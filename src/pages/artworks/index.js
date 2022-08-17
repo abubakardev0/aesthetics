@@ -2,45 +2,46 @@ import Head from 'next/head';
 import Card from '../../modules/artworkexperience/Card';
 import Link from 'next/link';
 
-import { db } from '../../common/utils/firebase/firebase-config';
+import { db } from '@/firebase/firebase-config';
 import { collection, getDocs } from 'firebase/firestore';
 
-function Artworks({ artworks }) {
+function Artworks({ artworks, hasError }) {
+    if (hasError) {
+        return (
+            <p className="text-center text-lg font-medium">
+                Sorry, we can&apos;t find that page! Don&apos;t worry though,
+                everything is STILL AWESOME!
+            </p>
+        );
+    }
     const data = JSON.parse(artworks);
-
     return (
         <div>
             <Head>
                 <title>Artworks</title>
             </Head>
-            <h1 className="mt-24 mb-10 py-2 text-center font-garamond text-2xl leading-loose md:text-4xl">
+            <h1 className="my-12 py-2 text-center font-garamond text-2xl leading-loose md:text-4xl">
                 Explore Artworks
             </h1>
             <main className="container mx-auto flex h-fit w-full flex-wrap items-start justify-center gap-6">
-                {data.length > 0 ? (
-                    data.map((item) => (
-                        <Link href={`/artworks/${item.id}`}>
-                            <a key={item.id}>
-                                <Card
-                                    image={item.images[0]}
-                                    artist={item.artist}
-                                    title={item.title}
-                                    height={item.height}
-                                    width={item.width}
-                                    medium={item.medium}
-                                    surface={item.surface}
-                                    unit={item.unit}
-                                    date={item.uploadedOn}
-                                    price={item.price}
-                                />
-                            </a>
-                        </Link>
-                    ))
-                ) : (
-                    <h3 className="h-screen w-screen text-center text-xl">
-                        No Artworks Found
-                    </h3>
-                )}
+                {data.map((item) => (
+                    <Link href={`/artworks/${item.id}`} key={item.id}>
+                        <a>
+                            <Card
+                                image={item.images[0]}
+                                artist={item.artist}
+                                title={item.title}
+                                height={item.height}
+                                width={item.width}
+                                medium={item.medium}
+                                surface={item.surface}
+                                unit={item.unit}
+                                date={item.uploadedOn}
+                                price={item.price}
+                            />
+                        </a>
+                    </Link>
+                ))}
             </main>
         </div>
     );
@@ -78,10 +79,14 @@ export async function getServerSideProps() {
             price,
         });
     });
-    const artworks = JSON.stringify(data);
+    if (data.length === 0) {
+        return {
+            props: { hasError: true },
+        };
+    }
     return {
         props: {
-            artworks,
+            artworks: JSON.stringify(data),
         },
     };
 }

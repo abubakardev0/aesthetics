@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Avvvatars from 'avvvatars-react';
-
-import { auth } from '../../utils/firebase/firebase-config';
-import useAuth from '../../hooks/useAuth';
+import { Avatar } from '@nextui-org/react';
+import { auth } from '@/firebase/firebase-config';
+import useAuth from '@/hooks/useAuth';
 
 import Tabbar from './Tabbar';
 import Navbar from './Navbar';
-import SearchModel from './SearchModel';
 
-import Logo from '../../utils/icons/Logo';
-import Search from '../../utils/icons/Search';
-import User from '../../utils/icons/User';
-import Heart from '../../utils/icons/Heart';
-import Chat from '../../utils/icons/Chat';
-import Logout from '../../utils/icons/Logout';
-import Bag from '../../utils/icons/Bag';
+import SearchModel from '@/commoncomponents/navbar/SearchModel';
+
+import Logo from '@/icons/Logo';
+import Search from '@/icons/Search';
+import User from '@/icons/User';
+import Heart from '@/icons/Heart';
+import Chat from '@/icons/Chat';
+import Logout from '@/icons/Logout';
+import Bag from '@/icons/Bag';
 
 function Header() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -63,6 +63,7 @@ function Header() {
                     </Link>
                 </div>
                 <Navbar />
+                <Tabbar />
                 <div className="flex items-center justify-center">
                     <button onClick={() => setIsSearchOpen(true)}>
                         <Search className="h-6 w-6 sm:h-7 sm:w-7" />
@@ -79,7 +80,10 @@ function Header() {
                             &#41;
                             <Link href="/bag">
                                 <a>
-                                    <Bag className="h-6 w-6 sm:h-7 sm:w-7" />
+                                    <Bag
+                                        className="h-6 w-6 sm:h-7 sm:w-7"
+                                        strokeWidth={1.5}
+                                    />
                                 </a>
                             </Link>
                         </span>
@@ -102,7 +106,6 @@ function Header() {
                         )}
                     </div>
                 </div>
-                <Tabbar />
             </div>
         </header>
     );
@@ -115,12 +118,14 @@ const LoggedIn = ({ user }) => {
     return (
         <>
             <div className="-mt-2 flex transform items-center border-b-2 border-slate-200 p-3 text-sm text-slate-600 transition-colors duration-200 hover:bg-slate-100">
-                <Avvvatars value={user.displayName} />
+                <Avatar text={user.displayName} size="md" />
                 <div className="mx-2">
-                    <h1 className="overflow-ellipsis text-sm font-semibold text-slate-700">
+                    <h1 className="overflow-hidden text-ellipsis text-sm font-semibold text-slate-700 ">
                         {user.displayName}
                     </h1>
-                    <p className="text-sm text-slate-500 ">{user.email}</p>
+                    <p className="overflow-hidden text-ellipsis text-sm text-slate-500 ">
+                        {user.email}
+                    </p>
                 </div>
             </div>
 

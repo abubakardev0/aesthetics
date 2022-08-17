@@ -1,14 +1,16 @@
-import React from 'react';
-import { Avatar } from '@nextui-org/react';
-import { auth } from '../../../common/utils/firebase/firebase-config';
-import User from '../../utils/icons/User';
-import Bookmark from '../../utils/icons/Bookmark';
-import Details from '../../utils/icons/Details';
-import Card from '../../utils/icons/Card';
-import Auction from '../../utils/icons/Auction';
-import Logout from '../../utils/icons/Logout';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
+
+import { Avatar } from '@nextui-org/react';
+import { useRouter } from 'next/router';
+
+import { auth } from '@/firebase/firebase-config';
+
+import User from '@/icons/User';
+import Bookmark from '@/icons/Bookmark';
+import Details from '@/icons/Details';
+import Card from '@/icons/Card';
+import Auction from '@/icons/Auction';
+import Logout from '@/icons/Logout';
 
 function Sidebar() {
     const profile = auth.currentUser.photoURL;

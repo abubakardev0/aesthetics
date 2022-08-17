@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import Link from 'next/link';
 
-import Details from '../../common/utils/icons/Details';
-import ImageAdd from '../../common/utils/icons/ImageAdd';
-import Tick from '../../common/utils/icons/Tick';
+import Details from '@/icons/Details';
+import ImageAdd from '@/icons/ImageAdd';
+import Tick from '@/icons/Tick';
 const SellArt = () => {
     return (
         <>
@@ -59,7 +59,7 @@ const SellArt = () => {
                         Sell art from your collection
                     </h3>
                     <button className="mt-6 h-10 w-32 rounded-sm bg-black bg-none text-sm text-white transition-all hover:opacity-80 md:h-12 md:w-40 md:text-lg">
-                        <Link href="/sellart/submit">
+                        <Link href="/seller/">
                             <a>Start Selling</a>
                         </Link>
                     </button>

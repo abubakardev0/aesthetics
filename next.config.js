@@ -11,4 +11,7 @@ module.exports = {
         browsersListForSwc: true,
         images: { allowFutureImage: true },
     },
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
 };

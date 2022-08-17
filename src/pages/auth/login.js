@@ -3,25 +3,25 @@ import { Input } from '@nextui-org/react';
 import { useForm } from 'react-hook-form';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { auth } from '../../common/utils/firebase/firebase-config';
-import useAuth from '../../common/hooks/useAuth';
-import Google from '../../common/utils/icons/Google';
-import Plus from '../../common/utils/icons/Plus';
-import Loader from '../../common/components/Loader';
+import { auth } from '@/firebase/firebase-config';
+import useAuth from '@/hooks/useAuth';
+import Google from '@/icons/Google';
+import Plus from '@/icons/Plus';
+import Loader from '@/commoncomponents/Loader';
 
 function Login() {
-    const router = useRouter();
-    if (auth.currentUser) {
-        router.replace('/');
-        return <Loader />;
-    }
-
     const { signIn, signInwithGoogleAccount } = useAuth();
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
+    const router = useRouter();
+    if (auth.currentUser) {
+        router.replace('/');
+        return <Loader />;
+    }
+
     const onSubmit = async ({ email, password }) => {
         await signIn(email, password);
     };
@@ -64,7 +64,7 @@ function Login() {
                     />
                     {errors.email && (
                         <p className="text-xs italic text-red-500">
-                            Invalid e-mail
+                            Hmm… that email doesn&apos;t look valid
                         </p>
                     )}
                     <Input.Password
@@ -81,7 +81,7 @@ function Login() {
                     />
                     {errors.password && (
                         <p className="text-xs italic text-red-500">
-                            Invalid password
+                            Make sure it&apos;s at least 8 characters
                         </p>
                     )}
                     <div className="my-4 flex items-center">

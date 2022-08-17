@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Head from 'next/head';
-const Ghost = dynamic(() => import('../common/utils/icons/BabyGhost'), {
+const Ghost = dynamic(() => import('@/icons/BabyGhost'), {
     suspense: true,
 });
 const NotFound = () => {
@@ -34,8 +34,8 @@ const NotFound = () => {
                     </button>
                 </div>
                 <div>
-                    <Suspense fallback="Loading...">
-                        <Ghost className="h-56 w-56 animate-pulse md:h-72 md:w-72" />
+                    <Suspense fallback={null}>
+                        <Ghost className="h-56 w-56 md:h-72 md:w-72" />
                     </Suspense>
                 </div>
             </main>

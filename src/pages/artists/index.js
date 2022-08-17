@@ -7,16 +7,16 @@ function Artists() {
     const [displayOptions, setDisplayOptions] = useState('list');
     return (
         <>
-            <section className="container mx-auto">
+            <section className="container mx-auto px-5 ">
                 <h1 className="text-4xl font-semibold">Artists</h1>
                 <p>Lorem Ipsum</p>
-                <div className="flex justify-end space-x-5 text-lg">
+                <div className="my-4 flex justify-end space-x-5 text-lg">
                     <button
                         className={`${
                             displayOptions === 'list'
                                 ? 'rounded-md bg-black '
                                 : ''
-                        } grid h-10 w-10 place-content-center`}
+                        } grid h-6 w-6 place-content-center md:h-10 md:w-10`}
                         onClick={() => setDisplayOptions('list')}
                     >
                         <List
@@ -24,7 +24,7 @@ function Artists() {
                                 displayOptions === 'list'
                                     ? 'fill-white'
                                     : 'fill-black'
-                            } mt-2 h-8 w-8`}
+                            } h-4 w-4 md:h-8 md:w-8`}
                         />
                     </button>
                     <button
@@ -32,15 +32,16 @@ function Artists() {
                             displayOptions === 'grid'
                                 ? 'rounded-md bg-black '
                                 : ''
-                        }w-10 h-10`}
+                        }  grid h-6 w-6 place-content-center md:h-10 md:w-10`}
                         onClick={() => setDisplayOptions('grid')}
                     >
                         <Grid
                             className={`${
                                 displayOptions === 'grid'
-                                    ? 'fill-white'
-                                    : 'fill-black'
-                            } mt-1 h-10 w-10`}
+                                    ? ' stroke-white'
+                                    : ' stroke-black'
+                            } h-4 w-4 stroke-2 md:h-8 md:w-8`}
+                            fill="none"
                         />
                     </button>
                 </div>
@@ -67,7 +68,7 @@ function ArtistList() {
         'Abdulllah Khan',
     ];
     return (
-        <ul className="col-auto my-6 grid list-inside list-disc grid-cols-4 gap-5 text-gray-700 marker:text-gray-700">
+        <ul className="grid-col-2 col-auto my-6 grid gap-3 text-gray-700 md:grid-cols-4 md:gap-5">
             {usernames.map((username, index) => (
                 <li
                     key={index}
@@ -95,13 +96,14 @@ function ArtistGrid() {
     ];
     return (
         <>
-            <div className="col-auto my-6 grid grid-cols-4 gap-5">
+            <div className="flex flex-wrap justify-center gap-5">
                 {usernames.map((username, index) => (
                     <div key={index}>
                         <Image
                             src={image}
-                            height={250}
-                            width={300}
+                            alt={username}
+                            height={200}
+                            width={250}
                             className="object-cover"
                         />
                         <h2 className="text-lg font-medium text-gray-700">

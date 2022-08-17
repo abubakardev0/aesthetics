@@ -1,26 +1,33 @@
-import { auth } from '../../common/utils/firebase/firebase-config';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import useAuth from '../../common/hooks/useAuth';
-import Loader from '../../common/components/Loader';
-import { deleteUser } from 'firebase/auth';
+
+import {
+    EmailAuthProvider,
+    reauthenticateWithCredential,
+    updatePassword,
+    deleteUser,
+} from 'firebase/auth';
+
+import { auth } from '@/firebase/firebase-config';
+import useAuth from '@/hooks/useAuth';
+import Loader from '@/commoncomponents/Loader';
 import PasswordChange from '../../modules/usermanagement/profile/buyer/change-password';
 import BasicInfo from '../../modules/usermanagement/profile/buyer/BasicInfo';
-import { EmailAuthProvider } from 'firebase/auth';
-const EditProfile = () => {
-    const router = useRouter();
-    const user = auth.currentUser;
-    if (!user) {
-        router.push('/auth/login');
-        return <Loader />;
-    }
 
+const EditProfile = () => {
     const { logout } = useAuth();
+    const router = useRouter();
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
+
+    const user = auth.currentUser;
+    if (!user) {
+        router.push('/auth/login');
+        return <Loader />;
+    }
 
     function changePassword({ currentpassword, newpassword }) {
         const credential = EmailAuthProvider.credential(

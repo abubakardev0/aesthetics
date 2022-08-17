@@ -1,11 +1,22 @@
 import Image from 'next/future/image';
 import React from 'react';
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { useInView } from 'framer-motion';
 
 function Card(props) {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true });
     return (
-        <div className="mb-8 inline-block">
-            <motion.div
+        <div
+            ref={ref}
+            className="mb-8 inline-block h-auto w-72"
+            style={{
+                transform: isInView ? 'none' : 'translateY(10px)',
+                opacity: isInView ? 1 : 0,
+                transition: 'all 0.3s 0.5s',
+            }}
+        >
+            <div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="mb-3 drop-shadow-xl"
@@ -17,7 +28,7 @@ function Card(props) {
                     alt={props.title}
                     className="object-cover"
                 />
-            </motion.div>
+            </div>
             <h3 className="border-t-2 py-1 pt-3 text-base font-medium text-gray-700 md:text-lg">
                 {props.artist}
             </h3>

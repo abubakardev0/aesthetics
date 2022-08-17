@@ -5,7 +5,7 @@ import { getDoc, doc } from 'firebase/firestore';
 import { Loading } from '@nextui-org/react';
 
 import axios from 'axios';
-import { auth, db } from '../../common/utils/firebase/firebase-config';
+import { auth, db } from '@/firebase/firebase-config';
 import Details from '../../modules/seller/uploadartwork/Details';
 import ChooseMaterial from '../../modules/seller/uploadartwork/ChooseMaterial';
 import Images from '../../modules/seller/uploadartwork/Images';

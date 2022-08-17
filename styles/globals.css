@@ -12,6 +12,9 @@
         width: 100%;
         height: 100vh;
         color: #010101;
+        background-color: #f9f9f9;
+        cursor: url('./cursor.png'), auto;
+        scroll-behavior: smooth;
     }
 
     .no-scrollbar::-webkit-scrollbar {
@@ -20,5 +23,34 @@
     .no-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
+    }
+    body::-webkit-scrollbar {
+        width: 12px;
+    }
+    body::-webkit-scrollbar-track {
+        background: #f1f1f3;
+    }
+    body::-webkit-scrollbar-thumb {
+        background-color: #2d2d2d;
+        border-radius: 20px;
+    }
+    .section-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+    .div-scrollbar::-webkit-scrollbar {
+        height: 3px;
+    }
+    .div-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f3;
+    }
+    .section-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f3;
+    }
+    .div-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #2d2d2d;
+    }
+    .section-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #2d2d2d;
+        border-radius: 20px;
     }
 }

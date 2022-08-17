@@ -10,9 +10,10 @@ import {
     onAuthStateChanged,
     sendPasswordResetEmail,
 } from 'firebase/auth';
+
 import { doc, setDoc, Timestamp } from 'firebase/firestore';
-import { auth, db } from '../utils/firebase/firebase-config';
-import Loader from '../../common/components/Loader';
+import { auth, db } from '@/firebase/firebase-config';
+
 const provider = new GoogleAuthProvider();
 
 const AuthContext = createContext({
@@ -56,7 +57,6 @@ export const AuthProvider = ({ children }) => {
                 email,
                 password
             );
-            console.log(result);
             const user = await updateProfile(auth.currentUser, {
                 displayName: name,
                 emailVerified: false,

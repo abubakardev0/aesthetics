@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../common/utils/firebase/firebase-config';
+import { auth, db } from '@/firebase/firebase-config';
 import { useRouter } from 'next/router';
 import Checkbox from '../modules/seller/uploadartwork/Checkbox';
 function Choices({ categories }) {

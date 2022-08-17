@@ -1,28 +1,27 @@
 import Link from 'next/link';
 import { Input } from '@nextui-org/react';
-import Plus from '../../common/utils/icons/Plus';
-import Google from '../../common/utils/icons/Google';
+import Plus from '@/icons/Plus';
+import Google from '@/icons/Google';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import Head from 'next/head';
-import { auth } from '../../common/utils/firebase/firebase-config';
-import useAuth from '../../common/hooks/useAuth';
-import Loader from '../../common/components/Loader';
+import { auth } from '@/firebase/firebase-config';
+import useAuth from '@/hooks/useAuth';
+import Loader from '@/commoncomponents/Loader';
 
 function Register() {
-    const router = useRouter();
-    if (auth.currentUser) {
-        router.replace('/');
-        return <Loader />;
-    }
-
     const { signUp, signInwithGoogleAccount, error } = useAuth();
-
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
+    const router = useRouter();
+
+    if (auth.currentUser) {
+        router.replace('/');
+        return <Loader />;
+    }
 
     const onSubmit = async ({ name, email, password, artist }) => {
         const isRegistered = await signUp(name, email, password, artist);

@@ -4,19 +4,20 @@ import { useRef } from 'react';
 import { Input } from '@nextui-org/react';
 
 import { useRouter } from 'next/router';
-import { auth } from '../../common/utils/firebase/firebase-config';
-import useAuth from '../../common/hooks/useAuth';
-import Loader from '../../common/components/Loader';
+import { auth } from '@/firebase/firebase-config';
+import useAuth from '@/hooks/useAuth';
+import Loader from '@/commoncomponents/Loader';
 
 const ResetPassword = () => {
+    const { resetPassword } = useAuth();
+    const emailRef = useRef();
+    const errorRef = useRef();
     const router = useRouter();
     if (auth.currentUser) {
         router.replace('/');
         return <Loader />;
     }
-    const { resetPassword } = useAuth();
-    const emailRef = useRef();
-    const errorRef = useRef();
+
     const validateEmail = (value) => {
         return value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
     };

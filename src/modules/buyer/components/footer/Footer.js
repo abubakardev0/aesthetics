@@ -1,18 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
-import Plane from '../../utils/icons/Plane';
-import Insta from '../../utils/icons/Insta';
-import Twitter from '../../utils/icons/Twitter';
-import Behance from '../../utils/icons/Behance';
+import Plane from '../../../../common/utils/icons/Plane';
+import Insta from '../../../../common/utils/icons/Insta';
+import Twitter from '../../../../common/utils/icons/Twitter';
+import Behance from '../../../../common/utils/icons/Behance';
 import { Input } from '@nextui-org/react';
 
 function Footer() {
     return (
         <>
-            {' '}
-            <h2 className='before:content[""] after:content[""] flex px-2 font-semibold tracking-wide text-gray-700 before:m-auto before:mr-2 before:flex-1 before:border-b-2 after:m-auto after:ml-2 after:flex-1 after:border-b-2'>
+            <div className='before:content[""] after:content[""] flex px-2 font-semibold tracking-wide text-gray-700 before:m-auto before:mr-2 before:flex-1 before:border-b-2 after:m-auto after:ml-2 after:flex-1 after:border-b-2'>
                 Aesthetics
-            </h2>
+            </div>
             <nav className="mt-10 flex justify-around text-gray-700">
                 <ul className="space-y-4">
                     <li className="text-xs md:text-lg">

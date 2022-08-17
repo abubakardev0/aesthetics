@@ -1,4 +1,4 @@
-import ProfileBar from '../common/components/sidebar/Sidebar';
+import ProfileBar from '@/commoncomponents/sidebar/Sidebar';
 
 function SettingsLayout({ children }) {
     return (

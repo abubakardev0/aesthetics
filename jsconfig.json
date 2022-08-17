@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "@/icons/*": ["src/common/utils/icons/*"],
+            "@/hooks/*": ["src/common/hooks/*"],
+            "@/commoncomponents/*": ["src/common/components/*"],
+            "@/store/*": ["src/common/store/*"],
+            "@/firebase/*": ["src/common/utils/firebase/*"],
+            "@/s3/*": ["src/common/utils/s3/*"],
+            "@/layouts/*": ["src/layouts/*"],
+            "@/seller/*": ["src/modules/seller/*"],
+            "@/buyer/*": ["src/modules/buyer/*"],
+            "@/artworkexperience/*": ["src/modules/artworkexperience/*"],
+            "@/auction/*": ["src/modules/auction/*"],
+            "@/chat/*": ["src/modules/chat/*"],
+            "@/immediatesell/*": ["src/modules/immediatesell/*"],
+            "@/user/*": ["src/modules/usermanagement/*"]
+        }
+    }
+}
