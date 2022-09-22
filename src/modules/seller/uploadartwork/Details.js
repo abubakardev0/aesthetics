@@ -17,7 +17,7 @@ const Details = ({ register, set, state, errors, trigger }) => {
     };
     return (
         <>
-            <div className="flex w-full flex-col space-y-3">
+            <div className="flex w-full flex-col space-y-5">
                 <Input
                     width="100%"
                     clearable
@@ -125,7 +125,7 @@ const Details = ({ register, set, state, errors, trigger }) => {
                         )}
                     </div>
                 </div>
-                <div className="grid grid-flow-col place-content-center gap-3">
+                <div className="grid grid-flow-col place-content-center gap-6">
                     <Input
                         width="100%"
                         clearable

@@ -1,20 +1,18 @@
 import React from 'react';
 
-const Bookmark = ({ fill = 'none', stroke = '#010101', ...props }) => {
+const Bookmark = ({ ...props }) => {
     return (
         <svg
-            data-name="Iconly/Curved/Profile"
             xmlns="http://www.w3.org/2000/svg"
+            fill="none"
             viewBox="0 0 24 24"
             {...props}
         >
             <path
-                fill={fill}
-                stroke={stroke}
-                fillRule="evenodd"
-                d="M8.9 2h6.17c2.71 0 4.9 1.07 4.93 3.79v15.18c0 .17-.04.34-.12.49-.13.24-.35.42-.62.5-.26.08-.55.04-.79-.1l-6.48-3.24-6.49 3.24c-.149.079-.32.13-.49.13-.56 0-1.01-.46-1.01-1.02V5.79C4 3.07 6.2 2 8.9 2zm-.68 7.62h7.53c.43 0 .78-.351.78-.79 0-.44-.35-.79-.78-.79H8.22c-.43 0-.78.35-.78.79 0 .439.35.79.78.79z"
-                clipRule="evenodd"
-            ></path>
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+            />
         </svg>
     );
 };

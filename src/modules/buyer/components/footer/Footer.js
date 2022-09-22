@@ -53,9 +53,9 @@ function Footer() {
                     type="email"
                     placeholder="Enter E-mail"
                     aria-label="weekly newsletter subscription"
-                    contentLeft={<Plane />}
+                    contentLeft={<Plane className="h-6 w-6" fill="#707070" />}
                     contentRight={
-                        <button className="mx-2 my-3 rounded-full bg-blue-200 px-3 py-1 text-sm text-blue-500 hover:bg-blue-300 md:text-base">
+                        <button className="my-3 mr-1 rounded-xl bg-blue-200 px-3 py-1 text-sm text-blue-500 hover:bg-blue-300 md:text-base">
                             Subscribe
                         </button>
                     }

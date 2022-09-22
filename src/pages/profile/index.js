@@ -1,5 +1,5 @@
 import React from 'react';
-import SettingsLayout from '../../layouts/Settings';
+import SettingsLayout from '@/layouts/SettingsLayout';
 import EditProfile from './edit-profile';
 function Profile() {
     return (

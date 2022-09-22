@@ -1,7 +1,7 @@
-import { s3Client } from '../../common/utils/s3/s3Client';
+import { s3Client } from '@/s3/s3Client';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
-import { db } from '../../common/utils/firebase/firebase-config';
+import { db } from '@/firebase/firebase-config';
 
 async function uploadImage(image) {
     const fileType = image.split(';')[0].split('/')[1];
@@ -42,46 +42,45 @@ async function uploadDocument(doc) {
 }
 
 export default async function handler(req, res) {
+    const data = req.body.data;
     const imagesPath = [];
     const certificatesPath = [];
     if (req.method === 'POST') {
-        new Promise.all(
-            req.body.data.images.map(async (image) => {
-                const imagePath = await uploadImage(image);
-                if (imagePath) {
-                    imagesPath.push(imagePath);
+        try {
+            for (let i = 0; i < data.images.length; i++) {
+                const image = await uploadImage(data.images[i]);
+                if (image) {
+                    imagesPath.push(image);
                 }
-            })
-        ).then(() => {
-            new Promise.all(
-                req.body.data.certificates.map(async (certificate) => {
-                    const certificatePath = await uploadDocument(certificate);
-                    if (certificatePath) {
-                        certificatesPath.push(certificatePath);
-                    }
-                })
-            ).then(() => {
-                const artwork = {
-                    images: imagesPath,
-                    certificates: certificatesPath,
-                    userId: req.body.data.userId,
-                    artist: req.body.data.artist,
-                    title: req.body.data.title,
-                    rarity: req.body.data.rarity,
-                    height: req.body.data.height,
-                    width: req.body.data.width,
-                    depth: req.body.data.depth,
-                    unit: req.body.data.unit,
-                    mediums: req.body.data.mediums,
-                    surfaces: req.body.data.surfaces,
-                    submittedAt: Timestamp.now(),
-                };
-                addDoc(collection(db, 'submittedArtworks'), artwork);
-                res.status(200).json({
-                    status: 'success',
-                });
+            }
+            for (let i = 0; i < data.certificates.length; i++) {
+                const certificate = await uploadDocument(data.certificates[i]);
+                if (certificate) {
+                    certificatesPath.push(certificate);
+                }
+            }
+            const artwork = {
+                images: imagesPath,
+                certificates: certificatesPath,
+                uid: data.uid,
+                artist: data.artist,
+                title: data.title,
+                rarity: data.rarity,
+                height: data.height,
+                width: data.width,
+                depth: data.depth,
+                unit: data.unit,
+                mediums: data.mediums,
+                surfaces: data.surfaces,
+                submittedAt: Timestamp.fromDate(new Date()),
+            };
+            await addDoc(collection(db, 'submittedArtworks'), artwork);
+            res.status(200).json({
+                status: 'success',
             });
-        });
+        } catch (error) {
+            res.status(500).send(error);
+        }
     }
 }
 

@@ -1,26 +1,22 @@
-import SellerLayout from '../../../layouts/SellerLayout';
-import { Table, useAsyncList, useCollator } from '@nextui-org/react';
+import Link from 'next/link';
+
+import { db } from '@/firebase/firebase-config';
 import {
     collection,
     query,
     startAfter,
-    // orderBy,
     limit,
     getDocs,
 } from 'firebase/firestore';
-import { db } from '../../../common/utils/firebase/firebase-config';
 
+import { Table, useAsyncList, useCollator, Tooltip } from '@nextui-org/react';
+
+import SellerLayout from '@/layouts/SellerLayout';
+
+import Edit from '@/icons/Edit';
+import { numberWithCommas } from '@/commoncomponents/functions';
 function Orders() {
     const collator = useCollator({ numeric: true });
-
-    const columns = [
-        { name: 'ID', uid: 'id' },
-        { name: 'Name', uid: 'name' },
-        { name: 'E-mail', uid: 'email' },
-        { name: 'Total', uid: 'total' },
-        { name: 'Status', uid: 'status' },
-        { name: 'Created at', uid: 'date' },
-    ];
     async function load({ signal, cursor }) {
         const querySnapshot = await getDocs(
             cursor
@@ -60,29 +56,42 @@ function Orders() {
             </h3>
             <Table
                 bordered
-                aria-label="Orders data table"
+                aria-label="orders table"
                 css={{
                     minWidth: '100%',
                     height: 'calc($space$14 * 12)',
                     backgroundColor: 'white',
                     overflowX: 'scroll',
                     zIndex: 0,
-                    whiteSpace: 'nowrap',
                 }}
                 selectionMode="none"
                 sortDescriptor={list.sortDescriptor}
                 onSortChange={list.sort}
             >
-                <Table.Header columns={columns}>
-                    {(column) => (
-                        <Table.Column
-                            key={column.uid}
-                            allowsSorting
-                            className="w-44"
-                        >
-                            {column.name}
-                        </Table.Column>
-                    )}
+                <Table.Header>
+                    <Table.Column
+                        key="title"
+                        css={{
+                            width: '200px',
+                        }}
+                    >
+                        ORDER ID
+                    </Table.Column>
+                    <Table.Column key="customer" width="200px">
+                        CUSTOMER NAME
+                    </Table.Column>
+                    <Table.Column key="price" width="150px">
+                        TOTAL AMOUNT
+                    </Table.Column>
+                    <Table.Column key="status" width="150px">
+                        STATUS
+                    </Table.Column>
+                    <Table.Column key="date" width="200px">
+                        PLACED AT
+                    </Table.Column>
+                    <Table.Column key="actions" width="80px">
+                        ACTIONS
+                    </Table.Column>
                 </Table.Header>
                 <Table.Body
                     items={list.items}
@@ -90,13 +99,88 @@ function Orders() {
                     onLoadMore={list.loadMore}
                 >
                     {(item) => (
-                        <Table.Row key={item.id}>
-                            <Table.Cell>{item.id}</Table.Cell>
-                            <Table.Cell>{item.name}</Table.Cell>
-                            <Table.Cell>{item.email}</Table.Cell>
-                            <Table.Cell>{item.total}</Table.Cell>
-                            <Table.Cell>{item.status}</Table.Cell>
-                            <Table.Cell>2020</Table.Cell>
+                        <Table.Row
+                            key={item.id}
+                            css={{
+                                borderBottom: '1px solid #f1f5f9',
+                            }}
+                        >
+                            <Table.Cell
+                                css={{
+                                    width: '200px',
+                                }}
+                            >
+                                <Link href={`/seller/orders/${item.id}`}>
+                                    {item.id}
+                                </Link>
+                            </Table.Cell>
+                            <Table.Cell
+                                css={{
+                                    width: '200px',
+                                }}
+                            >
+                                <span className="capitalize">
+                                    {item.shippingDetails.name}
+                                </span>
+                            </Table.Cell>
+                            <Table.Cell
+                                css={{
+                                    width: '150px',
+                                }}
+                            >
+                                {numberWithCommas(item.totalAmount)}
+                            </Table.Cell>
+                            <Table.Cell
+                                css={{
+                                    width: '150px',
+                                }}
+                            >
+                                <span
+                                    className={`${
+                                        item.status === 'delivered' &&
+                                        'bg-green-100 text-green-500'
+                                    } rounded-full px-4 py-1 text-sm capitalize
+                                    ${
+                                        item.status === 'in transit' &&
+                                        'bg-yellow-100 text-yellow-500'
+                                    }
+                                    ${
+                                        item.status === 'processing' &&
+                                        'bg-orange-100 text-orange-500'
+                                    }
+                                    ${
+                                        item.status === 'cancelled' &&
+                                        'bg-red-100 text-red-500'
+                                    }
+                                    `}
+                                >
+                                    {item.status}
+                                </span>
+                            </Table.Cell>
+                            <Table.Cell
+                                css={{
+                                    width: '200px',
+                                }}
+                            >
+                                {new Date(
+                                    item.placedAt.seconds * 1000
+                                ).toUTCString()}
+                            </Table.Cell>
+                            <Table.Cell
+                                css={{
+                                    width: '80px',
+                                }}
+                            >
+                                <Tooltip content="View Details" color="invert">
+                                    <Link href={`/seller/orders/${item.id}`}>
+                                        <Edit
+                                            className="h-5 w-5 cursor-pointer"
+                                            fill="none"
+                                            stroke="#979797"
+                                        />
+                                    </Link>
+                                </Tooltip>
+                            </Table.Cell>
                         </Table.Row>
                     )}
                 </Table.Body>

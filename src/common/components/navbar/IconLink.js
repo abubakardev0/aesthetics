@@ -11,7 +11,7 @@ const IconLink = ({ icon, refrence, text }) => {
                         router.pathname == refrence
                             ? 'bg-white text-[#2D2D2D] md:bg-[#2D2D2D] md:text-white'
                             : ' bg-none text-white md:text-[#2D2D2D]'
-                    } flex h-10 w-10 items-center justify-center rounded-full md:h-12 md:w-12 `}
+                    } mx-auto flex h-10 w-10 items-center justify-center rounded-full md:h-12 md:w-12`}
                 >
                     {icon}
                 </a>

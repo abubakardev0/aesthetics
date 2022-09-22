@@ -6,11 +6,6 @@ module.exports = {
     },
     swcMinify: true,
     reactStrictMode: true,
-    experimental: {
-        legacyBrowsers: false,
-        browsersListForSwc: true,
-        images: { allowFutureImage: true },
-    },
     eslint: {
         ignoreDuringBuilds: true,
     },

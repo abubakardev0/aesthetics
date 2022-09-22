@@ -1,11 +1,11 @@
-import Grid from '../../../../common/utils/icons/Grid';
-import Artwork from '../../../../common/utils/icons/Artwork';
-import Order from '../../../../common/utils/icons/Order';
-import Chat from '../../../../common/utils/icons/Chat';
-import Settings from '../../../../common/utils/icons/Settings';
-import IconLink from '../../../../common/components/navbar/IconLink';
-import Logout from '../../../../common/utils/icons/Logout';
-import useAuth from '../../../../common/hooks/useAuth';
+import Grid from '@/icons/Grid';
+import Artwork from '@/icons/Artwork';
+import Order from '@/icons/Order';
+import Chat from '@/icons/Chat';
+import Settings from '@/icons/Settings';
+import IconLink from '@/commoncomponents/navbar/IconLink';
+import Logout from '@/icons/Logout';
+import useAuth from '@/hooks/useAuth';
 function Sidebar() {
     const { logout } = useAuth();
     return (
@@ -48,7 +48,7 @@ function Sidebar() {
                             fill="none"
                         />
                     }
-                    refrence="/seller/chat"
+                    refrence="/chat"
                     text={'Chat'}
                 />
                 <IconLink

@@ -1,14 +1,17 @@
 import Link from 'next/link';
-import { Input } from '@nextui-org/react';
-import Plus from '@/icons/Plus';
-import Google from '@/icons/Google';
-import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+
+import { Input, Radio } from '@nextui-org/react';
+import { useForm } from 'react-hook-form';
+
 import { auth } from '@/firebase/firebase-config';
 import useAuth from '@/hooks/useAuth';
-import Loader from '@/commoncomponents/Loader';
 
+import Loader from '@/commoncomponents/Loader';
+import Google from '@/icons/Google';
+
+import AuthLayout from '@/layouts/AuthLayout';
 function Register() {
     const { signUp, signInwithGoogleAccount, error } = useAuth();
     const {
@@ -23,27 +26,16 @@ function Register() {
         return <Loader />;
     }
 
-    const onSubmit = async ({ name, email, password, artist }) => {
-        const isRegistered = await signUp(name, email, password, artist);
-        if (isRegistered) {
-            router.replace('/onboarding');
-            return <Loader />;
-        }
+    const onSubmit = async ({ name, email, password, gender }) => {
+        await signUp(name, email, password, gender);
     };
 
     return (
-        <div className="grid h-screen place-items-center">
+        <>
             <Head>
                 <title>Registeration</title>
             </Head>
-            <div className="fixed top-3 right-3">
-                <Link href="/">
-                    <a>
-                        <Plus className="h-6 w-6 rotate-45" />
-                    </a>
-                </Link>
-            </div>
-            <main className="w-full p-10 sm:w-[400px] sm:flex-col sm:rounded-xl sm:border-2 sm:border-slate-200 sm:px-10 sm:py-5 sm:shadow-slate-400 md:p-10">
+            <section className="w-full p-6 sm:w-[400px] sm:flex-col sm:rounded-xl sm:border-2 sm:border-slate-200 sm:px-10 sm:py-5 sm:shadow-slate-400 md:p-10">
                 <h2 className="xl:text-bold text-left text-3xl font-bold text-neutral-800">
                     Get Started
                 </h2>
@@ -65,8 +57,9 @@ function Register() {
                         clearable
                         color="black"
                         type="text"
-                        label="Your Name"
-                        placeholder="Abu Bakar"
+                        label="Name"
+                        autoComplete
+                        placeholder="Your Name"
                         {...register('name', {
                             required: true,
                         })}
@@ -81,8 +74,9 @@ function Register() {
                         clearable
                         color="black"
                         type="email"
-                        label="Your E-mail"
-                        placeholder="bakar097@gmail.com"
+                        label="E-mail"
+                        autoComplete
+                        placeholder="Your E-mail"
                         {...register('email', {
                             pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i,
                         })}
@@ -92,18 +86,13 @@ function Register() {
                             Invalid e-mail
                         </p>
                     )}
-                    {error && (
-                        <span className="text-xs italic text-red-500">
-                            This email address is already being used
-                        </span>
-                    )}
                     <Input.Password
                         width="100%"
                         clearable
                         color="black"
                         type="password"
                         label="Password"
-                        placeholder="Password"
+                        placeholder="Your Password"
                         {...register('password', {
                             required: true,
                             minLength: 8,
@@ -114,21 +103,23 @@ function Register() {
                             Invalid password
                         </p>
                     )}
-                    <input
-                        name="artist"
-                        type="checkbox"
-                        {...register('artist')}
-                        id="artist"
-                    />
-                    <label htmlFor="artist" className="ml-2 text-sm">
-                        Are you an artist?
-                    </label>
-
+                    <Radio.Group
+                        label="Select your gender:"
+                        defaultValue="male"
+                        size="sm"
+                        orientation="horizontal"
+                        isRequired
+                        {...register('gender')}
+                    >
+                        <Radio value="male">male</Radio>
+                        <Radio value="female">female</Radio>
+                        <Radio value="other">non-binary</Radio>
+                    </Radio.Group>
                     <button
                         type="submit"
                         className="w-full rounded-md bg-neutral-800 p-3 font-medium
-                                tracking-wide text-gray-100 shadow-lg hover:bg-neutral-900
-                                focus:outline-none"
+                                tracking-wide text-gray-100 shadow-lg hover:bg-neutral-700 focus:outline-none
+                                active:bg-neutral-900"
                     >
                         Create an Account
                     </button>
@@ -141,17 +132,18 @@ function Register() {
                     </div>
                     <button
                         onClick={signInwithGoogleAccount}
-                        className="focus:shadow-outline flex w-full items-center justify-center space-x-4 rounded-md bg-slate-200 px-4 py-3 font-medium
-                                text-slate-900 shadow-lg hover:bg-blue-400 hover:text-slate-100 focus:outline-none
-                                focus:ring-4"
+                        className="flex w-full items-center justify-center space-x-4 rounded-md border bg-slate-100 px-4 py-3 font-medium
+                                text-slate-900 shadow-lg hover:bg-slate-200 focus:outline-none active:bg-blue-500 active:text-slate-100"
                     >
                         <Google className="h-6 w-6" />
                         <span>Register with Google</span>
                     </button>
                 </div>
-            </main>
-        </div>
+            </section>
+        </>
     );
 }
+
+Register.Layout = AuthLayout;
 
 export default Register;

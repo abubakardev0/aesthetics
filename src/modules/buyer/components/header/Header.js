@@ -1,113 +1,73 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { Avatar } from '@nextui-org/react';
 import { auth } from '@/firebase/firebase-config';
 import useAuth from '@/hooks/useAuth';
 
-import Tabbar from './Tabbar';
 import Navbar from './Navbar';
 
 import SearchModel from '@/commoncomponents/navbar/SearchModel';
+import Modal from '@/commoncomponents/modal/Modal';
 
 import Logo from '@/icons/Logo';
 import Search from '@/icons/Search';
 import User from '@/icons/User';
-import Heart from '@/icons/Heart';
+import Bookmark from '@/icons/Bookmark';
 import Chat from '@/icons/Chat';
 import Logout from '@/icons/Logout';
 import Bag from '@/icons/Bag';
+import Switch from '@/icons/Switch';
 
 function Header() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
-    const [show, setShow] = useState(true);
-    const [lastScrollY, setLastScrollY] = useState(0);
-
-    const controlHeader = () => {
-        if (typeof window !== 'undefined') {
-            if (window.scrollY > lastScrollY) {
-                setShow(false);
-            } else {
-                setShow(true);
-            }
-            setLastScrollY(window.scrollY);
-        }
-    };
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            window.addEventListener('scroll', controlHeader);
-            return () => {
-                window.removeEventListener('scroll', controlHeader);
-            };
-        }
-    }, [lastScrollY]);
+    const dropdownRef = useRef(null);
 
     return (
-        <header
-            className={
-                show
-                    ? 'fixed top-0 z-50 w-full overflow-visible bg-[#ffffffa6] shadow-[0_0_15px_20px_#ffffffa6]'
-                    : 'hidden'
-            }
-        >
-            <div className="flex items-center justify-between px-3 py-3 md:justify-evenly md:px-0 md:py-5">
+        <>
+            <div className="flex items-center justify-between px-3 py-3 md:py-4 lg:container lg:mx-auto lg:py-5">
                 <div className="font-garamond text-lg font-bold sm:text-xl md:text-2xl">
                     <Link href="/">
                         <a>
-                            <span className="hidden md:block">AESTHETICS</span>
-                            <span className="block md:hidden">
+                            <span className="hidden lg:block">AESTHETICS</span>
+                            <span className="block lg:hidden">
                                 <Logo />
                             </span>
                         </a>
                     </Link>
                 </div>
                 <Navbar />
-                <Tabbar />
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center gap-2 sm:gap-3 lg:gap-4 xl:gap-6">
                     <button onClick={() => setIsSearchOpen(true)}>
-                        <Search className="h-6 w-6 sm:h-7 sm:w-7" />
+                        <Search className="h-6 w-6 opacity-75 transition hover:opacity-90 active:opacity-100 sm:h-7 sm:w-7" />
                     </button>
                     {isSearchOpen && (
                         <SearchModel openSearchModel={setIsSearchOpen} />
                     )}
-                    <div className="mx-1 sm:mx-3">
-                        <span className="inline-flex">
-                            &#40;
-                            <span className="pt-1 text-sm tracking-wide sm:text-base md:pt-0">
-                                2
-                            </span>
-                            &#41;
-                            <Link href="/bag">
-                                <a>
-                                    <Bag
-                                        className="h-6 w-6 sm:h-7 sm:w-7"
-                                        strokeWidth={1.5}
-                                    />
-                                </a>
-                            </Link>
-                        </span>
-                    </div>
+                    <Link href="/bag">
+                        <a className="flex cursor-pointer text-[#2D2D2D] opacity-75 transition hover:opacity-90 active:opacity-100">
+                            <Bag className="h-6 w-6 sm:h-7 sm:w-7" />
+                        </a>
+                    </Link>
                     <div className="relative inline-block font-medium ">
                         <button
-                            onClick={() => setIsOpen(!isOpen)}
-                            className="relative z-10 flex items-center rounded-full border border-transparent p-2 focus:border-slate-200 focus:outline-none focus:ring focus:ring-slate-200 focus:ring-opacity-40"
+                            onClick={() => dropdownRef.current.handler()}
+                            className="relative z-10 flex items-center rounded-full border border-transparent"
                         >
-                            <User className="h-6 w-6 sm:h-7 sm:w-7" />
+                            <User className="h-6 w-6 opacity-75 transition hover:opacity-90 active:opacity-100 sm:h-7 sm:w-7" />
                         </button>
-                        {isOpen && (
-                            <div className="absolute right-0 z-20 mt-2 w-60 overflow-hidden rounded-md border-2 border-slate-200 bg-white py-2 shadow-xl">
+                        <Modal ref={dropdownRef}>
+                            <div className="absolute right-0 z-20 mt-4 w-60 overflow-hidden rounded-md border-2 border-slate-200 bg-white py-2 shadow-xl md:mt-5 lg:w-64">
                                 {auth.currentUser ? (
                                     <LoggedIn user={auth.currentUser} />
                                 ) : (
                                     <LoggedOut />
                                 )}
                             </div>
-                        )}
+                        </Modal>
                     </div>
                 </div>
             </div>
-        </header>
+        </>
     );
 }
 
@@ -128,6 +88,16 @@ const LoggedIn = ({ user }) => {
                     </p>
                 </div>
             </div>
+            <Link href="/seller">
+                <a className="flex transform items-center px-3 py-2 text-base capitalize text-slate-600 transition-colors duration-200 hover:bg-slate-100">
+                    <Switch
+                        className="mx-1 h-6 w-6"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                    />
+                    <span className="mx-1 pt-1">Switch to Seller</span>
+                </a>
+            </Link>
 
             <Link href="/profile">
                 <a className="flex transform items-center p-3 text-sm capitalize text-slate-600 transition-colors duration-200 hover:bg-slate-100">
@@ -136,10 +106,14 @@ const LoggedIn = ({ user }) => {
                 </a>
             </Link>
 
-            <Link href="/wishlist">
+            <Link href="/profile/saves">
                 <a className="flex transform items-center p-3 text-sm capitalize text-slate-600 transition-colors duration-200 hover:bg-slate-100">
-                    <Heart className="mx-1 h-6 w-6" />
-                    <span className="mx-1 pt-1">Save Artworks</span>
+                    <Bookmark
+                        className="mx-1 h-6 w-6"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                    />
+                    <span className="mx-1 pt-1">Your Saves</span>
                 </a>
             </Link>
             <Link href="/chat">

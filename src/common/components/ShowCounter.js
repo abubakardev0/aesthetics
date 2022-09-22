@@ -5,7 +5,7 @@ const ShowCounter = ({ countDown }) => {
     const minutes = Math.floor((countDown % 3600) / 60);
     const seconds = Math.floor(countDown % 60);
     return (
-        <div className="flex w-full items-center justify-center space-x-2 text-center text-xl sm:text-2xl">
+        <div className="flex w-full items-center justify-start space-x-4 text-center text-xl sm:text-2xl">
             <DateTimeDisplay value={days} type={'Days'} />
             <DateTimeDisplay value={hours} type={'Hours'} />
             <DateTimeDisplay value={minutes} type={'Mins'} />
@@ -14,12 +14,10 @@ const ShowCounter = ({ countDown }) => {
     );
 };
 
-const DateTimeDisplay = ({ value, type, isDanger }) => {
+const DateTimeDisplay = ({ value, type }) => {
     return (
-        <div className="w-20 rounded-lg bg-white px-2 py-3 text-black drop-shadow-md sm:w-24">
-            <div className="" x-text="hours">
-                {value}
-            </div>
+        <div className="w-20 overflow-hidden rounded-md border bg-white py-3 text-black drop-shadow-sm sm:w-24">
+            <div x-text="hours">{value}</div>
             <div className="text-xs uppercase">{type}</div>
         </div>
     );

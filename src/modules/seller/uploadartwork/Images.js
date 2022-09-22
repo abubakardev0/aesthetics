@@ -1,11 +1,12 @@
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import Plus from '../../../common/utils/icons/Plus';
+import Plus from '@/icons/Plus';
 
 function Images({ set, state }) {
     const [picture, setPicture] = useState([]);
     const errorRef = useRef();
-    const onChange = (e) => {
+
+    const handleImageUpload = (e) => {
         if (picture.length > 2) {
             errorRef.current.innerText = 'You can only upload 3 pictures';
             return;
@@ -57,23 +58,23 @@ function Images({ set, state }) {
                     </ul>
                 </div>
                 <div className="flex w-full flex-col">
-                    <div className="relative h-fit w-full border p-4">
+                    <div className="relative h-fit w-full border p-5">
                         <span
                             ref={errorRef}
-                            className="absolute top-1 right-1 text-xs text-red-500"
+                            className="absolute top-1 right-1 py-1 text-xs tracking-wide text-red-500"
                         ></span>
                         <h1 className="text-lg font-semibold">
                             Add Photos here
                         </h1>
-                        <p className="text-sm text-gray-600 md:text-base">
+                        <p className="text-sm text-neutral-600 md:text-base">
                             Files Supported: JPG, PNG, Webp
                         </p>
-                        <p className="mb-6 text-sm text-gray-600 md:text-base">
+                        <p className="mb-6 text-sm text-neutral-600 md:text-base">
                             Maximum Size: 20MB
                         </p>
                         <label
                             htmlFor="image-file"
-                            className="mb-2 rounded-full border border-black px-5 py-3 shadow-md hover:bg-neutral-800 hover:text-white"
+                            className="mb-2 rounded-full border border-black px-5 py-2 shadow-md active:bg-neutral-800 active:text-white"
                         >
                             Add Photo
                         </label>
@@ -81,7 +82,7 @@ function Images({ set, state }) {
                             id="image-file"
                             type="file"
                             className="hidden"
-                            onChange={onChange}
+                            onChange={handleImageUpload}
                             multiple
                         />
                     </div>
@@ -129,13 +130,13 @@ function Images({ set, state }) {
             </div>
             <div className="mt-5 flex space-x-3">
                 <button
-                    className="w-full rounded-xl bg-neutral-200 py-2 text-neutral-800 hover:bg-neutral-300"
+                    className="w-full rounded-xl bg-neutral-200 py-2 text-neutral-800 active:bg-neutral-300"
                     onClick={prevStep}
                 >
                     Prev Step
                 </button>
                 <button
-                    className="focus:shadow-outline w-full rounded-xl bg-neutral-800 p-3 font-medium tracking-wide text-gray-100 shadow-lg hover:bg-neutral-900 focus:outline-none"
+                    className="focus:shadow-outline w-full rounded-xl bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg focus:outline-none active:bg-neutral-900"
                     onClick={nextStep}
                 >
                     Next Step

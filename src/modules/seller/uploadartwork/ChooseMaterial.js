@@ -11,14 +11,17 @@ function ChooseMaterial({ mediums, surfaces, set, state }) {
         state((e) => e - 1);
     };
     const nextStep = () => {
-        selectedMediums.length === 0
-            ? (mediumRef.current.innerText = `Please select at least one medium`)
-            : (mediumRef.current.innerText = ``),
+        if (selectedMediums.length > 0 && selectedSurfaces.length > 0) {
+            state((e) => e + 1);
+        } else {
+            selectedMediums.length === 0
+                ? (mediumRef.current.innerText = `Please select at least one medium`)
+                : (mediumRef.current.innerText = ``);
+
             selectedSurfaces.length === 0
                 ? (surfaceRef.current.innerText = `Please select at least one surface`)
-                : ((surfaceRef.current.innerText = ``),
-                  (mediumRef.current.innerText = ``),
-                  state((e) => e + 1));
+                : (surfaceRef.current.innerText = ``);
+        }
     };
 
     return (
@@ -65,7 +68,7 @@ function ChooseMaterial({ mediums, surfaces, set, state }) {
                     Prev Step
                 </button>
                 <button
-                    className="w-full rounded-xl bg-neutral-800 p-3 font-medium tracking-wide text-gray-100 shadow-lg hover:bg-neutral-900 "
+                    className="w-full rounded-xl bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg hover:bg-neutral-900 "
                     onClick={nextStep}
                 >
                     Next Step

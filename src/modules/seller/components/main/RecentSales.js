@@ -3,7 +3,7 @@ import { User } from '@nextui-org/react';
 
 export default function RecentSales() {
     return (
-        <div className="section-scrollbar max-h-64 min-h-fit w-full space-y-3 overflow-auto rounded-2xl border-2 bg-white p-4 drop-shadow-lg">
+        <div className=" min-h-fit w-full space-y-3 overflow-hidden rounded-2xl border-2 bg-white p-4 drop-shadow-lg md:h-full">
             <div className="flex justify-between">
                 <h3 className="text-lg font-medium">Recent Buy</h3>
                 <Link href="/seller/artworks">
@@ -12,14 +12,24 @@ export default function RecentSales() {
                     </a>
                 </Link>
             </div>
-            <Card />
+            <div className="section-scrollbar h-[300px] space-y-3 overflow-y-auto md:h-full ">
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+            </div>
         </div>
     );
 }
 
 export const Card = () => {
     return (
-        <div className="mt-3 flex items-center justify-between pr-2">
+        <div className="flex items-center justify-between py-2 pr-2 odd:bg-slate-100/80">
             <User
                 size="lg"
                 bordered

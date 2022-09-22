@@ -1,6 +1,6 @@
-import useBagStore from '../../store/bagStore';
+import useBagStore from '@/store/bagStore';
 import Image from 'next/image';
-import Plus from '../../utils/icons/Plus';
+import Plus from '@/icons/Plus';
 
 const ItemCard = (props) => {
     const removeItem = useBagStore((state) => state.removeItem);

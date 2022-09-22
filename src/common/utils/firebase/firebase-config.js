@@ -3,13 +3,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-    apiKey: 'AIzaSyByRsQZ2-duG0pNLAIMxr_3pnBVTjLW7hU',
-    authDomain: 'aesthetics-dev-a0a6f.firebaseapp.com',
-    projectId: 'aesthetics-dev-a0a6f',
-    storageBucket: 'aesthetics-dev-a0a6f.appspot.com',
-    messagingSenderId: '810437654968',
-    appId: '1:810437654968:web:aa00c78af49717f0d3774d',
-    measurementId: 'G-VZEC2SLMK7',
+    apiKey: 'AIzaSyBlM-D0IYQjVUC2dgEuGdTQ5sgT_C4Vy80',
+    authDomain: 'fyp-aesthetics.firebaseapp.com',
+    projectId: 'fyp-aesthetics',
+    storageBucket: 'fyp-aesthetics.appspot.com',
+    messagingSenderId: '609168028009',
+    appId: '1:609168028009:web:c03baf1da964ea4ff0cdf8',
+    measurementId: 'G-N8ZZYDR5D4',
 };
 
 const app = initializeApp(firebaseConfig);

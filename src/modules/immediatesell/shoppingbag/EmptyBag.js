@@ -4,9 +4,9 @@ import EmptyShoppingBag from '../../../common/utils/icons/EmptyShoppingBag';
 
 const EmptyBag = () => {
     return (
-        <div className="flex flex-col items-center justify-center py-24 font-medium">
-            <EmptyShoppingBag className="h-44 w-44 md:h-60 md:w-60" />
-            <h1 className="text-2xl font-semibold md:text-3xl">
+        <div className="flex flex-col items-center justify-center py-28 px-5 font-medium md:px-0">
+            <EmptyShoppingBag className="h-40 w-40 md:h-56 md:w-56" />
+            <h1 className="text-center text-2xl font-semibold md:text-3xl">
                 Unfortunately, you bag is empty
             </h1>
             <p className="mt-4 text-sm md:text-base">

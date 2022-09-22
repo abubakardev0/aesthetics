@@ -3,7 +3,7 @@ import { Avatar } from '@nextui-org/react';
 
 export default function Chat() {
     return (
-        <div className="section-scrollbar max-h-64 min-h-fit w-full space-y-3 overflow-auto rounded-2xl border-2 bg-white p-4 drop-shadow-lg">
+        <div className="min-h-fit w-full space-y-3 overflow-hidden rounded-2xl border-2 bg-white p-4 drop-shadow-lg md:h-full">
             <div className="flex justify-between">
                 <h3 className="text-lg font-medium">Recent Messages</h3>
                 <Link href="/seller/chat">
@@ -12,7 +12,10 @@ export default function Chat() {
                     </a>
                 </Link>
             </div>
-            <div className="space-y-4">
+            <div className="section-scrollbar h-[280px] space-y-3 overflow-y-auto md:h-full ">
+                <Card />
+                <Card />
+                <Card />
                 <Card />
             </div>
         </div>

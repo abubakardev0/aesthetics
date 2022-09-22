@@ -31,7 +31,7 @@ export const options = {
         },
         title: {
             display: true,
-            position: 'left',
+            position: 'bottom',
             text: 'Sale Analytics',
         },
         tooltip: {
@@ -44,7 +44,7 @@ export const options = {
             yAlign: 'center',
             position: 'average',
             displayColors: false,
-            padding: 10,
+            padding: 5,
             pointHitRadius: 5,
             pointRadius: 1,
             caretSize: 10,
@@ -109,7 +109,7 @@ export const data = {
             data: labels.map(() => Math.random() * 1000),
             backgroundColor: '#1B98F5',
             minBarLength: 50,
-            borderRadius: 100,
+            borderRadius: 80,
             borderSkipped: false,
         },
     ],
@@ -117,7 +117,7 @@ export const data = {
 
 export default function Chart() {
     return (
-        <div className="h-96 w-full rounded-2xl border-2 bg-white p-4 drop-shadow-lg md:p-5">
+        <div className="h-full w-full rounded-2xl border-2 bg-white p-1 drop-shadow-lg md:p-5">
             <Bar options={options} data={data} />;
         </div>
     );

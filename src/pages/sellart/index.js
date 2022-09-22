@@ -11,7 +11,7 @@ const SellArt = () => {
                 <title>Sell Art</title>
             </Head>
             <main className="mb-10 space-y-10 px-5 md:px-8">
-                <section className="relative flex h-64 flex-col items-center justify-center rounded-xl bg-slate-100/95 md:h-80">
+                <section className="relative flex h-64 flex-col items-center justify-center rounded-xl bg-sky-100/50 md:h-80">
                     <span className="absolute top-5 left-10 h-3 w-3 rounded-full bg-yellow-400 md:top-10 md:left-48 md:h-5 md:w-5"></span>
                     <span className="absolute top-4 right-8 h-2 w-2 rounded-full bg-green-400 md:top-20 md:right-56 md:h-3 md:w-3"></span>
                     <h3 className="text-xs font-medium uppercase md:text-sm">

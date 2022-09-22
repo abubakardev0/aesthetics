@@ -2,7 +2,9 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
     createUserWithEmailAndPassword,
+    setPersistence,
     signInWithEmailAndPassword,
+    browserSessionPersistence,
     GoogleAuthProvider,
     signInWithPopup,
     signOut,
@@ -11,14 +13,16 @@ import {
     sendPasswordResetEmail,
 } from 'firebase/auth';
 
-import { doc, setDoc, Timestamp } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '@/firebase/firebase-config';
+import Loader from '@/commoncomponents/Loader';
 
 const provider = new GoogleAuthProvider();
 
 const AuthContext = createContext({
     user: null,
     signIn: () => {},
+    sessionBasedSignin: () => {},
     logout: () => {},
     signInwithGoogleAccount: () => {},
     signUp: async () => {},
@@ -49,48 +53,66 @@ export const AuthProvider = ({ children }) => {
         [auth]
     );
 
-    const signUp = async (name, email, password, artist) => {
+    const signUp = async (name, email, password, gender) => {
         setLoading(true);
         try {
-            const result = await createUserWithEmailAndPassword(
-                auth,
-                email,
-                password
-            );
-            const user = await updateProfile(auth.currentUser, {
+            await createUserWithEmailAndPassword(auth, email, password);
+            await updateProfile(auth.currentUser, {
                 displayName: name,
                 emailVerified: false,
             });
-            await setDoc(doc(db, 'users', result.user.uid), {
-                uid: result.user.uid,
+            const user = await setDoc(doc(db, 'users', auth.currentUser.uid), {
                 name: name,
                 email: email,
-                createdAt: Timestamp.fromDate(new Date()),
-                artist: artist,
                 role: 'buyer',
+                gender: gender,
+                photoURL: auth.currentUser.photoURL,
+                createdAt: serverTimestamp(),
             });
             setUser(user);
-            return true;
         } catch (err) {
             setError(err);
         } finally {
             setLoading(false);
         }
     };
-
-    const signInwithGoogleAccount = () => {
+    const sessionBasedSignin = async (email, password) => {
         setLoading(true);
-        signInWithPopup(auth, provider)
-            .then((result) => {
-                setUser(result.user);
-                router.push('/onboarding');
+        setPersistence(auth, browserSessionPersistence)
+            .then(() => {
+                return signInWithEmailAndPassword(auth, email, password);
             })
             .catch((error) => {
-                alert(error.message);
+                setError(error);
             })
             .finally(() => {
                 setLoading(false);
             });
+    };
+
+    const signInwithGoogleAccount = async () => {
+        setLoading(true);
+        try {
+            await signInWithPopup(auth, provider);
+            const user = await setDoc(
+                doc(db, 'users', auth.currentUser.uid),
+                {
+                    name: auth.currentUser.displayName,
+                    email: auth.currentUser.email,
+                    role: 'buyer',
+                    photoURL: auth.currentUser.photoURL,
+                    createdAt: serverTimestamp(),
+                },
+                {
+                    merge: true,
+                }
+            );
+            setUser(user);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const signIn = (email, password) => {
@@ -125,13 +147,18 @@ export const AuthProvider = ({ children }) => {
     };
 
     const resetPassword = async (email) => {
-        return await sendPasswordResetEmail(auth, email);
+        try {
+            await sendPasswordResetEmail(auth, email);
+        } catch {
+            setError(error);
+        }
     };
 
     const memoedValue = useMemo(() => {
         return {
             user,
             signIn,
+            sessionBasedSignin,
             signInwithGoogleAccount,
             logout,
             signUp,
@@ -142,6 +169,7 @@ export const AuthProvider = ({ children }) => {
     }, [
         user,
         signIn,
+        sessionBasedSignin,
         signInwithGoogleAccount,
         logout,
         signUp,

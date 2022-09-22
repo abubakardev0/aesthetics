@@ -11,6 +11,8 @@ module.exports = {
             },
             animation: {
                 hero: 'hero 8s',
+                text: 'slideUp 1s',
+                opacity: 'opacity 2s',
             },
             keyframes: {
                 hero: {
@@ -19,6 +21,22 @@ module.exports = {
                     },
                     '100%': {
                         transform: 'translate3d(0px, 0, 0) scale(1)',
+                    },
+                },
+                slideUp: {
+                    from: {
+                        transform: 'translate3d(0px, 20px, 0)',
+                    },
+                    to: {
+                        transform: 'translate3d(0px, 0px, 0)',
+                    },
+                },
+                opacity: {
+                    from: {
+                        opacity: 0,
+                    },
+                    to: {
+                        opacity: 1,
                     },
                 },
             },

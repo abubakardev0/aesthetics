@@ -1,8 +1,59 @@
+import { useRef, useState } from 'react';
+
 import { motion } from 'framer-motion';
-import Plus from '../../utils/icons/Plus';
-import Search from '../../utils/icons/Search';
+
+import Plus from '@/icons/Plus';
+import Search from '@/icons/Search';
+
+import Image from 'next/image';
+
+import { db } from '@/firebase/firebase-config';
+import {
+    collection,
+    query,
+    where,
+    orderBy,
+    limit,
+    getDocs,
+} from 'firebase/firestore';
+
+import { Loading } from '@nextui-org/react';
 
 function SearchModel(props) {
+    const [searchValue, setValue] = useState('');
+    const [searchResult, setResult] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const ref = useRef(null);
+    const textRef = useRef(null);
+
+    const handleSearch = async () => {
+        setLoading(true);
+        let result = [];
+        const fieldValue = ref.current?.value;
+        try {
+            const documents = await getDocs(
+                query(
+                    collection(db, 'artworks'),
+                    where(`${fieldValue}`, '==', `${searchValue ?? ''}`),
+                    orderBy('uploadedAt', 'desc'),
+                    limit(5)
+                )
+            );
+            documents.forEach((document) => {
+                result.push({
+                    id: document.id,
+                    title: document.data().title,
+                    image: document.data().images[0],
+                    artist: document.data().artist,
+                });
+            });
+            setResult(result);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <motion.div
             initial={{ x: '-100', opacity: 0 }}
@@ -18,12 +69,24 @@ function SearchModel(props) {
             }}
             className={`fixed top-0 right-0 left-0 z-50 h-full w-full bg-slate-500/25 transition-all duration-500 ease-in-out`}
         >
-            <div className="flex h-16 w-full flex-col items-center bg-[#010101]">
-                <div className="relative mx-auto my-auto w-5/6 md:w-1/2">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
-                        <Search className="h-6 w-6" stroke="white" />
+            <div className="flex h-14 w-full flex-col items-center bg-[#010101] md:h-20">
+                <div className="relative mx-auto my-auto w-full md:w-1/2">
+                    <div className="pointer-events-none absolute inset-y-0 left-2 flex items-center space-x-2 md:left-0">
+                        <button type="submit">
+                            <Search className="h-6 w-6" stroke="white" />
+                        </button>
                     </div>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <div className="absolute inset-y-0 left-6 flex items-center px-4">
+                        <select
+                            ref={ref}
+                            className="block w-full bg-transparent px-2 py-1 text-sm text-gray-300"
+                        >
+                            <option value="title">Title</option>
+                            <option value="artist">Artist</option>
+                            <option value="category">Category</option>
+                        </select>
+                    </div>
+                    <div className="absolute inset-y-0 right-2 flex items-center pr-3 md:right-0">
                         <button
                             onClick={() => {
                                 props.openSearchModel(false);
@@ -36,22 +99,65 @@ function SearchModel(props) {
                         </button>
                     </div>
                     <input
+                        autocomplete="false"
                         type="text"
                         id="search"
-                        className="block w-full bg-[#010101] p-2.5 pl-8 text-xs leading-loose text-white shadow-slate-700 focus:outline-none sm:pl-16 sm:text-sm "
-                        placeholder="Search by title, artists, categories etc."
+                        value={searchValue}
+                        onChange={(e) => setValue(e.target.value)}
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSearch();
+                            }
+                        }}
+                        onPre
+                        className="ml-32 block w-full bg-[#010101] p-2.5 text-base text-white shadow-slate-700 focus:outline-none"
+                        placeholder="Search artworks"
                     />
                 </div>
             </div>
             <div className="relative mx-auto w-full rounded-b-2xl border-b bg-white py-4 px-3 shadow sm:w-5/6 sm:py-8 md:w-1/2">
-                <h1 className="cursor-default px-3 uppercase">Quick Links</h1>
+                {loading && <Loading color="black" />}
                 <ul className="my-1 space-y-1">
-                    <li className="rounded-lg py-1 pl-3 text-sm hover:bg-blue-200/50 sm:text-base">
-                        Abstract Art
-                    </li>
+                    {searchResult.lenght > 0 ? (
+                        searchResult.map((result) => {
+                            return (
+                                <Item
+                                    key={result.id}
+                                    title={result.title}
+                                    image={result.image}
+                                    artist={result.artist}
+                                />
+                            );
+                        })
+                    ) : (
+                        <p className="text-center">No Result</p>
+                    )}
                 </ul>
             </div>
         </motion.div>
     );
 }
 export default SearchModel;
+
+function Item(props) {
+    return (
+        <li className="flex h-16 w-full items-center space-x-4 rounded py-2 pl-3 hover:bg-blue-200/50">
+            <div className="relative h-10 w-10 md:h-12 md:w-12">
+                <Image
+                    src={props.image}
+                    layout="fill"
+                    objectFit="cover"
+                    objectPosition="center"
+                />
+            </div>
+            <div>
+                <h6 className="text-base font-medium capitalize leading-none tracking-wide md:text-lg">
+                    {props.title}
+                </h6>
+                <p className="text-sm md:text-base">
+                    by <span className="capitalize">{props.artist}</span>
+                </p>
+            </div>
+        </li>
+    );
+}
