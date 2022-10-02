@@ -1,10 +1,11 @@
 import Link from 'next/link';
 
+import { auth } from '@/firebase/firebase-config';
+
 import Logo from '@/icons/Logo';
-import Search from '@/icons/Search';
 import Bell from '@/icons//Bell';
 
-import { Input, User, Text } from '@nextui-org/react';
+import { User } from '@nextui-org/react';
 
 function Header() {
     return (
@@ -34,8 +35,8 @@ function Header() {
                         <User
                             bordered
                             size="md"
-                            name="Ariana Peter"
-                            src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+                            name={auth.currentUser.displayName}
+                            text={auth.currentUser.displayName}
                             className="hidden md:flex"
                         />
                     </div>

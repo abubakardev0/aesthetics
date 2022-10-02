@@ -30,17 +30,10 @@ export default function MenuItems() {
                     Back
                 </button>
                 <div className="mt-10 mb-5 grid place-content-center space-y-4">
-                    {auth.currentUser.photoURL ? (
-                        <Avatar
-                            src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
-                            className="mx-auto h-24 w-24 p-2 ring ring-blue-500 ring-offset-4"
-                        />
-                    ) : (
-                        <Avatar
-                            text={auth.currentUser.displayName}
-                            className="mx-auto h-24 w-24 p-2 ring ring-blue-500 ring-offset-4"
-                        />
-                    )}
+                    <Avatar
+                        text={auth.currentUser.displayName}
+                        className="mx-auto h-24 w-24 p-2 ring ring-blue-500 ring-offset-4"
+                    />
                     <span className="text-lg font-semibold">{name}</span>
                 </div>
                 <ul className="space-y-4 border-t border-gray-200 pt-3">
@@ -53,7 +46,7 @@ export default function MenuItems() {
                     </li>
                     <li>
                         <NavLink
-                            hhref="/profile/orders"
+                            hhref="/profile/orders/"
                             title={'Order History'}
                             icon={<Details className="h-6 w-6 text-gray-700" />}
                         />

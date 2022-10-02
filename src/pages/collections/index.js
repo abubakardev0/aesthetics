@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import Head from 'next/head';
-import Image from 'next/image';
 
 import { db } from '@/firebase/firebase-config';
 import { doc, getDoc } from 'firebase/firestore';
@@ -9,11 +8,12 @@ import { doc, getDoc } from 'firebase/firestore';
 import List from '@/icons/List';
 import Grid from '@/icons/Grid';
 
-import { myLoader } from '@/commoncomponents/functions';
+import Collection from '@/buyer/components/artwork/Collection';
+import Error from '@/commoncomponents/Error';
 
-function Collection({ list, hasError }) {
+export default function ArtworkCollection({ list, hasError }) {
     if (hasError) {
-        return <p>Not found</p>;
+        return <Error />;
     }
     const [display, setDisplay] = useState('grid');
     return (
@@ -60,8 +60,6 @@ function Collection({ list, hasError }) {
     );
 }
 
-export default Collection;
-
 function CollectionList({ list }) {
     return (
         <ul className="sm:colums-2 my-6 mx-auto w-3/4 columns-1 text-gray-700 md:columns-3">
@@ -80,24 +78,9 @@ function CollectionList({ list }) {
 function CollectionGrid({ list }) {
     return (
         <>
-            <div className="flex flex-wrap justify-center gap-6">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-8">
                 {list.map((category) => (
-                    <div
-                        key={Date.now() + Math.random()}
-                        className="relative h-56 w-48 snap-center snap-normal overflow-hidden md:h-80 md:w-72 lg:h-[400px] lg:w-80"
-                    >
-                        <Image
-                            src={myLoader(category)}
-                            height={500}
-                            width={400}
-                            className="bg-gradient-to-t from-neutral-800 via-neutral-200/10 to-neutral-300/10 object-cover"
-                        />
-                        <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-gray-400/10 via-black/10 to-gray-400/10 backdrop-blur-[0.6px]">
-                            <button className="absolute bottom-8 left-8 rounded-full border-[3px] border-gray-100 px-4 py-2 text-lg font-medium capitalize text-gray-100 delay-100 duration-300 ease-in-out hover:bg-gray-100 hover:text-black">
-                                Explore {category}
-                            </button>
-                        </div>
-                    </div>
+                    <Collection category={category} />
                 ))}
             </div>
         </>

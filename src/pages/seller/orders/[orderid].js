@@ -14,8 +14,8 @@ import SellerLayout from '@/layouts/SellerLayout';
 import { formatCurrency } from '@/commoncomponents/functions';
 
 const Details = ({ data, hasError }) => {
-    if (hasError) return <p>Something went wrong!</p>;
     const router = useRouter();
+    if (hasError) return <p>Something went wrong!</p>;
     const orderDetails = JSON.parse(data);
     return (
         <>

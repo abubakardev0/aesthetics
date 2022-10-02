@@ -1,45 +1,51 @@
 import Link from 'next/link';
 import { User } from '@nextui-org/react';
 
-export default function RecentSales() {
+import { formatCurrency } from '@/commoncomponents/functions';
+
+export default function RecentSales({ recentSales }) {
     return (
         <div className=" min-h-fit w-full space-y-3 overflow-hidden rounded-2xl border-2 bg-white p-4 drop-shadow-lg md:h-full">
             <div className="flex justify-between">
-                <h3 className="text-lg font-medium">Recent Buy</h3>
-                <Link href="/seller/artworks">
+                <h3 className="text-lg font-medium">Recent Sales</h3>
+                <Link href="/seller/orders">
                     <a className="text-sky-500 underline underline-offset-2">
                         View All
                     </a>
                 </Link>
             </div>
-            <div className="section-scrollbar h-[300px] space-y-3 overflow-y-auto md:h-full ">
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-            </div>
+            <ul className="section-scrollbar h-[300px] space-y-3 overflow-y-auto md:h-full ">
+                {recentSales ? (
+                    recentSales.map((order) => {
+                        return (
+                            <Link href={`/orders/${order.id}`} key={order.id}>
+                                <Card
+                                    amount={order.amount}
+                                    time={order.time}
+                                    name={order.name}
+                                />
+                            </Link>
+                        );
+                    })
+                ) : (
+                    <p className="py-2 text-center">No Orders</p>
+                )}
+            </ul>
         </div>
     );
 }
 
-export const Card = () => {
+const Card = ({ amount, time, name }) => {
     return (
-        <div className="flex items-center justify-between py-2 pr-2 odd:bg-slate-100/80">
+        <li className="flex items-center justify-between rounded-md py-2 pr-2 odd:bg-slate-100/90">
             <User
                 size="lg"
                 bordered
-                name="Abu Bakar"
-                description="10 minutes ago"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+                name={name.split(' ')[0]}
+                description={new Date(time.seconds * 1000).toLocaleTimeString()}
+                text={name.toUpperCase()}
             />
-            <div className="text-sm uppercase">
-                pkr.<span className="ml-1 text-xl font-medium">15,986</span>
-            </div>
-        </div>
+            <span className="text-sm uppercase">{formatCurrency(amount)}</span>
+        </li>
     );
 };

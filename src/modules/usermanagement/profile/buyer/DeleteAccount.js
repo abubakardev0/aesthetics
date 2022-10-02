@@ -43,7 +43,7 @@ function DeleteAccount({ user, router }) {
         <>
             <button
                 onClick={() => setVisible(true)}
-                className="w-full rounded-md bg-neutral-800 py-2.5 font-medium text-gray-100 hover:bg-neutral-700 active:bg-neutral-900 md:py-3 "
+                className="h-12 w-full rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
             >
                 Delete my Account
             </button>
@@ -54,9 +54,9 @@ function DeleteAccount({ user, router }) {
                 onClose={() => setVisible(false)}
             >
                 <Modal.Header className="inline-block text-left">
-                    <h1 className="text-lg font-medium">
+                    <h4 className="text-lg font-medium">
                         Deleting an account will do following things:
-                    </h1>
+                    </h4>
                     <ul className="my-4 list-inside list-disc">
                         <li className="text-sm text-red-400">
                             Log you out on all devices.

@@ -46,7 +46,7 @@ const Hero = ({ list }) => {
         <>
             <section className="flex h-full w-full flex-col-reverse md:h-screen md:max-h-[700px] md:flex-row">
                 <div className="flex h-auto w-full flex-col items-center justify-center pt-1  md:h-full md:w-1/2 md:flex-row md:justify-start md:pt-0">
-                    <div className="mt-2 flex h-fit w-full items-center justify-center gap-5 self-center md:mt-0 md:h-4/6 md:w-20 md:flex-col ">
+                    <div className="mt-2 flex h-fit w-full items-center justify-center gap-5 self-center md:mt-0 md:h-4/6 md:w-1/12 md:flex-col ">
                         {list.map((img, index) => {
                             return (
                                 <div
@@ -60,7 +60,7 @@ const Hero = ({ list }) => {
                             );
                         })}
                     </div>
-                    <div className="space-y-5 px-10 pt-2 text-center md:space-y-8 md:px-4 md:text-left">
+                    <div className="space-y-3 px-10 pt-2 text-center md:w-11/12 md:space-y-8 md:px-4 md:text-left">
                         <div className="space-y-1 md:space-y-3">
                             <h6
                                 className="animate-opacity text-xs font-medium
@@ -98,7 +98,7 @@ const Hero = ({ list }) => {
                         onTouchStart={handleTouchStart}
                         onTouchMove={handleTouchMove}
                     />
-                    <div className="absolute bottom-2 -left-10 z-10 hidden gap-4 md:flex">
+                    <div className="absolute bottom-2 -left-12 z-10 hidden gap-4 md:flex">
                         <button onClick={prev}>
                             <Arrow className="h-10 w-10 rotate-180 stroke-black" />
                         </button>

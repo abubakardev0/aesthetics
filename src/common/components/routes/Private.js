@@ -1,8 +1,16 @@
-import React from 'react';
-import { auth } from '../../../firebase';
-function Private({ component: Component, ...rest }) {
-    const user = auth.currentUser;
-    return <div>Private</div>;
+import { useRouter } from 'next/router';
+
+import { auth } from '@/firebase/firebase-config';
+
+import Loader from '@/commoncomponents/Loader';
+
+function PrivateRoute({ children }) {
+    const router = useRouter();
+    if (!auth.currentUser) {
+        router.replace('/auth/login');
+        return <Loader />;
+    }
+    return children;
 }
 
-export default Private;
+export default PrivateRoute;

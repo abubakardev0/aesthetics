@@ -1,22 +1,30 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
+
 import { db, auth } from '@/firebase/firebase-config';
 import {
     addDoc,
+    doc,
     Timestamp,
     query,
     orderBy,
     limit,
     getDocs,
-    startAfter,
     collection,
+    deleteDoc,
 } from 'firebase/firestore';
+
 import { Avatar } from '@nextui-org/react';
+
 import useSWR from 'swr';
+
+import Modal from '@/commoncomponents/modal/Modal';
+
+import Ellipsis from '@/icons/Ellipsis';
 import Plane from '@/icons/Plane';
 
 const LIMIT = 10;
 
-const Room = ({ chat }) => {
+const Room = ({ chat, setChat }) => {
     if (chat === undefined || chat === null) {
         return (
             <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform text-center text-2xl font-medium">
@@ -56,9 +64,9 @@ const Room = ({ chat }) => {
     if (error) {
         return <p>Cannot load messages!</p>;
     }
-    const [messages, setMessages] = useState(list);
     const textRef = useRef(null);
     const dummy = useRef();
+    const dropdownRef = useRef(null);
 
     const sendMessage = async (e) => {
         e.preventDefault();
@@ -72,53 +80,50 @@ const Room = ({ chat }) => {
             sentAt: Timestamp.fromDate(new Date()),
             sentBy: auth.currentUser.uid,
         });
-
         textRef.current.value = '';
     };
-
-    async function getMoreMessages() {
-        const last = messages[messages.length - 1];
-        let newMessages = [];
-        const cursor = last.sentAt;
-        const messageRef = collection(db, 'chat', `${chat.chatId}`, 'messages');
-        const q = query(
-            messageRef,
-            orderBy('sentAt', 'desc'),
-            startAfter(cursor),
-            limit(LIMIT)
-        );
-        const docSnap = await getDocs(q);
-        docSnap.forEach((doc) => {
-            if (doc.exists) {
-                newMessages.push({ id: doc.id, ...doc.data() });
-            }
-        });
-        setMessages(messages.concat(newMessages));
+    async function handleDelete() {
+        try {
+            await deleteDoc(doc(db, 'chat', `${chat.chatId}`));
+            setChat(null);
+        } catch (error) {
+            console.log(error);
+        }
     }
-    useEffect(() => {
-        dummy.current.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
     return (
         <>
-            <ul className="no-scrollbar relative flex h-5/6 w-full flex-col-reverse overflow-y-auto px-3 pt-3">
-                {messages &&
-                    messages.map((msg) => (
-                        <ChatMessage
-                            key={msg.id}
-                            message={msg}
-                            photo={chat.photo}
-                            name={chat.name}
-                        />
-                    ))}
-                {messages && messages.length === LIMIT && (
-                    <button
-                        onClick={getMoreMessages}
-                        className="text-blue-500 underline"
-                    >
-                        Load More
-                    </button>
-                )}
-                <span ref={dummy}></span>
+            <div className="relative flex w-full items-center space-x-3 border-b py-3 px-4">
+                <Avatar size="sm" text={chat.name} />
+                <span className="">{chat.name}</span>
+                <button
+                    onClick={() => dropdownRef.current.handler()}
+                    className="absolute right-3 top-4"
+                >
+                    <Ellipsis className="h-6 w-6 rotate-90" />
+                </button>
+                <Modal ref={dropdownRef}>
+                    <div className="absolute right-4 top-12 z-10 w-36 overflow-hidden rounded-md border-2 bg-white p-1 drop-shadow-md delay-75 duration-500 ease-in-out">
+                        <button
+                            onClick={handleDelete}
+                            className="w-full rounded-md py-2 text-red-500 hover:bg-red-100"
+                        >
+                            Delete Chat
+                        </button>
+                    </div>
+                </Modal>
+            </div>
+            <ul className="no-scrollbar relative flex h-[450px] w-full flex-col-reverse overflow-y-auto px-3 pt-3">
+                {list &&
+                    list.map((msg) => {
+                        return (
+                            <ChatMessage
+                                key={msg.id}
+                                message={msg}
+                                photo={chat.photo}
+                                name={chat.name}
+                            />
+                        );
+                    })}
             </ul>
 
             <form onSubmit={sendMessage} className="absolute bottom-1 w-full">
@@ -133,9 +138,9 @@ const Room = ({ chat }) => {
                     <button
                         type="submit"
                         disabled={textRef.current?.value === null}
-                        className="rounded-full bg-blue-500/90 p-2"
+                        className="rounded-full bg-blue-100 p-2.5 hover:bg-blue-200"
                     >
-                        <Plane className="h-6 w-6" fill="white" />
+                        <Plane className="h-6 w-6" fill="#3b82f6" />
                     </button>
                 </div>
             </form>
@@ -164,11 +169,7 @@ function ChatMessage(props) {
             ) : (
                 <li className="mt-1 flex justify-start">
                     <div className="relative flex max-w-xl items-center space-x-2">
-                        {url ? (
-                            <Avatar size="lg" src={url} />
-                        ) : (
-                            <Avatar size="lg" text={name} />
-                        )}
+                        <Avatar size="lg" text={name} />
                         <span className="rounded-t-3xl rounded-br-3xl bg-slate-100 px-4 py-2  text-gray-700 shadow">
                             {text}
                         </span>

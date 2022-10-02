@@ -14,7 +14,7 @@ const SellArt = () => {
                 <section className="relative flex h-64 flex-col items-center justify-center rounded-xl bg-sky-100/50 md:h-80">
                     <span className="absolute top-5 left-10 h-3 w-3 rounded-full bg-yellow-400 md:top-10 md:left-48 md:h-5 md:w-5"></span>
                     <span className="absolute top-4 right-8 h-2 w-2 rounded-full bg-green-400 md:top-20 md:right-56 md:h-3 md:w-3"></span>
-                    <h3 className="text-xs font-medium uppercase md:text-sm">
+                    <h3 className="text-xs font-medium uppercase tracking-wide md:text-sm">
                         Sell art with Aesthetics
                     </h3>
                     <h1 className="mt-3 text-center text-lg font-semibold sm:text-xl md:text-4xl">

@@ -49,11 +49,14 @@ export default function Carousel({ list }) {
     };
     return (
         <>
-            <div className="flex gap-x-4">
+            <div className="relative flex gap-x-4">
                 <button
                     onClick={prev}
-                    className="hidden h-full self-center rounded-full border bg-neutral-50 p-3 text-neutral-700 transition-all duration-300 ease-in-out active:bg-neutral-600 active:text-white active:ring-8 active:ring-neutral-200 disabled:cursor-not-allowed disabled:opacity-25 md:block"
-                    disabled={isDisabled('prev')}
+                    className={
+                        isDisabled('prev')
+                            ? 'hidden'
+                            : 'absolute left-4 top-40 z-20 hidden rounded-full border bg-neutral-50 p-3 text-neutral-700 transition-all duration-300 ease-in-out active:bg-neutral-600 active:text-white active:ring-8 active:ring-neutral-200 disabled:cursor-not-allowed disabled:opacity-25 md:block'
+                    }
                 >
                     <Arrow className="h-8 w-8 rotate-180" />
                 </button>
@@ -91,8 +94,11 @@ export default function Carousel({ list }) {
                 </div>
                 <button
                     onClick={next}
-                    className="hidden h-full self-center rounded-full border bg-neutral-50 p-3 text-neutral-700 transition-all duration-300 ease-in-out active:bg-neutral-600 active:text-white active:ring-8 active:ring-neutral-200 disabled:cursor-not-allowed disabled:opacity-25 md:block"
-                    disabled={isDisabled('next')}
+                    className={
+                        isDisabled('next')
+                            ? 'hidden'
+                            : 'absolute right-4 top-40 z-20 hidden rounded-full border bg-neutral-50 p-3 text-neutral-700 transition-all duration-300 ease-in-out active:bg-neutral-600 active:text-white active:ring-8 active:ring-neutral-200 disabled:cursor-not-allowed disabled:opacity-25 md:block'
+                    }
                 >
                     <Arrow className="h-8 w-8" />
                 </button>

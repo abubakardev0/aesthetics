@@ -3,21 +3,27 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import {
+    doc,
+    getDoc,
+    updateDoc,
+    arrayRemove,
+    arrayUnion,
+} from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebase-config';
+
+import { Avatar, Collapse } from '@nextui-org/react';
 
 import ARView from '@/icons/ARView';
 import Bookmark from '@/icons/Bookmark';
+import Chat from '@/icons/Chat';
 import Insta from '@/icons/Insta';
 import Twitter from '@/icons/Twitter';
 import Behance from '@/icons/Behance';
 
-import { Avatar, Collapse } from '@nextui-org/react';
-
 import Slider from '@/commoncomponents/Scrollers/Slider';
 import RelatedWorks from '@/buyer/components/artwork/RelatedWorks';
-import { numberWithCommas } from '@/commoncomponents/functions';
-
+import { formatCurrency } from '@/commoncomponents/functions';
 import Alert from '@/commoncomponents/popups/Alert';
 
 export default function Item({ artwork, hasError }) {
@@ -30,34 +36,25 @@ export default function Item({ artwork, hasError }) {
     });
 
     const data = JSON.parse(artwork);
+    const users = {
+        currentUser: auth.currentUser && auth.currentUser.uid,
+        otherUser: data.sellerId,
+    };
 
-    async function handler(document, set) {
-        const docRef = doc(db, document, auth.currentUser.uid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            const artworks = docSnap.data().artworks;
-            const index = artworks.indexOf(data.id);
-            if (index !== -1) {
-                artworks.splice(index, 1);
-                await setDoc(docRef, {
-                    artworks: artworks,
-                });
-                set(false);
-            } else {
-                artworks.push(data.id);
-                setDoc(docRef, {
-                    artworks: artworks,
-                });
-                set(true);
-            }
+    async function handler(document, set, type) {
+        if (type) {
+            await updateDoc(doc(db, document, auth.currentUser.uid), {
+                artworks: arrayRemove(data.id),
+            });
+            set(false);
         } else {
-            await setDoc(docRef, {
-                artworks: [data.id],
+            await updateDoc(doc(db, document, auth.currentUser.uid), {
+                artworks: arrayUnion(data.id),
             });
             set(true);
         }
     }
+
     async function inCollection(document, set) {
         const docRef = doc(db, document, auth.currentUser.uid);
         const docSnap = await getDoc(docRef);
@@ -79,9 +76,16 @@ export default function Item({ artwork, hasError }) {
             });
             setShow(true);
             return;
-        } else {
-            handler('saves', setSave);
         }
+        if (auth.currentUser.uid === data.sellerId) {
+            setAlert({
+                type: 'Error',
+                message: 'You don`t have permission to save this artwork',
+            });
+            setShow(true);
+            return;
+        }
+        handler('saves', setSave, save);
     }
 
     function handleBag() {
@@ -92,9 +96,16 @@ export default function Item({ artwork, hasError }) {
             });
             setShow(true);
             return;
-        } else {
-            handler('bag', setAddtoBag);
         }
+        if (auth.currentUser.uid === data.sellerId) {
+            setAlert({
+                type: 'Error',
+                message: 'You don`t have permission to add this artwork to bag',
+            });
+            setShow(true);
+            return;
+        }
+        handler('bag', setAddtoBag, addtoBag);
     }
 
     useEffect(() => {
@@ -116,7 +127,7 @@ export default function Item({ artwork, hasError }) {
     return (
         <>
             <Head>
-                <title>{data.title}</title>
+                <title>{data.title.toLocaleUpperCase()}</title>
             </Head>
             <section className="container mx-auto flex h-full w-full flex-col md:h-[600px] md:flex-row md:gap-5">
                 <div className="grid h-[450px] w-full place-content-center pt-0 md:h-full md:w-1/2 md:pt-14">
@@ -146,48 +157,50 @@ export default function Item({ artwork, hasError }) {
                                 Follow
                             </button>
                         </div>
-                        <div>
-                            <h2 className="mb-1 text-xl font-medium tracking-wide sm:text-2xl md:text-3xl md:font-semibold">
+                        <div className="space-y-2">
+                            <h2 className="mb-1 text-xl font-medium capitalize tracking-wide sm:text-2xl md:text-3xl md:font-semibold">
                                 {data.title}
                             </h2>
                             <p>
-                                <span className="text-base italic md:text-lg">
-                                    Acrylic on Canvas
+                                <span className="mr-1 text-lg capitalize italic md:text-xl">
+                                    {data.mediums && data.mediums.join(' and ')}
+                                </span>
+                                on
+                                <span className="ml-1 text-lg capitalize md:text-xl">
+                                    {data.surfaces}
                                 </span>
                                 <br />
-                                9 1/2 x 9 1/2 in <br /> 24.1 x 24.1 cm
+                                {data.dimensions.height} H x{' '}
+                                {data.dimensions.width} W {data.dimensions.unit}
                             </p>
                         </div>
-                        <div className="w-full space-y-4">
+                        <div className="w-full">
                             <h4 className="text-lg font-medium tracking-wide md:text-xl">
-                                PKR.
-                                <span className="ml-1">
-                                    {numberWithCommas(data.price)}
-                                </span>
+                                {formatCurrency(data.price)}
                             </h4>
                         </div>
 
                         <button
                             onClick={handleBag}
-                            className="h-12 w-80 rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
+                            className="h-12 w-full rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300 md:w-80"
                         >
                             {addtoBag ? 'Remove from Bag' : 'Add to Bag'}
                         </button>
-                        <div className="mt-2 flex justify-evenly space-x-3 md:justify-start">
+                        <div className="flex justify-center space-x-5 md:justify-start md:space-x-3">
                             <button
                                 className="flex items-center space-x-2"
                                 onClick={handleWishList}
                             >
                                 <Bookmark
-                                    className={`delay-50 h-6 w-6 transition-colors md:h-8 md:w-8 `}
+                                    className="delay-50 h-8 w-8 transition-colors "
                                     fill={save ? 'black' : 'none'}
                                     stroke="black"
                                 />
-                                <span className="font-medium">
+                                <span className="hidden font-medium  md:block">
                                     Save Artwork
                                 </span>
                             </button>
-                            <div className="flex space-x-6 border-l-2 border-black/25 px-3">
+                            <div className="flex space-x-5 border-l-2 border-r-2 border-black/25 px-3">
                                 <button>
                                     <Insta className="h-6 w-6 hover:scale-105" />
                                 </button>
@@ -198,6 +211,23 @@ export default function Item({ artwork, hasError }) {
                                     <Twitter className="h-6 w-6 hover:scale-105" />
                                 </button>
                             </div>
+                            <Link
+                                href={{
+                                    pathname: '/chat',
+                                    query: auth.currentUser ? users : '',
+                                }}
+                            >
+                                <a className="flex items-center space-x-2">
+                                    <Chat
+                                        className="h-8 w-8"
+                                        stroke="black"
+                                        strokeWidth={1}
+                                    />
+                                    <span className="hidden font-medium md:block">
+                                        Chat
+                                    </span>
+                                </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

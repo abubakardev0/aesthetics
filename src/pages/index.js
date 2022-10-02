@@ -6,12 +6,12 @@ import Hero from '@/buyer/components/home/Hero';
 import Category from '@/buyer/components/home/Category';
 import About from '@/buyer/components/home/About';
 import NewWorks from '@/buyer/components/artwork/NewWorks';
+import Error from '@/commoncomponents/Error';
 
 function Home({ data, hasError }) {
     if (hasError) {
-        return <p>Error Occured!</p>;
+        return <Error />;
     }
-
     return (
         <>
             <Head>
@@ -26,7 +26,7 @@ function Home({ data, hasError }) {
             <section className="container relative flex h-fit w-full flex-col items-center justify-between py-10 px-2 md:mx-auto md:flex-row md:py-20 md:px-0">
                 <Category />
             </section>
-            <section className="px-2 pt-5 md:px-5">
+            <section className="container mx-auto px-2 pt-5 md:px-5">
                 <NewWorks />
             </section>
         </>

@@ -1,124 +1,136 @@
-import React from 'react';
 import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
+    ComposedChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
     Tooltip,
-    Legend,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+    ResponsiveContainer,
+} from 'recharts';
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-);
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db, auth } from '@/firebase/firebase-config';
 
-export const options = {
-    layout: { autoPadding: false },
-    hover: { intersect: false },
-    backdropPadding: 0,
-    padding: 0,
-    plugins: {
-        legend: {
-            display: true,
-            position: 'top',
-        },
-        title: {
-            display: true,
-            position: 'bottom',
-            text: 'Sale Analytics',
-        },
-        tooltip: {
-            caretPadding: 10,
-            caretPosition: 'right',
-            caretX: 0,
-            caretY: 0,
-            intersect: false,
-            mode: 'index',
-            yAlign: 'center',
-            position: 'average',
-            displayColors: false,
-            padding: 5,
-            pointHitRadius: 5,
-            pointRadius: 1,
-            caretSize: 10,
-            backgroundColor: '#CAD5E2',
-            borderWidth: 1,
-            bodyColor: '#1B98F5',
-            titleColor: '#1B98F5',
-        },
-    },
-    scales: {
-        y: {
-            ticks: {
-                display: true,
-            },
-            grid: {
-                drawBorder: false,
-                borderWidth: 0,
-                drawTicks: false,
-                color: 'transparent',
-                width: 0,
-                backdropPadding: 0,
-            },
-            drawBorder: false,
-            drawTicks: false,
-        },
-        x: {
-            ticks: {
-                display: true,
-            },
-            grid: {
-                drawBorder: false,
-                borderWidth: 0,
-                drawTicks: false,
-                display: false,
-            },
-        },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-};
+import useSWR from 'swr';
+
+import { formatCurrency } from '@/commoncomponents/functions';
 
 const labels = [
-    'January',
-    'February',
-    'March',
-    'April',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
     'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
 ];
 
-export const data = {
-    labels,
-    datasets: [
-        {
-            label: 'This Year Sales',
-            data: labels.map(() => Math.random() * 1000),
-            backgroundColor: '#1B98F5',
-            minBarLength: 50,
-            borderRadius: 80,
-            borderSkipped: false,
-        },
-    ],
-};
-
 export default function Chart() {
+    const { data: getData, error } = useSWR('sales', async () => {
+        let data = [];
+        const docSnap = await getDocs(
+            query(
+                collection(db, 'orders'),
+                where('sellers', 'array-contains', `${auth.currentUser.uid}`)
+            )
+        );
+        docSnap.forEach((e) => {
+            if (e.exists()) {
+                data.push({ items: e.data().items, date: e.data().placedAt });
+            }
+        });
+        return data;
+    });
+    if (error) {
+        console.log(error);
+    }
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+    });
+    function getMonthData(month) {
+        let thisMonth = 0;
+        getData &&
+            getData.forEach((e) => {
+                const orderMonth = formatter.format(
+                    new Date(e.date.seconds * 1000)
+                );
+                if (orderMonth === month) {
+                    e.items.map((item) => {
+                        if (item.sellerId === auth.currentUser.uid) {
+                            thisMonth += parseInt(item.price);
+                        }
+                    });
+                }
+            });
+        return thisMonth;
+    }
+    function getSalesDataYearly() {
+        const data = [];
+        labels.map((month) => {
+            const sale = getMonthData(month);
+            data.push({ month, sale });
+        });
+        return data;
+    }
     return (
-        <div className="h-full w-full rounded-2xl border-2 bg-white p-1 drop-shadow-lg md:p-5">
-            <Bar options={options} data={data} />;
+        <div className="h-full w-full rounded-2xl border-2 bg-white pb-5 drop-shadow-lg">
+            <h2 className="w-full py-3 text-center text-sm font-medium text-gray-600 md:text-base lg:text-lg">
+                Your Monthly Sales
+            </h2>
+            <ResponsiveContainer width="100%" height="90%">
+                <ComposedChart
+                    width={500}
+                    height={300}
+                    data={getSalesDataYearly()}
+                    margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                    }}
+                >
+                    <CartesianGrid
+                        horizontal={false}
+                        strokeWidth="6"
+                        stroke="#f3f4f6"
+                    />
+                    <XAxis
+                        dataKey="month"
+                        axisLine={false}
+                        tickLine={false}
+                        tickMargin={10}
+                    />
+                    <YAxis axisLine={false} tickLine={false} tickMargin={10} />
+                    <Tooltip content={<CustomTooltip />} cursor={false} />
+                    <Area
+                        type="monotone"
+                        dataKey="sale"
+                        fill="#7dd3fc"
+                        stroke="#0ea5e9"
+                        strokeWidth="4"
+                    />
+                </ComposedChart>
+            </ResponsiveContainer>
         </div>
     );
 }
+const CustomTooltip = ({ active, payload, label }) => {
+    if (active) {
+        return (
+            <div className="rounded-xl border-2 bg-slate-100 px-4 py-2.5 text-center drop-shadow-sm">
+                <h4 className="border-b-2 px-2 py-1 font-medium">
+                    {label} revenue
+                </h4>
+                <p className="text-gray-600">
+                    {formatCurrency(parseInt(payload[0].value))}
+                </p>
+            </div>
+        );
+    }
+    return null;
+};

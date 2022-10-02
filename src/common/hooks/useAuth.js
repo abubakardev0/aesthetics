@@ -13,9 +13,9 @@ import {
     sendPasswordResetEmail,
 } from 'firebase/auth';
 
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
+
 import { auth, db } from '@/firebase/firebase-config';
-import Loader from '@/commoncomponents/Loader';
 
 const provider = new GoogleAuthProvider();
 
@@ -68,6 +68,13 @@ export const AuthProvider = ({ children }) => {
                 gender: gender,
                 photoURL: auth.currentUser.photoURL,
                 createdAt: serverTimestamp(),
+                uploadedWorks: 0,
+            });
+            await setDoc(doc(db, 'saves', `${auth.currentUser.uid}`), {
+                artworks: [],
+            });
+            await setDoc(doc(db, 'bag', `${auth.currentUser.uid}`), {
+                artworks: [],
             });
             setUser(user);
         } catch (err) {
@@ -102,11 +109,23 @@ export const AuthProvider = ({ children }) => {
                     role: 'buyer',
                     photoURL: auth.currentUser.photoURL,
                     createdAt: serverTimestamp(),
+                    uploadedWorks: 0,
                 },
                 {
                     merge: true,
                 }
             );
+            const saveRef = await getDoc(
+                doc(db, 'saves', auth.currentUser.uid)
+            );
+            if (!saveRef.exists()) {
+                await setDoc(doc(db, 'saves', `${auth.currentUser.uid}`), {
+                    artworks: [],
+                });
+                await setDoc(doc(db, 'bag', `${auth.currentUser.uid}`), {
+                    artworks: [],
+                });
+            }
             setUser(user);
         } catch (err) {
             setError(err);

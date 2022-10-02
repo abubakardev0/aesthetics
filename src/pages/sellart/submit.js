@@ -1,14 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
-import { Loading } from '@nextui-org/react';
+import { useState, useEffect, useRef } from 'react';
 
-import Loader from '@/commoncomponents/Loader';
+import { useRouter } from 'next/router';
 
 import { getDoc, doc } from 'firebase/firestore';
+import { auth, db } from '@/firebase/firebase-config';
 
 import axios from 'axios';
-import { auth, db } from '@/firebase/firebase-config';
+import { useForm } from 'react-hook-form';
+import { Loading } from '@nextui-org/react';
+
+import PrivateRoute from '@/commoncomponents/routes/Private';
 import Details from '@/seller/uploadartwork/Details';
 import ChooseMaterial from '@/seller/uploadartwork/ChooseMaterial';
 import Images from '@/seller/uploadartwork/Images';
@@ -18,6 +19,7 @@ function FormSubmission({ mediums, surfaces }) {
     const router = useRouter();
     const [formState, setFormState] = useState(1);
     const [loading, setLoading] = useState(false);
+    const errorRef = useRef(null);
     const {
         register,
         handleSubmit,
@@ -26,32 +28,29 @@ function FormSubmission({ mediums, surfaces }) {
         formState: { errors },
     } = useForm({ mode: 'onChange' });
 
-    if (!auth.currentUser) {
-        router.push('/auth/login');
-        return <Loader />;
-    }
-
-    const onSubmit = useCallback(async (data) => {
-        setValue('uid', auth.currentUser.uid);
+    const onSubmit = async (data) => {
         setLoading(true);
-        axios
-            .post('/api/submit-artwork', {
+        try {
+            const res = await axios.post('/api/submit-artwork', {
                 data,
-            })
-            .then(() => {
-                setLoading(false);
-            })
-            .catch(() => {
-                setLoading(false);
             });
-    }, []);
+            if (res.status === 200) {
+                setFormState((e) => e + 1);
+            }
+        } catch (error) {
+            errorRef.current.innerText =
+                'There was an error while submitting the form. Please try again later.';
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        router.prefetch('/seller/dashboard');
+        router.prefetch('/seller/');
     }, []);
 
     return (
-        <>
+        <PrivateRoute>
             <main className="grid place-content-center py-10 md:gap-5">
                 <div className="flex w-full items-center justify-center px-2 pt-3 sm:w-[500px]">
                     <Steps
@@ -113,6 +112,7 @@ function FormSubmission({ mediums, surfaces }) {
                                 set={setValue}
                                 state={setFormState}
                             />
+                            {setValue('uid', auth.currentUser.uid)}
                             <div className="mt-5 flex space-x-3">
                                 <button
                                     className="w-full rounded-xl bg-neutral-200 py-2 text-neutral-800 active:bg-neutral-300"
@@ -136,11 +136,42 @@ function FormSubmission({ mediums, surfaces }) {
                                     )}
                                 </button>
                             </div>
+                            <span
+                                ref={errorRef}
+                                className="mt-2 text-base text-red-500"
+                            />
+                        </>
+                    )}
+                    {formState === 5 && (
+                        <>
+                            <h4 className="my-2 text-center text-xl font-medium">
+                                Thanks for uploading your artwork!
+                            </h4>
+                            <p className="text-center">
+                                If your artwork is accepted, we will notify you
+                                by email. In the event that your application is
+                                rejected, you will be notified by email with
+                                feedback.
+                            </p>
+                            <div className="mt-5 flex space-x-3">
+                                <button
+                                    onClick={() => router.push('/')}
+                                    className="w-full rounded-xl bg-neutral-200 py-3 text-neutral-800 active:bg-neutral-300"
+                                >
+                                    Go to Home
+                                </button>
+                                <button
+                                    onClick={() => router.push('/seller/')}
+                                    className="focus:shadow-outline w-full rounded-xl bg-neutral-800 py-3 px-1 font-medium tracking-wide text-neutral-100 shadow-lg focus:outline-none active:bg-neutral-900"
+                                >
+                                    Go to Dashboard
+                                </button>
+                            </div>
                         </>
                     )}
                 </form>
             </main>
-        </>
+        </PrivateRoute>
     );
 }
 

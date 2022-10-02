@@ -91,8 +91,7 @@ export default function PaymentModal() {
         <>
             <button
                 onClick={() => setVisible(true)}
-                className="mt-10 rounded-md bg-neutral-800 px-10 py-3 text-white
-                hover:bg-neutral-700 active:bg-neutral-900"
+                className="mt-10 h-12 w-full rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
             >
                 Add Payment Details
             </button>

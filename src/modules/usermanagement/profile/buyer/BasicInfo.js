@@ -131,13 +131,13 @@ function BasicInfo({ user }) {
                     <div className="flex space-x-3">
                         <button
                             type="reset"
-                            className="w-full rounded-md bg-neutral-200 py-2.5 text-neutral-800 hover:bg-neutral-100 active:bg-neutral-300 md:py-3"
+                            className="h-12 w-full rounded-md bg-neutral-200 text-neutral-800 hover:bg-neutral-100 focus:outline-none focus:ring-4 focus:ring-neutral-300 active:bg-neutral-300"
                         >
                             Discard
                         </button>
                         <button
                             type="submit"
-                            className="w-full rounded-md bg-neutral-800 py-2.5 font-medium text-gray-100 hover:bg-neutral-700 active:bg-neutral-900 md:py-3 "
+                            className="h-12 w-full rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
                         >
                             {loading ? (
                                 <Loading type="points" color="white" />

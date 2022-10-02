@@ -1,7 +1,7 @@
 import { s3Client } from '@/s3/s3Client';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
-import { db, auth } from '@/firebase/firebase-config';
+import { db } from '@/firebase/firebase-config';
 
 async function uploadImage(image) {
     const fileType = image.split(';')[0].split('/')[1];
@@ -22,39 +22,69 @@ async function uploadImage(image) {
     } else return null;
 }
 
+async function uploadDocument(doc) {
+    const fileType = doc.split(';')[0].split('/')[1];
+    const base64Data = new Buffer.from(
+        doc.replace(/^data:application\/\w+;base64,/, ''),
+        'base64'
+    );
+    const bucketParams = {
+        Bucket: 'fypaesthetics',
+        Key: `document-${Date.now()}.${fileType}`,
+        Body: base64Data,
+        ContentEncoding: 'base64',
+        ContentType: `doc/${fileType}`,
+    };
+    const obj = await s3Client.send(new PutObjectCommand(bucketParams));
+    if (obj) {
+        return `https://fypaesthetics.s3.ap-south-1.amazonaws.com/${bucketParams.Key}`;
+    } else return null;
+}
+
 export default async function handler(req, res) {
-    const data = req.body.data.images;
+    const data = req.body.data;
     const imagesPath = [];
+    const certificatesPath = [];
     if (req.method === 'POST') {
         try {
-            for (let i = 0; i < data.length; i++) {
-                const image = await uploadImage(data[i]);
+            for (let i = 0; i < data.images.length; i++) {
+                const image = await uploadImage(data.images[i]);
                 if (image) {
                     imagesPath.push(image);
                 }
             }
+            // for (let i = 0; i < data.certificates.length; i++) {
+            //     const certificate = await uploadDocument(data.certificates[i]);
+            //     if (certificate) {
+            //         certificatesPath.push(certificate);
+            //     }
+            // }
             const artwork = {
-                images: imagesPath,
-                certificates: [null],
-                artist: 'Eastman Johnson',
+                artist: data.artist.toLocaleLowerCase(),
+                certificates: null,
+                currentBid: 60000,
                 description: '',
                 dimensions: {
-                    height: 70,
-                    width: 79,
-                    depth: null,
-                    unit: 'cm',
+                    height: data.height,
+                    width: data.width,
+                    depth: data.depth,
+                    unit: data.unit.toLocaleLowerCase(),
                 },
-                worth: {
-                    price: 19000,
-                },
-                mediums: ['Acrylic'],
-                category: 'Landscape',
-                surfaces: ['Canvas'],
-                title: 'Sunset in the sea',
-                type: 'immediate',
-                uploadedAt: Timestamp.fromDate(new Date()),
+                endingTime: Timestamp.fromDate(new Date()),
+                images: imagesPath,
+                lastBid: null,
+                mediums: data.mediums,
+                price: 95000,
                 seller: req.body.data.uid,
+                startingBid: 60000,
+                status: 'listed',
+                subject: 'abstract',
+                surfaces: data.surfaces,
+                title: data.title.toLocaleLowerCase(),
+                type: 'auction',
+                uploadedAt: Timestamp.fromDate(new Date()),
             };
+
             await addDoc(collection(db, 'artworks'), artwork);
             res.status(200).json({
                 status: 'success',

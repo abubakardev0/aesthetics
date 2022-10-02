@@ -13,7 +13,6 @@
         height: 100vh;
         color: #010101;
         background-color: #ffffff;
-        cursor: url('./cursor.png'), auto;
         scroll-behavior: smooth;
     }
     .no-scrollbar::-webkit-scrollbar {
@@ -75,5 +74,8 @@
 
     .StripeElement--webkit-autofill {
         background-color: #fefde5 !important;
+    }
+    table th svg {
+        display: inline;
     }
 }

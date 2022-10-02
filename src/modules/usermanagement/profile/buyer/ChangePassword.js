@@ -49,7 +49,7 @@ const ChangePassword = ({ user }) => {
         <>
             <button
                 onClick={() => setVisible(true)}
-                className="w-full rounded-md bg-neutral-800 py-2.5 font-medium text-gray-100 hover:bg-neutral-700 active:bg-neutral-900 md:py-3"
+                className="h-12 w-full rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
             >
                 Change Password
             </button>

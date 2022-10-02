@@ -1,27 +1,45 @@
 import Link from 'next/link';
+import Head from 'next/head';
 
-import { db } from '@/firebase/firebase-config';
+import { db, auth } from '@/firebase/firebase-config';
 import {
     collection,
     query,
     startAfter,
     limit,
     getDocs,
+    where,
 } from 'firebase/firestore';
 
 import { Table, useAsyncList, useCollator, Tooltip } from '@nextui-org/react';
 
 import SellerLayout from '@/layouts/SellerLayout';
-
 import Edit from '@/icons/Edit';
-import { numberWithCommas } from '@/commoncomponents/functions';
+import { formatCurrency } from '@/commoncomponents/functions';
 function Orders() {
     const collator = useCollator({ numeric: true });
     async function load({ signal, cursor }) {
         const querySnapshot = await getDocs(
             cursor
-                ? query(collection(db, 'orders'), startAfter(cursor), limit(10))
-                : query(collection(db, 'orders'), limit(10)),
+                ? query(
+                      collection(db, 'orders'),
+                      where(
+                          'sellers',
+                          'array-contains',
+                          `${auth.currentUser.uid}`
+                      ),
+                      startAfter(cursor),
+                      limit(10)
+                  )
+                : query(
+                      collection(db, 'orders'),
+                      where(
+                          'sellers',
+                          'array-contains',
+                          `${auth.currentUser.uid}`
+                      ),
+                      limit(10)
+                  ),
             { signal }
         );
         const data = [];
@@ -50,96 +68,105 @@ function Orders() {
     const list = useAsyncList({ load, sort });
 
     return (
-        <section className="py-4 px-3">
-            <h3 className="my-2 text-center text-2xl font-medium">
-                All Orders
-            </h3>
-            <Table
-                bordered
-                aria-label="orders table"
-                css={{
-                    minWidth: '100%',
-                    height: 'calc($space$14 * 12)',
-                    backgroundColor: 'white',
-                    overflowX: 'scroll',
-                    zIndex: 0,
-                }}
-                selectionMode="none"
-                sortDescriptor={list.sortDescriptor}
-                onSortChange={list.sort}
-            >
-                <Table.Header>
-                    <Table.Column
-                        key="title"
-                        css={{
-                            width: '200px',
-                        }}
-                    >
-                        ORDER ID
-                    </Table.Column>
-                    <Table.Column key="customer" width="200px">
-                        CUSTOMER NAME
-                    </Table.Column>
-                    <Table.Column key="price" width="150px">
-                        TOTAL AMOUNT
-                    </Table.Column>
-                    <Table.Column key="status" width="150px">
-                        STATUS
-                    </Table.Column>
-                    <Table.Column key="date" width="200px">
-                        PLACED AT
-                    </Table.Column>
-                    <Table.Column key="actions" width="80px">
-                        ACTIONS
-                    </Table.Column>
-                </Table.Header>
-                <Table.Body
-                    items={list.items}
-                    loadingState={list.loadingState}
-                    onLoadMore={list.loadMore}
+        <>
+            <Head>
+                <title>Your Orders</title>
+            </Head>
+            <section className="py-4 px-3">
+                <h3 className="my-2 text-center text-2xl font-medium">
+                    All Orders
+                </h3>
+                <Table
+                    bordered
+                    aria-label="orders table"
+                    css={{
+                        minWidth: '100%',
+                        height: 'calc($space$14 * 12)',
+                        backgroundColor: 'white',
+                        overflowX: 'scroll',
+                        zIndex: 0,
+                    }}
+                    selectionMode="none"
+                    sortDescriptor={list.sortDescriptor}
+                    onSortChange={list.sort}
                 >
-                    {(item) => (
-                        <Table.Row
-                            key={item.id}
+                    <Table.Header>
+                        <Table.Column
+                            key="title"
                             css={{
-                                borderBottom: '1px solid #f1f5f9',
+                                width: '200px',
                             }}
+                            allowsSorting
                         >
-                            <Table.Cell
+                            ORDER ID
+                        </Table.Column>
+                        <Table.Column
+                            key="customer"
+                            width="200px"
+                            allowsSorting
+                        >
+                            CUSTOMER NAME
+                        </Table.Column>
+                        <Table.Column key="price" width="150px" allowsSorting>
+                            TOTAL AMOUNT
+                        </Table.Column>
+                        <Table.Column key="status" width="150px" allowsSorting>
+                            STATUS
+                        </Table.Column>
+                        <Table.Column key="date" width="200px" allowsSorting>
+                            PLACED AT
+                        </Table.Column>
+                        <Table.Column key="actions" width="80px">
+                            ACTIONS
+                        </Table.Column>
+                    </Table.Header>
+                    <Table.Body
+                        items={list.items}
+                        loadingState={list.loadingState}
+                        onLoadMore={list.loadMore}
+                    >
+                        {(item) => (
+                            <Table.Row
+                                key={item.id}
                                 css={{
-                                    width: '200px',
+                                    borderBottom: '1px solid #f1f5f9',
                                 }}
                             >
-                                <Link href={`/seller/orders/${item.id}`}>
-                                    {item.id}
-                                </Link>
-                            </Table.Cell>
-                            <Table.Cell
-                                css={{
-                                    width: '200px',
-                                }}
-                            >
-                                <span className="capitalize">
-                                    {item.shippingDetails.name}
-                                </span>
-                            </Table.Cell>
-                            <Table.Cell
-                                css={{
-                                    width: '150px',
-                                }}
-                            >
-                                {numberWithCommas(item.totalAmount)}
-                            </Table.Cell>
-                            <Table.Cell
-                                css={{
-                                    width: '150px',
-                                }}
-                            >
-                                <span
-                                    className={`${
-                                        item.status === 'delivered' &&
-                                        'bg-green-100 text-green-500'
-                                    } rounded-full px-4 py-1 text-sm capitalize
+                                <Table.Cell
+                                    css={{
+                                        width: '200px',
+                                    }}
+                                >
+                                    <Link href={`/seller/orders/${item.id}`}>
+                                        {item.id}
+                                    </Link>
+                                </Table.Cell>
+                                <Table.Cell
+                                    css={{
+                                        width: '200px',
+                                    }}
+                                >
+                                    <span className="capitalize">
+                                        {item.shippingDetails.name}
+                                    </span>
+                                </Table.Cell>
+                                <Table.Cell
+                                    css={{
+                                        width: '150px',
+                                    }}
+                                >
+                                    {formatCurrency(item.totalAmount)}
+                                </Table.Cell>
+                                <Table.Cell
+                                    css={{
+                                        width: '150px',
+                                    }}
+                                >
+                                    <span
+                                        className={`${
+                                            item.status === 'delivered' &&
+                                            'bg-green-100 text-green-500'
+                                        } rounded-full px-4 py-1 text-sm capitalize
                                     ${
                                         item.status === 'in transit' &&
                                         'bg-yellow-100 text-yellow-500'
@@ -153,39 +180,45 @@ function Orders() {
                                         'bg-red-100 text-red-500'
                                     }
                                     `}
+                                    >
+                                        {item.status}
+                                    </span>
+                                </Table.Cell>
+                                <Table.Cell
+                                    css={{
+                                        width: '200px',
+                                    }}
                                 >
-                                    {item.status}
-                                </span>
-                            </Table.Cell>
-                            <Table.Cell
-                                css={{
-                                    width: '200px',
-                                }}
-                            >
-                                {new Date(
-                                    item.placedAt.seconds * 1000
-                                ).toUTCString()}
-                            </Table.Cell>
-                            <Table.Cell
-                                css={{
-                                    width: '80px',
-                                }}
-                            >
-                                <Tooltip content="View Details" color="invert">
-                                    <Link href={`/seller/orders/${item.id}`}>
-                                        <Edit
-                                            className="h-5 w-5 cursor-pointer"
-                                            fill="none"
-                                            stroke="#979797"
-                                        />
-                                    </Link>
-                                </Tooltip>
-                            </Table.Cell>
-                        </Table.Row>
-                    )}
-                </Table.Body>
-            </Table>
-        </section>
+                                    {new Date(
+                                        item.placedAt.seconds * 1000
+                                    ).toUTCString()}
+                                </Table.Cell>
+                                <Table.Cell
+                                    css={{
+                                        width: '80px',
+                                    }}
+                                >
+                                    <Tooltip
+                                        content="View Details"
+                                        color="invert"
+                                    >
+                                        <Link
+                                            href={`/seller/orders/${item.id}`}
+                                        >
+                                            <Edit
+                                                className="h-5 w-5 cursor-pointer"
+                                                fill="none"
+                                                stroke="#979797"
+                                            />
+                                        </Link>
+                                    </Tooltip>
+                                </Table.Cell>
+                            </Table.Row>
+                        )}
+                    </Table.Body>
+                </Table>
+            </section>
+        </>
     );
 }
 

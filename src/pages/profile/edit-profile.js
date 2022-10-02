@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 
 import { auth } from '@/firebase/firebase-config';
-import Loader from '@/commoncomponents/Loader';
 
 import BasicInfo from '../../modules/usermanagement/profile/buyer/BasicInfo';
 import ChangePassword from '@/user/profile/buyer/ChangePassword';
@@ -11,18 +10,12 @@ import VerifyEmail from '@/user/profile/buyer/VerifyEmail';
 const EditProfile = () => {
     const router = useRouter();
     const user = auth.currentUser;
-
-    if (!user) {
-        router.push('/auth/login');
-        return <Loader />;
-    }
-
     return (
         <section className="grid h-screen place-content-center">
             <div className="w-[300px] space-y-5 md:mt-0 md:w-[400px]">
                 <BasicInfo user={user} />
                 <ChangePassword user={user} />
-                {user.emailVerified ? '' : <VerifyEmail user={user} />}
+                {!user.emailVerified && <VerifyEmail user={user} />}
 
                 <DeleteAccount user={user} router={router} />
             </div>

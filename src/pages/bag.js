@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebase-config';
@@ -18,6 +18,8 @@ import { formatCurrency } from '@/commoncomponents/functions';
 
 import Alert from '@/commoncomponents/popups/Alert';
 
+import Loader from '@/commoncomponents/Loader';
+
 async function getItems() {
     const docRef = doc(db, 'bag', auth.currentUser.uid);
     const docSnap = await getDoc(docRef);
@@ -25,6 +27,7 @@ async function getItems() {
     if (docSnap.exists()) {
         return docSnap.data().artworks;
     }
+    return 0;
 }
 async function getArtworks() {
     let items = [];
@@ -39,6 +42,11 @@ async function getArtworks() {
 }
 
 export default function Bag() {
+    const router = useRouter();
+    if (!auth.currentUser) {
+        router.replace('/auth/login');
+        return <Loader />;
+    }
     const { data: items, error } = useSWR('bagItems', getArtworks);
     const [selectedItems, setSelectedItems] = useState([]);
     const [show, setShow] = useState(false);
@@ -57,7 +65,10 @@ export default function Bag() {
                 artworks: arrayRemove(itemId),
             });
         } catch (error) {
-            console.log(error.message);
+            setAlert({
+                type: 'error',
+                message: 'There was an error while removing item from your bag',
+            });
         }
     }
 
@@ -125,25 +136,33 @@ export default function Bag() {
                                 <h3 className="mb-5 text-lg font-semibold uppercase tracking-wide md:text-2xl">
                                     Order Summary
                                 </h3>
-                                <div className="flex justify-between border-b-2 pb-2">
-                                    <h6 className="text-base font-medium text-neutral-700 md:text-lg">
-                                        Sub Total
+                                <div className="flex justify-between border-t-2 pt-2">
+                                    <h6 className="text-sm text-neutral-700 md:text-base">
+                                        Shipping (5-7 Business Days)
                                     </h6>
-                                    <p className="text-base font-medium text-neutral-700 md:text-lg">
-                                        {formatCurrency(getTotalPrice())}
+                                    <p className="text-sm font-medium text-neutral-700 md:text-base">
+                                        FREE
+                                    </p>
+                                </div>
+                                <div className="flex justify-between">
+                                    <h6 className="text-sm text-neutral-700 md:text-base">
+                                        TAX
+                                    </h6>
+                                    <p className="text-sm font-medium text-neutral-700 md:text-base">
+                                        PKR 0.00
                                     </p>
                                 </div>
                                 <div className="flex justify-between border-b-2 pb-2">
-                                    <h6 className="text-base font-medium text-neutral-700 md:text-lg">
-                                        Estimated Shipping
+                                    <h6 className="text-sm text-neutral-700 md:text-base">
+                                        Subtotal
                                     </h6>
-                                    <p className="text-base font-medium text-neutral-700 md:text-lg">
-                                        Free
+                                    <p className="text-sm font-medium text-neutral-700 md:text-base">
+                                        {formatCurrency(getTotalPrice())}
                                     </p>
                                 </div>
                                 <div className="flex justify-between">
                                     <h6 className="text-lg font-medium text-black md:text-xl">
-                                        Estimated Total
+                                        Total
                                     </h6>
                                     <p className="text-lg font-medium text-black md:text-xl">
                                         {formatCurrency(getTotalPrice())}
@@ -157,11 +176,16 @@ export default function Bag() {
                                                 query: selectedItems,
                                             }}
                                         >
-                                            <a disabled={true}>Checkout Now</a>
+                                            <a>Checkout Now</a>
                                         </Link>
                                     ) : (
                                         'Make a selection'
                                     )}
+                                </button>
+                                <button className="w-full text-center text-sm uppercase tracking-wide underline-offset-4 before:pr-2 before:content-['<'] hover:underline">
+                                    <Link href="/artworks">
+                                        Continue Shopping
+                                    </Link>
                                 </button>
                             </div>
                         </div>

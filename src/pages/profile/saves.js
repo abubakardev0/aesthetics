@@ -1,16 +1,17 @@
-import useSWR from 'swr';
-
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-import SettingsLayout from '@/layouts/SettingsLayout';
-
-import Card from '@/buyer/components/artwork/Card';
-
-import Loader from '@/commoncomponents/Loader';
 import { doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebase-config';
+
+import useSWR from 'swr';
+
+import SettingsLayout from '@/layouts/SettingsLayout';
+import { formatCurrency } from '@/commoncomponents/functions';
+
+import Error from '@/commoncomponents/Error';
 
 async function getItems() {
     const docRef = doc(db, 'saves', auth.currentUser.uid);
@@ -33,16 +34,10 @@ async function getArtworks() {
 }
 
 function Saves() {
-    const router = useRouter();
     const { data: items, error } = useSWR('saves', getArtworks);
     if (error) {
-        return <h1>Error Occured!</h1>;
+        return <Error />;
     }
-    if (!auth.currentUser) {
-        router.replace('/auth/login');
-        return <Loader />;
-    }
-
     return (
         <>
             <Head>
@@ -50,27 +45,48 @@ function Saves() {
             </Head>
             <section>
                 <h3 className="py-10 text-center text-xl font-medium md:text-4xl">
-                    Save Artworks
+                    Your Saves
                 </h3>
-                <div className="flex h-full w-full flex-wrap items-start justify-start gap-3 p-2 md:gap-6 md:pl-64">
-                    {items &&
+                <div className="mx-auto w-full space-y-5 pb-6 md:w-[600px]">
+                    {items ? (
                         items.map((item) => (
-                            <Link href={`/artworks/${item.id}`} key={item.id}>
-                                <a>
-                                    <Card
-                                        image={item.images[0]}
-                                        artist={item.artist}
-                                        title={item.title}
-                                        height={item.dimensions.height}
-                                        width={item.dimensions.width}
-                                        mediums={item.mediums}
-                                        surfaces={item.surfaces}
-                                        unit={item.dimensions.unit}
-                                        price={item.price}
-                                    />
-                                </a>
+                            <Link
+                                href={`/artworks${
+                                    item.type === 'auction'
+                                        ? '/auction'
+                                        : '/immediate'
+                                }/${item.id}`}
+                                key={item.id}
+                            >
+                                <div className="flex w-full cursor-pointer flex-col items-start justify-start space-y-4 rounded-md border p-4 hover:bg-gray-50 md:mt-0 md:h-36 md:flex-row  md:items-center md:space-x-5">
+                                    <div className="relative h-full w-full md:w-40">
+                                        <Image
+                                            src={item.images[0]}
+                                            layout="fill"
+                                            objectFit="cover"
+                                            objectPosition="center"
+                                            priority
+                                        />
+                                    </div>
+                                    <div className="flex w-full flex-col items-start justify-between space-y-4 pb-5 md:flex-row md:justify-between md:space-y-0">
+                                        <div className="flex w-full flex-col leading-loose">
+                                            <h3 className="text-2xl font-medium capitalize text-gray-800">
+                                                {item.title}
+                                            </h3>
+                                            <p className="text-base capitalize text-gray-700">
+                                                by {item.artist}
+                                            </p>
+                                        </div>
+                                        <p className="text-xl font-medium">
+                                            {formatCurrency(item.price)}
+                                        </p>
+                                    </div>
+                                </div>
                             </Link>
-                        ))}
+                        ))
+                    ) : (
+                        <p className="text-center">No Saves</p>
+                    )}
                 </div>
             </section>
         </>

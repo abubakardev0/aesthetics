@@ -1,9 +1,10 @@
+import PrivateRoute from '@/commoncomponents/routes/Private';
 import Header from '@/seller/components/header/Header';
 import Sidebar from '@/seller/components/sidebar/Sidebar';
 
 function SellerLayout({ children }) {
     return (
-        <>
+        <PrivateRoute>
             <header className="sticky top-0 z-50 w-screen bg-slate-50">
                 <Header />
             </header>
@@ -15,7 +16,7 @@ function SellerLayout({ children }) {
                     {children}
                 </section>
             </main>
-        </>
+        </PrivateRoute>
     );
 }
 

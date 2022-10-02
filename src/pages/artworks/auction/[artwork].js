@@ -1,34 +1,45 @@
 import { useState, useRef, useEffect } from 'react';
 
-import { useRouter } from 'next/router';
-
 import Link from 'next/link';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
-import { doc, updateDoc, getDoc, onSnapshot } from 'firebase/firestore';
+import {
+    doc,
+    updateDoc,
+    getDoc,
+    onSnapshot,
+    Timestamp,
+    collection,
+    addDoc,
+    arrayUnion,
+    arrayRemove,
+    increment,
+} from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebase-config';
+
+import { Avatar, Collapse, Loading } from '@nextui-org/react';
+
+import { useCountDown } from '@/hooks/useCountDown';
+
+import Slider from '@/commoncomponents/Scrollers/Slider';
+import Loader from '@/commoncomponents/Loader';
+import RelatedWorks from '@/buyer/components/artwork/RelatedWorks';
+import ShowCounter from '@/commoncomponents/ShowCounter';
+import Alert from '@/commoncomponents/popups/Alert';
+import { formatCurrency } from '@/commoncomponents/functions';
 
 import ARView from '@/icons/ARView';
 import Bookmark from '@/icons/Bookmark';
+import Chat from '@/icons/Chat';
 import Insta from '@/icons/Insta';
 import Twitter from '@/icons/Twitter';
 import Behance from '@/icons/Behance';
-import image from '@/artworkexperience/images/image2.jpg';
-import Slider from '@/commoncomponents/Scrollers/Slider';
-import { Avatar, Collapse } from '@nextui-org/react';
-
-import Loader from '@/commoncomponents/Loader';
-
-import { useCountDown } from '@/hooks/useCountDown';
-import RelatedWorks from '@/buyer/components/artwork/RelatedWorks';
-import ShowCounter from '@/commoncomponents/ShowCounter';
-
-import Alert from '@/commoncomponents/popups/Alert';
-import { numberWithCommas } from '@/commoncomponents/functions';
 
 function Item({ artwork, notFound }) {
     const [data, setData] = useState(JSON.parse(artwork));
     const [save, setSave] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false);
     const [alert, setAlert] = useState({
         type: '',
@@ -38,6 +49,10 @@ function Item({ artwork, notFound }) {
     const bidValueRef = useRef();
     const countDown = useCountDown(data.endingTime.seconds);
     const documentId = data.id;
+    const users = {
+        currentUser: auth.currentUser && auth.currentUser.uid,
+        otherUser: data.sellerId,
+    };
 
     useEffect(() => {
         const docRef = doc(db, 'artworks', documentId);
@@ -50,6 +65,59 @@ function Item({ artwork, notFound }) {
         return 'Not Found';
     }
 
+    async function handler(document, set, type) {
+        if (type) {
+            await updateDoc(doc(db, document, auth.currentUser.uid), {
+                artworks: arrayRemove(data.id),
+            });
+            set(false);
+        } else {
+            await updateDoc(doc(db, document, auth.currentUser.uid), {
+                artworks: arrayUnion(data.id),
+            });
+            set(true);
+        }
+    }
+
+    async function inCollection(document, set) {
+        const docRef = doc(db, document, auth.currentUser.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const artworks = docSnap.data().artworks;
+            const index = artworks.indexOf(data.id);
+            if (index !== -1) {
+                set(true);
+                return;
+            }
+        }
+    }
+
+    function handleWishList() {
+        if (!auth.currentUser) {
+            setAlert({
+                type: 'Error',
+                message: 'Please login to save items in wishlist',
+            });
+            setShow(true);
+            return;
+        } else if (auth.currentUser.uid === data.sellerId) {
+            setAlert({
+                type: 'Error',
+                message: 'You don`t have permission to save this artwork',
+            });
+            setShow(true);
+            return;
+        } else {
+            handler('saves', setSave, save);
+        }
+    }
+
+    useEffect(() => {
+        if (auth.currentUser) {
+            inCollection('saves', setSave);
+        }
+    }, [save]);
+
     const validateBidValue = (newValue, currentValue) => {
         newValue = parseInt(newValue);
         currentValue = parseInt(currentValue);
@@ -61,6 +129,14 @@ function Item({ artwork, notFound }) {
             router.push('/auth/login');
             return <Loader />;
         }
+        if (auth.currentUser.uid === data.sellerId) {
+            setAlert({
+                type: 'Error',
+                message: 'You don`t have permission to bid on this artwork',
+            });
+            setShow(true);
+            return;
+        }
         if (countDown <= 0) {
             setAlert({
                 type: 'error',
@@ -69,7 +145,7 @@ function Item({ artwork, notFound }) {
             setShow(true);
             return;
         }
-        const newValue = bidValueRef.current.value;
+        const newValue = bidValueRef.current?.value;
         const currentValue = data.currentBid;
         const isValid = validateBidValue(newValue, currentValue);
 
@@ -81,15 +157,24 @@ function Item({ artwork, notFound }) {
             setShow(true);
             return;
         } else {
+            setLoading(true);
             try {
-                const document = doc(db, 'artworks', `${data.id}`);
-                await updateDoc(document, {
+                await updateDoc(doc(db, 'artworks', `${documentId}`), {
                     currentBid: newValue,
                     lastBid: {
                         user: auth.currentUser.uid,
                         bid: currentValue,
                     },
+                    totalBids: increment(1),
                 });
+                await addDoc(
+                    collection(db, 'artworks', `${documentId}`, 'bids'),
+                    {
+                        user: auth.currentUser.uid,
+                        value: parseInt(newValue),
+                        time: Timestamp.fromDate(new Date()),
+                    }
+                );
                 setAlert({
                     type: 'success',
                     message: 'A successful bid has been submitted',
@@ -101,6 +186,7 @@ function Item({ artwork, notFound }) {
                 });
             } finally {
                 setShow(true);
+                setLoading(false);
             }
         }
     };
@@ -108,11 +194,11 @@ function Item({ artwork, notFound }) {
     return (
         <>
             <Head>
-                <title>{data.title}</title>
+                <title>{data.title.toLocaleUpperCase()}</title>
             </Head>
             <section className="container mx-auto flex h-full w-full flex-col md:h-screen md:flex-row md:gap-5">
                 <div className="grid h-[450px] w-full place-content-center md:h-full md:w-1/2">
-                    <Slider images={[image]} />
+                    <Slider images={data.images} />
                     <div className="mt-3 flex justify-center">
                         <Link href="/">
                             <a>
@@ -122,7 +208,7 @@ function Item({ artwork, notFound }) {
                     </div>
                 </div>
                 <div className="h-full w-full py-2 md:w-1/2 md:px-16">
-                    <div className="h-full w-full flex-col-reverse space-y-6 p-4 md:flex-col md:rounded-lg md:p-12">
+                    <div className="h-full w-full flex-col-reverse space-y-8 p-4 md:flex-col md:rounded-lg md:p-12">
                         <div className="flex w-full items-center justify-between">
                             <div className="inline-flex items-center space-x-3">
                                 <Avatar
@@ -139,37 +225,42 @@ function Item({ artwork, notFound }) {
                             </button>
                         </div>
                         <div>
-                            <h2 className="mb-1 text-xl font-medium sm:text-2xl md:text-3xl">
+                            <h2 className="mb-1 text-xl font-medium capitalize sm:text-2xl md:text-3xl">
                                 {data.title}
                             </h2>
                             <p>
-                                <span className="text-base italic md:text-lg">
-                                    Acrylic on Canvas
+                                <span className="mr-1 text-lg capitalize italic md:text-xl">
+                                    {data.mediums && data.mediums.join(' and ')}
+                                </span>
+                                on
+                                <span className="ml-1 text-lg capitalize md:text-xl">
+                                    {data.surfaces}
                                 </span>
                                 <br />
-                                9 1/2 x 9 1/2 in <br /> 24.1 x 24.1 cm
+                                {data.dimensions.height} H x{' '}
+                                {data.dimensions.width} W {data.dimensions.unit}
                             </p>
                         </div>
                         <div className="w-full">
                             <h4 className="text-lg font-medium">
-                                Estimates: PKR.
+                                Estimates:
                                 <span className="ml-1">
-                                    {numberWithCommas(data.price)}
+                                    {formatCurrency(data.price)}
                                 </span>
                             </h4>
                             <h4 className="text-lg font-medium">
                                 {data.currentBid === data.startingBid ? (
                                     <>
-                                        Starting bid: PKR.
+                                        Starting bid:
                                         <span className="ml-1">
-                                            {numberWithCommas(data.startingBid)}
+                                            {formatCurrency(data.startingBid)}
                                         </span>
                                     </>
                                 ) : (
                                     <>
-                                        Current bid: PKR.
+                                        Current bid:
                                         <span className="ml-1">
-                                            {numberWithCommas(data.currentBid)}
+                                            {formatCurrency(data.currentBid)}
                                         </span>
                                     </>
                                 )}
@@ -180,7 +271,7 @@ function Item({ artwork, notFound }) {
                                 <ShowCounter countDown={countDown} />
                             )}
                         </div>
-                        <div className="inline-flex h-auto w-full space-x-5">
+                        <div className="inline-flex h-auto w-full space-x-2 md:space-x-5">
                             <select
                                 id="bidValue"
                                 name="bidValue"
@@ -221,21 +312,34 @@ function Item({ artwork, notFound }) {
                                 onClick={updateBid}
                                 className="h-12 w-1/2 rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
                             >
-                                {countDown <= 0 ? 'Auction Ends' : 'Place Bid'}
+                                {countDown <= 0 ? (
+                                    'Auction Ends'
+                                ) : loading ? (
+                                    <Loading
+                                        type="points-opacity"
+                                        color="currentColor"
+                                        size="sm"
+                                    />
+                                ) : (
+                                    'Place Bid'
+                                )}
                             </button>
                         </div>
-                        <div className="flex justify-center space-x-3 md:justify-start">
-                            <button className="flex items-center space-x-2">
+                        <div className="flex justify-center space-x-5 md:justify-start md:space-x-3">
+                            <button
+                                className="flex items-center space-x-2"
+                                onClick={handleWishList}
+                            >
                                 <Bookmark
-                                    className={`delay-50 h-6 w-6 transition-colors md:h-8 md:w-8 `}
+                                    className="delay-50 h-8 w-8 transition-colors "
                                     fill={save ? 'black' : 'none'}
                                     stroke="black"
                                 />
-                                <span className="font-medium">
+                                <span className="hidden font-medium  md:block">
                                     Save Artwork
                                 </span>
                             </button>
-                            <div className="flex space-x-5 border-l-2 border-black/25 px-3">
+                            <div className="flex space-x-5 border-l-2 border-r-2 border-black/25 px-3">
                                 <button>
                                     <Insta className="h-6 w-6 hover:scale-105" />
                                 </button>
@@ -246,6 +350,23 @@ function Item({ artwork, notFound }) {
                                     <Twitter className="h-6 w-6 hover:scale-105" />
                                 </button>
                             </div>
+                            <Link
+                                href={{
+                                    pathname: '/chat',
+                                    query: auth.currentUser ? users : '',
+                                }}
+                            >
+                                <a className="flex items-center space-x-2">
+                                    <Chat
+                                        className="h-8 w-8"
+                                        stroke="black"
+                                        strokeWidth={1}
+                                    />
+                                    <span className="hidden font-medium md:block">
+                                        Chat
+                                    </span>
+                                </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

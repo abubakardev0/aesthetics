@@ -22,20 +22,20 @@ import { Loading } from '@nextui-org/react';
 function SearchModel(props) {
     const [searchValue, setValue] = useState('');
     const [searchResult, setResult] = useState([]);
-    const [loading, setLoading] = useState(false);
     const ref = useRef(null);
     const textRef = useRef(null);
 
-    const handleSearch = async () => {
-        setLoading(true);
+    const handleSearch = async (e) => {
         let result = [];
         const fieldValue = ref.current?.value;
+        const searchValue = e.target.value.toLowerCase();
         try {
             const documents = await getDocs(
                 query(
                     collection(db, 'artworks'),
-                    where(`${fieldValue}`, '==', `${searchValue ?? ''}`),
-                    orderBy('uploadedAt', 'desc'),
+                    where(`${fieldValue}`, '>=', `${searchValue}`),
+                    where(`${fieldValue}`, '<=', `${searchValue}\uf8ff`),
+                    orderBy(`${fieldValue}`),
                     limit(5)
                 )
             );
@@ -50,8 +50,6 @@ function SearchModel(props) {
             setResult(result);
         } catch (error) {
             console.log(error);
-        } finally {
-            setLoading(false);
         }
     };
     return (
@@ -79,9 +77,14 @@ function SearchModel(props) {
                     <div className="absolute inset-y-0 left-6 flex items-center px-4">
                         <select
                             ref={ref}
-                            className="block w-full bg-transparent px-2 py-1 text-sm text-gray-300"
+                            className="block w-full bg-transparent px-0 py-1 text-xs text-gray-300 md:px-2 md:text-sm"
                         >
-                            <option value="title">Title</option>
+                            <option
+                                value="title"
+                                className="text-xs md:text-sm"
+                            >
+                                Title
+                            </option>
                             <option value="artist">Artist</option>
                             <option value="category">Category</option>
                         </select>
@@ -102,23 +105,16 @@ function SearchModel(props) {
                         autocomplete="false"
                         type="text"
                         id="search"
-                        value={searchValue}
-                        onChange={(e) => setValue(e.target.value)}
-                        onKeyPress={(e) => {
-                            if (e.key === 'Enter') {
-                                handleSearch();
-                            }
-                        }}
-                        onPre
-                        className="ml-32 block w-full bg-[#010101] p-2.5 text-base text-white shadow-slate-700 focus:outline-none"
+                        onChange={handleSearch}
+                        className="block w-full bg-[#010101] p-2.5 pl-28 text-base text-white shadow-slate-700 focus:outline-none md:pl-36"
                         placeholder="Search artworks"
                     />
                 </div>
             </div>
+
             <div className="relative mx-auto w-full rounded-b-2xl border-b bg-white py-4 px-3 shadow sm:w-5/6 sm:py-8 md:w-1/2">
-                {loading && <Loading color="black" />}
                 <ul className="my-1 space-y-1">
-                    {searchResult.lenght > 0 ? (
+                    {searchResult ? (
                         searchResult.map((result) => {
                             return (
                                 <Item

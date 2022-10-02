@@ -6,7 +6,7 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 
 import axios from 'axios';
 
-import { Loading, Input } from '@nextui-org/react';
+import { Loading } from '@nextui-org/react';
 import { useForm } from 'react-hook-form';
 
 import { auth } from '@/firebase/firebase-config';
@@ -15,6 +15,8 @@ import Loader from '@/commoncomponents/Loader';
 import Alert from '@/commoncomponents/popups/Alert';
 import Card from '@/payment/components/Card';
 import AddressForm from '@/user/profile/buyer/Address';
+import ShippingInfo from '@/illustrations/ShippingInfo';
+import Lock from '@/icons/Lock';
 
 export default function CheckoutForm({ itemsId }) {
     const stripe = useStripe();
@@ -51,7 +53,7 @@ export default function CheckoutForm({ itemsId }) {
                 const response = await axios.post('/api/checkout', {
                     id,
                     contact: data.phone,
-                    email: data.email.toLocaleLowerCase(),
+                    email: auth.currentUser.email,
                     items: itemsId,
                     userId: auth.currentUser.uid,
                     shippingDetails: {
@@ -86,7 +88,6 @@ export default function CheckoutForm({ itemsId }) {
     };
     const nextStep = async () => {
         const isValid = await trigger([
-            'email',
             'name',
             'phone',
             'province',
@@ -100,83 +101,96 @@ export default function CheckoutForm({ itemsId }) {
     };
     return (
         <>
-            <form
-                onSubmit={handleSubmit(handleCheckout)}
-                className="w-full space-y-4 p-3 md:w-[450px] md:p-6"
-            >
-                {formState === 1 && (
-                    <>
-                        <h2 className="text-base font-medium md:text-xl">
-                            Your Shipping Information
-                        </h2>
-                        <Input
-                            width="100%"
-                            clearable
-                            color="black"
-                            type="email"
-                            label="E-mail"
-                            size="lg"
-                            autoComplete
-                            initialValue={auth.currentUser.email}
-                            {...register('email', {
-                                required: true,
-                            })}
-                        />
-                        {errors.email && (
-                            <span className="text-sm text-red-500">
-                                Please fill this field
+            <div className="container mx-auto flex h-full w-full  space-x-0 md:space-x-5 md:py-12">
+                <div className="hidden w-1/2 self-center md:block">
+                    <div className="mx-auto w-96">
+                        <ShippingInfo className="h-80 w-80" />
+                        <p className="text-center text-xl font-medium text-gray-500">
+                            Don't wait to add color to your life
+                            <br />
+                            <span className="text-2xl font-semibold text-blue-500">
+                                BUY NOW
                             </span>
+                        </p>
+                    </div>
+                </div>
+                <div className="w-full self-center sm:w-[400px] md:w-[500px] lg:w-1/2">
+                    <form
+                        onSubmit={handleSubmit(handleCheckout)}
+                        className="w-fit space-y-3 rounded-lg border-2 p-3 md:w-[450px] md:p-6"
+                    >
+                        {formState === 1 && (
+                            <>
+                                <h2 className="text-base font-medium md:text-xl">
+                                    Your Shipping Information
+                                </h2>
+                                <AddressForm
+                                    errors={errors}
+                                    register={register}
+                                    name={auth.currentUser.displayName}
+                                    trigger={trigger}
+                                />
+                                <div className="flex space-x-3">
+                                    <button
+                                        onClick={() => {
+                                            router.push('/bag');
+                                            return <Loader />;
+                                        }}
+                                        className="w-full rounded-md bg-neutral-200 py-2.5 text-sm text-neutral-800 hover:bg-neutral-100 active:bg-neutral-300 md:py-3 md:text-base"
+                                    >
+                                        Return to Bag
+                                    </button>
+                                    <button
+                                        onClick={nextStep}
+                                        className="w-full rounded-md bg-neutral-800 py-2.5 text-sm font-medium text-gray-100 hover:bg-neutral-700 active:bg-neutral-900 md:py-3 md:text-base "
+                                    >
+                                        Go to Payment
+                                    </button>
+                                </div>
+                            </>
                         )}
-                        <AddressForm
-                            errors={errors}
-                            register={register}
-                            name={auth.currentUser.displayName}
-                            trigger={trigger}
-                        />
-                        <div className="flex space-x-3">
-                            <button
-                                onClick={() => {
-                                    router.push('/bag');
-                                    return <Loader />;
-                                }}
-                                className="w-full rounded-md bg-neutral-200 py-2.5 text-neutral-800 hover:bg-neutral-100 active:bg-neutral-300 md:py-3"
-                            >
-                                Return to Bag
-                            </button>
-                            <button
-                                onClick={nextStep}
-                                className="w-full rounded-md bg-neutral-800 py-2.5 font-medium text-gray-100 hover:bg-neutral-700 active:bg-neutral-900 md:py-3 "
-                            >
-                                Go to Payment
-                            </button>
-                        </div>
-                    </>
-                )}
-                {formState === 2 && (
-                    <>
-                        <Card />
-                        <div className="flex space-x-3">
-                            <button
-                                onClick={() => setFormState((e) => e - 1)}
-                                className="w-full rounded-md bg-neutral-200 py-2.5 text-neutral-800 hover:bg-neutral-100 active:bg-neutral-300 md:py-3"
-                            >
-                                Discard
-                            </button>
-                            <button
-                                disabled={state}
-                                type="submit"
-                                className="h-12 w-full rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
-                            >
-                                {state ? (
-                                    <Loading type="points" color="white" />
-                                ) : (
-                                    'Pay'
-                                )}
-                            </button>
-                        </div>
-                    </>
-                )}
-            </form>
+                        {formState === 2 && (
+                            <>
+                                <div>
+                                    <p>Don't worry, you're safe.</p>
+                                    <h3 className="mb-5 text-3xl font-medium uppercase text-blue-500">
+                                        secure checkout
+                                    </h3>
+                                </div>
+                                <Card />
+                                <div className="flex space-x-3">
+                                    <button
+                                        onClick={() =>
+                                            setFormState((e) => e - 1)
+                                        }
+                                        className="w-full rounded-md bg-neutral-200 py-2.5 text-neutral-800 hover:bg-neutral-100 active:bg-neutral-300 md:py-3"
+                                    >
+                                        Discard
+                                    </button>
+                                    <button
+                                        disabled={state}
+                                        type="submit"
+                                        className="flex h-12 w-full items-center justify-center gap-x-3 rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
+                                    >
+                                        <Lock
+                                            className="h-6 w-6"
+                                            fill="white"
+                                        />
+                                        {state ? (
+                                            <Loading
+                                                type="points"
+                                                color="white"
+                                            />
+                                        ) : (
+                                            'Pay'
+                                        )}
+                                    </button>
+                                </div>
+                            </>
+                        )}
+                    </form>
+                </div>
+            </div>
             <Alert
                 show={show}
                 setShow={setShow}

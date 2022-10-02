@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
+
 import Head from 'next/head';
-import useSWR from 'swr';
+
 import {
     doc,
     getDoc,
@@ -17,9 +18,12 @@ import { db } from '@/firebase/firebase-config';
 
 import { Loading, Collapse, Input } from '@nextui-org/react';
 
+import useSWR from 'swr';
+
 import Plus from '@/icons/Plus';
 import Modal from '@/commoncomponents/modal/Modal';
 import Page from '@/buyer/components/artwork/Page';
+import Error from '@/commoncomponents/Error';
 
 import {
     priceFilterQuery,
@@ -28,21 +32,17 @@ import {
     categoryFilterQuery,
 } from '../../common/queries';
 
-const LIMIT = 10;
+const LIMIT = 12;
 
 function Artworks({ artworks, hasError }) {
+    if (hasError) {
+        return <Error />;
+    }
     const { data: list, error } = useSWR('collection', async () => {
         const docSnap = await getDoc(doc(db, 'categories', 'paintings'));
         const list = docSnap.data().list;
         return list;
     });
-    if (hasError) {
-        return (
-            <p className="flex h-[90vh] w-screen items-center justify-center text-center text-base font-medium md:text-xl">
-                For some reason, we couldn't load 😓
-            </p>
-        );
-    }
     const [posts, setPosts] = useState(JSON.parse(artworks));
     const [loading, setLoading] = useState(false);
     const [postsEnd, setPostsEnd] = useState(false);
@@ -117,6 +117,7 @@ function Artworks({ artworks, hasError }) {
         filter(query);
     }
     function filterCategory(category) {
+        console.log(category);
         const query = categoryFilterQuery(category);
         filter(query);
     }

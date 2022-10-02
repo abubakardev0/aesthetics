@@ -46,11 +46,13 @@ export default async function handler(req, res) {
     let subtotal = 0;
     const shipping = 0;
     const lineItems = [];
+    const sellers = [];
     let itemsId = [];
     for (let key of Object.keys(items)) {
         const { title, price, sellerId, images, artist } = await getDocument(
             items[key]
         );
+        sellers.push(sellerId);
         itemsId.push(items[key]);
         subtotal += parseInt(price);
         lineItems.push({
@@ -77,13 +79,18 @@ export default async function handler(req, res) {
             totalAmount: subtotal + shipping,
             email,
             items: lineItems,
-            shippingDetails,
+            shippingDetails: {
+                ...shippingDetails,
+                contact,
+            },
+            sellers,
             userId,
             paymentId: intent.id,
             status: 'processing',
             placedAt: Timestamp.fromDate(new Date()),
         };
         const docRef = await addDoc(collection(db, 'orders'), order);
+
         for (let item of itemsId) {
             await unListItem(item);
         }

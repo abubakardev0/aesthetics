@@ -24,7 +24,7 @@ function Header() {
 
     return (
         <>
-            <div className="flex items-center justify-between px-3 py-3 md:py-4 lg:container lg:mx-auto lg:py-5">
+            <div className="flex items-center justify-between px-3 py-3 md:py-4 lg:container lg:mx-auto">
                 <div className="font-garamond text-lg font-bold sm:text-xl md:text-2xl">
                     <Link href="/">
                         <a>

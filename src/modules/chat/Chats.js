@@ -17,9 +17,8 @@ const fetchChats = async () => {
     let chats = [];
     const chatsId = await getChats();
     for (let i = 0; i < chatsId.length; i++) {
-        const otherUser = chatsId[i].users.filter(
-            (id) => id !== auth.currentUser.uid
-        );
+        const users = Object.keys(chatsId[i].users);
+        const otherUser = users.filter((id) => id !== auth.currentUser.uid);
         const user = await getUser(otherUser.toString());
         chats.push({
             chatId: chatsId[i].chatId,
@@ -32,10 +31,8 @@ const fetchChats = async () => {
 };
 const getChats = async () => {
     let chats = [];
-    const q = query(
-        collection(db, 'chat'),
-        where('users', 'array-contains', `${auth.currentUser.uid}`)
-    );
+    const ref = collection(db, 'chat');
+    const q = query(ref, where(`users.${auth.currentUser.uid}`, '==', true));
     const docSnap = await getDocs(q);
     docSnap.forEach((doc) => {
         if (doc.exists()) {
@@ -44,7 +41,7 @@ const getChats = async () => {
     });
     return chats;
 };
-const getUser = async (userId) => {
+export const getUser = async (userId) => {
     const getUserDoc = await getDoc(doc(db, 'users', `${userId}`));
     if (getUserDoc.exists) {
         return getUserDoc.data();
@@ -56,12 +53,15 @@ export default function Chat({ setChat }) {
     return (
         <>
             <ul className="section-scrollbar h-full overflow-y-auto">
-                {(chats === undefined ||
-                    chats.length === 0 ||
-                    chats == null) && (
+                {(chats === undefined || chats == null) && (
                     <div className="grid place-content-center">
-                        <Loading>{error ? 'Cannot Fetch' : 'Loading'}</Loading>
+                        <Loading>
+                            {error ? 'Unable to Fetch' : 'Loading'}
+                        </Loading>
                     </div>
+                )}
+                {chats && chats.length === 0 && (
+                    <p className="text-center">No Chat found</p>
                 )}
                 {chats &&
                     chats.map((chat) => {
@@ -71,11 +71,7 @@ export default function Chat({ setChat }) {
                                 onClick={() => setChat(chat)}
                                 className="flex cursor-pointer items-center space-x-2 rounded-xl border-b px-1 py-2 transition delay-75 duration-300 ease-in-out last:border-0 hover:bg-gray-100 focus:outline-none"
                             >
-                                {chat.photo ? (
-                                    <Avatar size="lg" src={chat.photo} />
-                                ) : (
-                                    <Avatar size="lg" text={chat.name} />
-                                )}
+                                <Avatar size="lg" text={chat.name} />
                                 <span className="">{chat.name}</span>
                             </li>
                         );
