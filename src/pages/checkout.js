@@ -10,7 +10,7 @@ const stripePromise = loadStripe(
     'pk_test_51LessqL2R3MKmO5U51jVjtUKp0kPbkMizhlWsBvMQ8hXTRYgs9YmCfEs8kZ0y3xLTPka5ID2eYBQEZ1QT2M3FRvQ00psEJErDU'
 );
 
-export default function App() {
+export default function Checkout() {
     const router = useRouter();
     return (
         <PrivateRoute>
@@ -22,3 +22,5 @@ export default function App() {
         </PrivateRoute>
     );
 }
+
+Checkout.title = 'Checkout';

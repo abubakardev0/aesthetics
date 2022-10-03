@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
@@ -19,9 +18,6 @@ const Details = ({ data, hasError }) => {
     const orderDetails = JSON.parse(data);
     return (
         <>
-            <Head>
-                <title>Order Details</title>
-            </Head>
             <div className="relative py-14 px-4 md:mt-8 md:px-6 lg:container lg:mx-auto">
                 <button
                     className="absolute top-2 left-3 rounded-full border bg-white p-2 md:top-0 md:left-5"
@@ -217,6 +213,7 @@ const Details = ({ data, hasError }) => {
 
 export default Details;
 
+Details.title = 'Order Details';
 Details.Layout = EmptyLayout;
 
 export async function getServerSideProps({

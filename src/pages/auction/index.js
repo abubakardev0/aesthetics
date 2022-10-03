@@ -1,6 +1,3 @@
-import { useState } from 'react';
-
-import Head from 'next/head';
 import Link from 'next/link';
 
 import { collection, getDocs, query, limit, where } from 'firebase/firestore';
@@ -11,16 +8,13 @@ import Hero from '@/auction/components/Hero';
 import Trending from '@/auction/components/Trending';
 import Error from '@/commoncomponents/Error';
 
-function AuctionItems({ artworks, hasError }) {
+function Auction({ artworks, hasError }) {
     if (hasError) {
         return <Error />;
     }
-    const [posts, setPosts] = useState(JSON.parse(artworks));
+    const posts = JSON.parse(artworks);
     return (
         <>
-            <Head>
-                <title>Auction</title>
-            </Head>
             <Hero />
             <section className="container z-50 mt-5 bg-white px-2 md:mx-auto md:px-0">
                 <div>
@@ -65,7 +59,9 @@ function AuctionItems({ artworks, hasError }) {
     );
 }
 
-export default AuctionItems;
+export default Auction;
+
+Auction.title = 'Auction';
 
 export async function getServerSideProps() {
     const data = [];

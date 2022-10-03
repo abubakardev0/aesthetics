@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Head from 'next/head';
 import Link from 'next/link';
 
 import {
@@ -72,9 +71,6 @@ function Artworks() {
 
     return (
         <>
-            <Head>
-                <title>Your Artworks</title>
-            </Head>
             <section className="py-4 px-3">
                 <h3 className="my-2 text-center text-2xl font-medium">
                     Your Artworks
@@ -245,4 +241,5 @@ function Artworks() {
 
 export default Artworks;
 
+Artworks.title = 'Artworks';
 Artworks.Layout = SellerLayout;

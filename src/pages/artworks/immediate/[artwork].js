@@ -27,6 +27,7 @@ import { formatCurrency } from '@/commoncomponents/functions';
 import Alert from '@/commoncomponents/popups/Alert';
 
 export default function Item({ artwork, hasError }) {
+     const [follow, setFollow] = useState(false);
     const [save, setSave] = useState(false);
     const [addtoBag, setAddtoBag] = useState(false);
     const [show, setShow] = useState(false);
@@ -107,18 +108,43 @@ export default function Item({ artwork, hasError }) {
         }
         handler('bag', setAddtoBag, addtoBag);
     }
-
+    async function handleFollow() {
+        if (!auth.currentUser) {
+            setAlert({
+                type: 'Not Logged In',
+                message: 'Please login to use this feature',
+            });
+            setShow(true);
+            return;
+        }
+        if (follow) {
+            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                favourites: arrayRemove(data.artist),
+            });
+        } else {
+            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                favourites: arrayRemove(data.artist),
+            });
+        }
+        setFollow(!follow);
+    }
+    async function checkFollow() {
+        const ref = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        if (ref.exists()) {
+            if (ref.data().favourites.includes(data.artist)) {
+                setFollow(true);
+                return;
+            }
+            setFollow(false);
+        }
+    }
     useEffect(() => {
         if (auth.currentUser) {
             inCollection('saves', setSave);
-        }
-    }, [save]);
-
-    useEffect(() => {
-        if (auth.currentUser) {
             inCollection('bag', setAddtoBag);
+            checkFollow();
         }
-    }, [addtoBag]);
+    }, []);
 
     if (hasError) {
         return 'Not Found';
@@ -153,7 +179,8 @@ export default function Item({ artwork, hasError }) {
                                     {data.artist}
                                 </h3>
                             </div>
-                            <button className="h-8 w-20 rounded-full border-2 border-black bg-none text-base transition-all duration-100 hover:bg-neutral-800 hover:text-white active:bg-neutral-900 active:text-white sm:w-24 md:h-10 md:w-32">
+                            <button onClick={handleFollow}
+                            className="h-8 w-20 rounded-full border-2 border-black bg-none text-base transition-all duration-100 hover:bg-neutral-800 hover:text-white active:bg-neutral-900 active:text-white sm:w-24 md:h-10 md:w-32">
                                 Follow
                             </button>
                         </div>

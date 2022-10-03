@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { Input, Checkbox } from '@nextui-org/react';
@@ -35,9 +34,6 @@ function Login() {
     };
     return (
         <>
-            <Head>
-                <title>Login</title>
-            </Head>
             <section className="w-full p-6 sm:w-[400px] sm:flex-col sm:rounded-xl sm:border-2 sm:border-slate-200 sm:px-10 sm:py-5 sm:shadow-slate-400 md:p-10">
                 <h2
                     className="xl:text-bold text-left text-3xl font-bold text-neutral-900
@@ -141,6 +137,7 @@ function Login() {
     );
 }
 
+Login.title = 'Login';
 Login.Layout = AuthLayout;
 
 export default Login;

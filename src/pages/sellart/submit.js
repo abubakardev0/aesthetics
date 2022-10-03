@@ -177,6 +177,8 @@ function FormSubmission({ mediums, surfaces }) {
 
 export default FormSubmission;
 
+FormSubmission.title = 'Submit Artwork';
+
 const Steps = ({ current, number, isLast }) => {
     return (
         <>

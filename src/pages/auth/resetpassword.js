@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { Input } from '@nextui-org/react';
@@ -39,9 +38,6 @@ const ResetPassword = () => {
 
     return (
         <>
-            <Head>
-                <title>Reset Password</title>
-            </Head>
             <section className="w-96 p-6 sm:rounded-xl sm:border-2 sm:border-slate-200 sm:shadow-slate-400">
                 <div className="mb-5">
                     <h2
@@ -84,5 +80,7 @@ const ResetPassword = () => {
         </>
     );
 };
+
+ResetPassword.title = 'Reset Password';
 ResetPassword.Layout = AuthLayout;
 export default ResetPassword;

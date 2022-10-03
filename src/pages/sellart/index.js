@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import Link from 'next/link';
 
 import Details from '@/icons/Details';
@@ -7,9 +6,6 @@ import Tick from '@/icons/Tick';
 const SellArt = () => {
     return (
         <>
-            <Head>
-                <title>Sell Art</title>
-            </Head>
             <main className="mb-10 space-y-10 px-5 md:px-8">
                 <section className="relative flex h-64 flex-col items-center justify-center rounded-xl bg-sky-100/50 md:h-80">
                     <span className="absolute top-5 left-10 h-3 w-3 rounded-full bg-yellow-400 md:top-10 md:left-48 md:h-5 md:w-5"></span>
@@ -70,6 +66,7 @@ const SellArt = () => {
 };
 
 export default SellArt;
+SellArt.title = 'Sell Art';
 
 const Item = (props) => {
     return (

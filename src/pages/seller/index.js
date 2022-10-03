@@ -1,7 +1,5 @@
 import useSWR from 'swr';
 
-import Head from 'next/head';
-
 import {
     doc,
     getDoc,
@@ -68,9 +66,6 @@ function Dashboard() {
     }
     return (
         <>
-            <Head>
-                <title>Dashboard</title>
-            </Head>
             <main className="md:grid-row-4 grid h-screen grid-flow-row gap-3 md:grid-cols-9 md:gap-5">
                 <div className="w-screen px-2 md:col-span-2 md:col-start-1 md:row-span-1 md:row-start-1 md:h-full md:w-full md:px-0">
                     <AnalyticsCard
@@ -127,6 +122,7 @@ function Dashboard() {
     );
 }
 
+Dashboard.title = 'Dashboard';
 Dashboard.Layout = SellerLayout;
 
 export default Dashboard;

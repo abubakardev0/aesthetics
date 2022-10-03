@@ -12,9 +12,9 @@ function Artworks({ artworks, hasError, category }) {
     }
     const posts = JSON.parse(artworks);
     return (
-        <div>
+        <>
             <Head>
-                <title>{category}</title>
+                <title>{category.toUpperCase()}</title>
             </Head>
             <h2 className="py-4 text-center font-garamond text-3xl font-medium md:py-8 md:text-5xl">
                 Explore {category}
@@ -22,7 +22,7 @@ function Artworks({ artworks, hasError, category }) {
             <main className="relative">
                 <Page posts={posts} />
             </main>
-        </div>
+        </>
     );
 }
 

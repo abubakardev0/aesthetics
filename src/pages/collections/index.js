@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import Head from 'next/head';
-
 import { db } from '@/firebase/firebase-config';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -18,9 +16,6 @@ export default function ArtworkCollection({ list, hasError }) {
     const [display, setDisplay] = useState('grid');
     return (
         <>
-            <Head>
-                <title>Collections</title>
-            </Head>
             <section className="container space-y-4 px-5 py-5 md:mx-auto md:px-0 ">
                 <h2 className="py-4 text-center font-garamond text-3xl font-semibold  md:text-4xl">
                     Explore Collections
@@ -101,3 +96,5 @@ export async function getServerSideProps() {
         },
     };
 }
+
+ArtworkCollection.title = 'Collections';

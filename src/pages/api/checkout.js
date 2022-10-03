@@ -41,8 +41,7 @@ async function removeFromBag(itemsId, userId) {
 }
 
 export default async function handler(req, res) {
-    const { id, name, contact, email, items, shippingDetails, userId } =
-        req.body;
+    const { id, contact, email, items, shippingDetails, userId } = req.body;
     let subtotal = 0;
     const shipping = 0;
     const lineItems = [];

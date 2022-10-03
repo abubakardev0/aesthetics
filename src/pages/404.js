@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import EmptyLayout from '@/layouts/EmptyLayout';
 import Ghost from '@/icons/BabyGhost';
 
@@ -8,9 +7,6 @@ const NotFound = () => {
     const router = useRouter();
     return (
         <>
-            <Head>
-                <title>Not found</title>
-            </Head>
             <main className="my-10 flex w-full flex-col-reverse items-center justify-center space-x-5 md:my-0 md:h-[100vh] md:flex-row">
                 <div className="mt-5 text-center md:mt-0 md:text-left">
                     <h5 className="">Error 404</h5>
@@ -39,6 +35,7 @@ const NotFound = () => {
     );
 };
 
+NotFound.title = 'NotFound';
 NotFound.Layout = EmptyLayout;
 
 export default NotFound;

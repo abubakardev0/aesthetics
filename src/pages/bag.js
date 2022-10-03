@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -9,15 +8,13 @@ import { db, auth } from '@/firebase/firebase-config';
 
 import useSWR from 'swr';
 
-import { Checkbox } from '@nextui-org/react';
+import { Checkbox, Loading } from '@nextui-org/react';
 
 import ItemBlock from '@/immediatesell/shoppingbag/ItemBlock';
 import EmptyBag from '@/immediatesell/shoppingbag/EmptyBag';
-
 import { formatCurrency } from '@/commoncomponents/functions';
-
 import Alert from '@/commoncomponents/popups/Alert';
-
+import Error from '@/commoncomponents/Error';
 import Loader from '@/commoncomponents/Loader';
 
 async function getItems() {
@@ -55,10 +52,13 @@ export default function Bag() {
         message: '',
     });
 
-    if (!items) return <h1 className="text-center">Loading...</h1>;
-    if (error)
-        return <h1 className="text-center">Loading failed, Retrying...</h1>;
-
+    if (!items)
+        return (
+            <div className="grid h-screen place-content-center">
+                <Loading />
+            </div>
+        );
+    if (error) return <Error />;
     async function removeFromBag(itemId) {
         try {
             await updateDoc(doc(db, 'bag', auth.currentUser.uid), {
@@ -87,9 +87,6 @@ export default function Bag() {
 
     return (
         <>
-            <Head>
-                <title>Shopping Bag</title>
-            </Head>
             {items.length === 0 ? (
                 <EmptyBag />
             ) : (
@@ -201,3 +198,5 @@ export default function Bag() {
         </>
     );
 }
+
+Bag.title = 'Bag';

@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Head from 'next/head';
 
 import { db, auth } from '@/firebase/firebase-config';
 import {
@@ -69,9 +68,6 @@ function Orders() {
 
     return (
         <>
-            <Head>
-                <title>Your Orders</title>
-            </Head>
             <section className="py-4 px-3">
                 <h3 className="my-2 text-center text-2xl font-medium">
                     All Orders
@@ -224,4 +220,5 @@ function Orders() {
 
 export default Orders;
 
+Orders.title = 'Orders';
 Orders.Layout = SellerLayout;

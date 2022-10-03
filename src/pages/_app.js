@@ -1,28 +1,19 @@
-import '../../styles/globals.css';
+import Head from 'next/head';
 import { NextUIProvider } from '@nextui-org/react';
 import { AuthProvider } from '@/hooks/useAuth';
 import { Suspense } from 'react';
 import { ParallaxProvider } from 'react-scroll-parallax';
 import Loader from '@/commoncomponents/Loader';
-import { motion } from 'framer-motion';
 import BuyerLayout from '@/layouts/BuyerLayout';
+import '../../styles/globals.css';
 
-function App({ Component, pageProps, router }) {
+function App({ Component, pageProps }) {
     const Layout = Component.Layout || BuyerLayout;
     return (
-        <motion.div
-            key={router.route}
-            initial={{
-                opacity: 0,
-            }}
-            animate={{
-                opacity: 1,
-                transition: {
-                    duration: 0.5,
-                    ease: 'easeInOut',
-                },
-            }}
-        >
+        <>
+            <Head>
+                <title>{Component.title}</title>
+            </Head>
             <NextUIProvider>
                 <AuthProvider>
                     <Suspense fallback={<Loader />}>
@@ -34,7 +25,7 @@ function App({ Component, pageProps, router }) {
                     </Suspense>
                 </AuthProvider>
             </NextUIProvider>
-        </motion.div>
+        </>
     );
 }
 

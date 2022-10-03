@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import { db } from '@/firebase/firebase-config';
 import { getDocs, collection } from 'firebase/firestore';
 
@@ -14,9 +13,6 @@ function Home({ data, hasError }) {
     }
     return (
         <>
-            <Head>
-                <title>Home</title>
-            </Head>
             <section className="-mt-12 md:-mt-20">
                 <Hero list={data} />
             </section>
@@ -33,6 +29,7 @@ function Home({ data, hasError }) {
     );
 }
 
+Home.title = 'Home';
 export default Home;
 
 export async function getServerSideProps() {

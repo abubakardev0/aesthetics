@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
@@ -32,9 +31,6 @@ const OrderSuccess = () => {
     }
     return (
         <>
-            <Head>
-                <title>Order Success</title>
-            </Head>
             {orderDetails && (
                 <div className="container mx-auto py-5 md:py-10">
                     <div className="flex flex-col justify-start space-y-2 ">
@@ -230,3 +226,5 @@ const OrderSuccess = () => {
 };
 
 export default OrderSuccess;
+
+OrderSuccess.title = 'Order Success';

@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }) => {
                 photoURL: auth.currentUser.photoURL,
                 createdAt: serverTimestamp(),
                 uploadedWorks: 0,
+                favourites: [],
             });
             await setDoc(doc(db, 'saves', `${auth.currentUser.uid}`), {
                 artworks: [],

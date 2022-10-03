@@ -28,9 +28,6 @@ function Chat({ chat, hasError, noQuery }) {
 
     return (
         <PrivateRoute>
-            <Head>
-                <title>Chat</title>
-            </Head>
             <section className="relative h-full w-full bg-gray-100">
                 <button
                     onClick={() => router.back()}
@@ -50,6 +47,7 @@ function Chat({ chat, hasError, noQuery }) {
         </PrivateRoute>
     );
 }
+Chat.title = 'Chat';
 Chat.Layout = EmptyLayout;
 
 export default Chat;

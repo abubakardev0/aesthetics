@@ -8,6 +8,7 @@ import {
     doc,
     updateDoc,
     getDoc,
+    getDocs,
     onSnapshot,
     Timestamp,
     collection,
@@ -15,7 +16,11 @@ import {
     arrayUnion,
     arrayRemove,
     increment,
+    query,
+    limit,
+    where,
 } from 'firebase/firestore';
+
 import { db, auth } from '@/firebase/firebase-config';
 
 import { Avatar, Collapse, Loading } from '@nextui-org/react';
@@ -38,6 +43,7 @@ import Behance from '@/icons/Behance';
 
 function Item({ artwork, notFound }) {
     const [data, setData] = useState(JSON.parse(artwork));
+    const [follow, setFollow] = useState(false);
     const [save, setSave] = useState(false);
     const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false);
@@ -95,15 +101,15 @@ function Item({ artwork, notFound }) {
     function handleWishList() {
         if (!auth.currentUser) {
             setAlert({
-                type: 'Error',
-                message: 'Please login to save items in wishlist',
+                type: 'Not Logged In',
+                message: 'Please login to save this item',
             });
             setShow(true);
             return;
         } else if (auth.currentUser.uid === data.sellerId) {
             setAlert({
                 type: 'Error',
-                message: 'You don`t have permission to save this artwork',
+                message: 'Oops! You don`t have permission to save this artwork',
             });
             setShow(true);
             return;
@@ -111,12 +117,43 @@ function Item({ artwork, notFound }) {
             handler('saves', setSave, save);
         }
     }
+    async function handleFollow() {
+        if (!auth.currentUser) {
+            setAlert({
+                type: 'Not Logged In',
+                message: 'Please login to use this feature',
+            });
+            setShow(true);
+            return;
+        }
+        if (follow) {
+            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                favourites: arrayRemove(data.artist),
+            });
+        } else {
+            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                favourites: arrayUnion(data.artist),
+            });
+        }
+        setFollow(!follow);
+    }
+    async function checkFollow() {
+        const ref = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        if (ref.exists()) {
+            if (ref.data().favourites.includes(data.artist)) {
+                setFollow(true);
+                return;
+            }
+            setFollow(false);
+        }
+    }
 
     useEffect(() => {
         if (auth.currentUser) {
             inCollection('saves', setSave);
+            checkFollow(auth.currentUser.uid);
         }
-    }, [save]);
+    }, []);
 
     const validateBidValue = (newValue, currentValue) => {
         newValue = parseInt(newValue);
@@ -159,14 +196,6 @@ function Item({ artwork, notFound }) {
         } else {
             setLoading(true);
             try {
-                await updateDoc(doc(db, 'artworks', `${documentId}`), {
-                    currentBid: newValue,
-                    lastBid: {
-                        user: auth.currentUser.uid,
-                        bid: currentValue,
-                    },
-                    totalBids: increment(1),
-                });
                 await addDoc(
                     collection(db, 'artworks', `${documentId}`, 'bids'),
                     {
@@ -175,11 +204,27 @@ function Item({ artwork, notFound }) {
                         time: Timestamp.fromDate(new Date()),
                     }
                 );
+                if (data.currentBid === data.startingBid) {
+                    updateDoc(doc(db, 'artworks', `${documentId}`), {
+                        currentBid: parseInt(newValue),
+                        totalBids: increment(1),
+                    });
+                } else {
+                    updateDoc(doc(db, 'artworks', `${documentId}`), {
+                        currentBid: parseInt(newValue),
+                        lastBid: {
+                            user: auth.currentUser.uid,
+                            bid: parseInt(currentValue),
+                        },
+                        totalBids: increment(1),
+                    });
+                }
                 setAlert({
                     type: 'success',
                     message: 'A successful bid has been submitted',
                 });
             } catch (error) {
+                console.log(error);
                 setAlert({
                     type: 'error',
                     message: 'There was no success with the bid',
@@ -220,8 +265,15 @@ function Item({ artwork, notFound }) {
                                     {data.artist}
                                 </h3>
                             </div>
-                            <button className="h-8 w-20 rounded-full border-2 border-black bg-none text-base transition-all duration-100 hover:bg-neutral-800 hover:text-white active:bg-neutral-900 active:text-white sm:w-24 md:h-10 md:w-32">
-                                Follow
+                            <button
+                                onClick={handleFollow}
+                                className={`${
+                                    follow
+                                        ? 'bg-neutral-900 text-white'
+                                        : 'bg-none text-black'
+                                } h-10 w-24 rounded-full border border-black text-base transition-all duration-100 hover:bg-neutral-800 hover:text-white sm:w-28 md:h-10 md:w-32`}
+                            >
+                                {follow ? 'Follwing' : 'Follow'}
                             </button>
                         </div>
                         <div>

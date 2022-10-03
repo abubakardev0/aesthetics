@@ -9,6 +9,8 @@ function Profile() {
     );
 }
 
+Profile.title = 'Your Profile';
+
 Profile.Layout = SettingsLayout;
 
 export default Profile;
