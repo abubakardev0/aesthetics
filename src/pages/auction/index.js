@@ -21,12 +21,12 @@ function Auction({ artworks, hasError }) {
                     <Trending />
                 </div>
                 <div className="my-12 text-center">
-                    <span className="text-sm font-medium uppercase">
+                    <p className="text-sm font-medium uppercase md:text-base">
                         Your Price, Your Way
-                    </span>
-                    <h1 className="mt-1 font-garamond text-3xl font-semibold uppercase ">
+                    </p>
+                    <h2 className="mt-2 font-garamond text-4xl font-semibold md:text-5xl ">
                         Live Auction
-                    </h1>
+                    </h2>
                 </div>
                 <div className="flex flex-wrap justify-center gap-6">
                     {posts.map((item) => (

@@ -60,16 +60,16 @@ function Saves() {
     }
     return (
         <>
-            <section>
-                <h3 className="py-10 text-center text-xl font-medium md:text-4xl">
+            <div className="grid h-screen place-content-center">
+                <h3 className="my-5 text-center text-xl font-medium md:text-2xl">
                     Your Saves
                 </h3>
-                <ul className="mx-auto w-full space-y-5 pb-6 md:w-[600px]">
+                <ul className="h-[500px] w-full space-y-4 overflow-auto">
                     {items.map((item) => (
                         <Item key={item.id} item={item} />
                     ))}
                 </ul>
-            </section>
+            </div>
         </>
     );
 }

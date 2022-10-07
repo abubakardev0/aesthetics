@@ -36,10 +36,10 @@ function NewWorks() {
     return (
         <>
             <div className="my-12 text-center">
-                <h4 className="text-sm font-medium uppercase md:text-base">
+                <p className="text-sm font-medium uppercase md:text-base">
                     epitome of creativity
-                </h4>
-                <h2 className="mt-1 mb-6 font-garamond text-2xl font-semibold capitalize md:text-4xl">
+                </p>
+                <h2 className="mt-2 font-garamond text-4xl font-semibold md:text-5xl ">
                     See Latest Works
                 </h2>
             </div>

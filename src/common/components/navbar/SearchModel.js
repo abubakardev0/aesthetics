@@ -77,14 +77,9 @@ function SearchModel(props) {
                     <div className="absolute inset-y-0 left-6 flex items-center px-4">
                         <select
                             ref={ref}
-                            className="block w-full bg-transparent px-0 py-1 text-xs text-gray-300 md:px-2 md:text-sm"
+                            className="content:after[>] block w-full appearance-none bg-transparent px-2 py-1 text-sm text-gray-300 md:px-4"
                         >
-                            <option
-                                value="title"
-                                className="text-xs md:text-sm"
-                            >
-                                Title
-                            </option>
+                            <option value="title">Title</option>
                             <option value="artist">Artist</option>
                             <option value="category">Category</option>
                         </select>
@@ -112,7 +107,7 @@ function SearchModel(props) {
                 </div>
             </div>
 
-            <div className="relative mx-auto w-full rounded-b-2xl border-b bg-white py-4 px-3 shadow sm:w-5/6 sm:py-8 md:w-1/2">
+            <div className="min-h-48 relative mx-auto w-full rounded-b-2xl border-b bg-white py-4 px-3 shadow sm:w-5/6 sm:py-8 md:w-1/2">
                 <ul className="my-1 space-y-1">
                     {searchResult ? (
                         searchResult.map((result) => {

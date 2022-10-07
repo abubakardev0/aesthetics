@@ -33,6 +33,7 @@ import RelatedWorks from '@/buyer/components/artwork/RelatedWorks';
 import ShowCounter from '@/commoncomponents/ShowCounter';
 import Alert from '@/commoncomponents/popups/Alert';
 import { formatCurrency } from '@/commoncomponents/functions';
+import Error from '@/commoncomponents/Error';
 
 import ARView from '@/icons/ARView';
 import Bookmark from '@/icons/Bookmark';
@@ -43,6 +44,7 @@ import Behance from '@/icons/Behance';
 
 function Item({ artwork, notFound }) {
     const [data, setData] = useState(JSON.parse(artwork));
+    const [userBid, setUserBid] = useState(null);
     const [follow, setFollow] = useState(false);
     const [save, setSave] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -68,7 +70,7 @@ function Item({ artwork, notFound }) {
     }, [data]);
 
     if (notFound) {
-        return 'Not Found';
+        return <Error />;
     }
 
     async function handler(document, set, type) {
@@ -148,10 +150,23 @@ function Item({ artwork, notFound }) {
         }
     }
 
+    async function checkBid() {
+        const ref = query(
+            collection(db, 'artworks', `${data.id}`, 'bids'),
+            where('user', '==', auth.currentUser.uid),
+            limit(1)
+        );
+        const docs = await getDocs(ref);
+        docs.forEach((doc) => {
+            setUserBid({ id: doc.id, ...doc.data() });
+        });
+    }
+
     useEffect(() => {
         if (auth.currentUser) {
             inCollection('saves', setSave);
             checkFollow(auth.currentUser.uid);
+            checkBid();
         }
     }, []);
 
@@ -196,10 +211,15 @@ function Item({ artwork, notFound }) {
         } else {
             setLoading(true);
             try {
-                await addDoc(
-                    collection(db, 'artworks', `${documentId}`, 'bids'),
+                await updateDoc(
+                    doc(
+                        db,
+                        'artworks',
+                        `${documentId}`,
+                        'bids',
+                        `${userBid.id}`
+                    ),
                     {
-                        user: auth.currentUser.uid,
                         value: parseInt(newValue),
                         time: Timestamp.fromDate(new Date()),
                     }
@@ -219,6 +239,11 @@ function Item({ artwork, notFound }) {
                         totalBids: increment(1),
                     });
                 }
+                setUserBid((prev) => ({
+                    ...prev,
+                    value: parseInt(newValue),
+                    time: Timestamp.fromDate(new Date()),
+                }));
                 setAlert({
                     type: 'success',
                     message: 'A successful bid has been submitted',
@@ -294,13 +319,13 @@ function Item({ artwork, notFound }) {
                             </p>
                         </div>
                         <div className="w-full">
-                            <h4 className="text-lg font-medium">
+                            <p className="text-lg font-medium">
                                 Estimates:
                                 <span className="ml-1">
                                     {formatCurrency(data.price)}
                                 </span>
-                            </h4>
-                            <h4 className="text-lg font-medium">
+                            </p>
+                            <p className="text-lg font-medium ">
                                 {data.currentBid === data.startingBid ? (
                                     <>
                                         Starting bid:
@@ -316,7 +341,16 @@ function Item({ artwork, notFound }) {
                                         </span>
                                     </>
                                 )}
-                            </h4>
+                                <br />
+                                {userBid !== null && (
+                                    <>
+                                        Your bid:
+                                        <span className="ml-1">
+                                            {formatCurrency(userBid.value)}
+                                        </span>
+                                    </>
+                                )}
+                            </p>
                         </div>
                         <div>
                             {countDown >= 0 && (

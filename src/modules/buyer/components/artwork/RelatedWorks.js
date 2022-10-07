@@ -37,9 +37,9 @@ function RelatedWorks({ category }) {
     return (
         <>
             <div className="my-12 text-center">
-                <h4 className="text-sm font-medium uppercase md:text-base">
+                <p className="text-sm font-medium uppercase md:text-base">
                     Love what you like
-                </h4>
+                </p>
                 <h2 className="mt-1 mb-6 font-garamond text-2xl font-semibold capitalize md:text-4xl">
                     Related Artworks
                 </h2>

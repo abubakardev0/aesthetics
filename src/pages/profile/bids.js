@@ -13,7 +13,7 @@ import { db, auth } from '@/firebase/firebase-config';
 
 import useSWR from 'swr';
 
-import { Loading } from '@nextui-org/react';
+import { Loading, Tooltip } from '@nextui-org/react';
 
 import { useCountDown } from '@/hooks/useCountDown';
 import SettingsLayout from '@/layouts/SettingsLayout';
@@ -76,6 +76,7 @@ function Bids() {
     if (bids.length === 0) {
         return <p className="grid h-screen place-content-center">No Bids</p>;
     }
+
     return (
         <>
             <div className="grid h-screen place-content-center">
@@ -98,10 +99,24 @@ Bids.Layout = SettingsLayout;
 
 function Bid({ data }) {
     const time = useCountDown(data.endingTime.seconds);
+    const handleBidCancellation = async () => {
+        if (data.value === data.currentBid) {
+            alert('Highest Bidder');
+        }
+        const ref = query(
+            collection(db, 'artworks', `${data.artworkId}`, 'bids'),
+            where('user', '==', auth.currentUser.uid),
+            limit(1)
+        );
+        const docs = await getDocs(ref);
+        docs.forEach((doc) => {
+            alert({ id: doc.id, ...doc.data() });
+        });
+    };
     return (
-        <li>
+        <li className="relative">
             <Link href={`/artworks/auction/${data.artworkId}`}>
-                <a className="relative flex w-full cursor-pointer items-end space-x-3 border-b px-0 py-2.5 hover:bg-gray-50 md:w-[500px] md:items-center md:rounded-lg md:border md:px-4">
+                <a className="flex h-32 w-full cursor-pointer items-end space-x-2 border-b py-2.5 pr-10 hover:bg-gray-50 md:h-36 md:w-[500px] md:items-center md:rounded-lg md:border md:px-4">
                     <div className="h-24 w-20 overflow-hidden md:h-32 md:w-28">
                         <Image
                             src={data.image}
@@ -110,33 +125,43 @@ function Bid({ data }) {
                             className="object-cover"
                         />
                     </div>
-                    <div>
-                        <h6>
+                    <div className="mt-2 leading-3">
+                        <p>
                             <span className="mr-1 font-medium">
                                 Current Bid:
                             </span>
                             {formatCurrency(data.currentBid)}
-                        </h6>
-                        <h6>
+                        </p>
+                        <p>
                             <span className="mr-1 font-medium">Your Bid:</span>
                             {formatCurrency(data.value)}
-                        </h6>
+                        </p>
                         <p>
                             <span className="mr-1 font-medium">Bid At:</span>
                             {new Date(data.time.seconds * 1000).toDateString()}
                         </p>
                     </div>
-                    {time >= 0 ? (
-                        <span className="absolute top-0 right-0 rounded-full bg-green-100 px-4 py-[2px] text-xs text-green-500 md:right-2 md:top-2 md:text-sm">
-                            Listed
-                        </span>
-                    ) : (
-                        <span className="absolute top-0 right-0 rounded-full bg-red-100 px-4 py-[2px] text-xs text-red-500 md:right-2 md:top-2 md:text-sm">
-                            Auction Ends
-                        </span>
-                    )}
                 </a>
             </Link>
+            {time >= 0 ? (
+                <div className="absolute top-2 right-1 flex flex-row gap-2 md:flex-col">
+                    <span className="rounded-full bg-green-100 px-4 py-[2px] text-sm text-green-500">
+                        Listed
+                    </span>
+                    <button
+                        onClick={handleBidCancellation}
+                        className="rounded-full bg-red-100 px-4 py-[2px] text-sm text-red-500"
+                    >
+                        <Tooltip content="Cancel Bid" color="invert">
+                            Cancel
+                        </Tooltip>
+                    </button>
+                </div>
+            ) : (
+                <span className="absolute top-0 right-0 rounded-full bg-red-100 px-4 py-[2px] text-sm text-red-500 md:right-2 md:top-2">
+                    Auction Ends
+                </span>
+            )}
         </li>
     );
 }
