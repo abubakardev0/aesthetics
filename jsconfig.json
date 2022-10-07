@@ -3,7 +3,7 @@
         "baseUrl": "./",
         "paths": {
             "@/icons/*": ["src/common/utils/icons/*"],
-            "@/illustrations/*": ["src/common/utils/illustration/*"],
+            "@/illustrations/*": ["src/common/utils/illustrations/*"],
             "@/assets/*": ["src/common/assets/*"],
             "@/hooks/*": ["src/common/hooks/*"],
             "@/commoncomponents/*": ["src/common/components/*"],
