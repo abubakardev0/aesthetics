@@ -249,7 +249,6 @@ function Item({ artwork, notFound }) {
                     message: 'A successful bid has been submitted',
                 });
             } catch (error) {
-                console.log(error);
                 setAlert({
                     type: 'error',
                     message: 'There was no success with the bid',
