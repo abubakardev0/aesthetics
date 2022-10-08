@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
         [auth]
     );
 
-    const signUp = async (name, email, password, gender) => {
+    const signUp = async (name, email, password) => {
         setLoading(true);
         try {
             await createUserWithEmailAndPassword(auth, email, password);
@@ -65,7 +65,6 @@ export const AuthProvider = ({ children }) => {
                 name: name,
                 email: email,
                 role: 'buyer',
-                gender: gender,
                 photoURL: auth.currentUser.photoURL,
                 createdAt: serverTimestamp(),
                 uploadedWorks: 0,
@@ -141,10 +140,9 @@ export const AuthProvider = ({ children }) => {
             .then((userCredentials) => {
                 setUser(userCredentials.user);
                 router.push('/');
-                setLoading(false);
             })
             .catch((error) => {
-                alert(error.message);
+                setError(error);
             })
             .finally(() => {
                 setLoading(false);

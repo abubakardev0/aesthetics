@@ -35,6 +35,7 @@ const ChangePassword = ({ user }) => {
                 updatePassword(user, newPasswordRef.current.value)
                     .then(() => {
                         setAlert(true);
+                        setVisible(false);
                     })
                     .catch((error) => {
                         errorRef.current.innerText = { error };

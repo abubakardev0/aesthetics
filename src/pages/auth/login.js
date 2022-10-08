@@ -1,7 +1,9 @@
+import { useRef } from 'react';
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { Input, Checkbox } from '@nextui-org/react';
+import { Input } from '@nextui-org/react';
 import { useForm } from 'react-hook-form';
 
 import { auth } from '@/firebase/firebase-config';
@@ -13,13 +15,17 @@ import Loader from '@/commoncomponents/Loader';
 import AuthLayout from '@/layouts/AuthLayout';
 
 function Login() {
-    const { signIn, signInwithGoogleAccount, sessionBasedSignin } = useAuth();
+    const { signIn, signInwithGoogleAccount, sessionBasedSignin, error } =
+        useAuth();
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
     const router = useRouter();
+
+    const errorRef = useRef(null);
+
     if (auth.currentUser) {
         router.replace('/');
         return <Loader />;
@@ -27,9 +33,13 @@ function Login() {
 
     const onSubmit = async ({ logmeout, email, password }) => {
         if (logmeout) {
-            await sessionBasedSignin(email, password);
+            sessionBasedSignin(email, password);
         } else {
-            await signIn(email, password);
+            signIn(email, password);
+        }
+        if (error) {
+            const message = error.message.split(':');
+            errorRef.current.innerText = message[1];
         }
     };
     return (
@@ -48,6 +58,10 @@ function Login() {
                     onSubmit={handleSubmit(onSubmit)}
                     className="mt-5 space-y-5"
                 >
+                    <p
+                        className="text-sm font-medium text-red-500"
+                        ref={errorRef}
+                    />
                     <Input
                         width="100%"
                         clearable
@@ -58,11 +72,12 @@ function Login() {
                         autoComplete
                         placeholder="Your E-mail"
                         {...register('email', {
+                            required: true,
                             pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i,
                         })}
                     />
                     {errors.email && (
-                        <p className="text-xs italic text-red-500">
+                        <p className="text-sm text-red-500">
                             Hmm… that email doesn&apos;t look valid
                         </p>
                     )}
@@ -76,24 +91,28 @@ function Login() {
                         placeholder="Your Password"
                         {...register('password', {
                             required: true,
-                            minLength: 8,
                         })}
                     />
                     {errors.password && (
-                        <p className="text-xs italic text-red-500">
+                        <p className="text-sm text-red-500">
                             Make sure it&apos;s at least 8 characters
                         </p>
                     )}
-                    <div className="my-4 flex items-center">
-                        <Checkbox
-                            color="primary"
-                            labelColor="black"
-                            size="sm"
-                            defaultSelected={false}
-                            {...register('logmeout')}
-                        >
-                            Log me out
-                        </Checkbox>
+                    <div className="flex items-center">
+                        <div className="flex items-center">
+                            <input
+                                id="checkbox"
+                                type="checkbox"
+                                className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                {...register('logmeout')}
+                            />
+                            <label
+                                htmlFor="checkbox"
+                                class="ml-2 text-sm text-neutral-800"
+                            >
+                                Log me Out
+                            </label>
+                        </div>
                         <Link href="/auth/resetpassword">
                             <a className="ml-auto text-base text-neutral-800 hover:underline active:underline ">
                                 Lost Password?

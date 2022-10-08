@@ -13,6 +13,10 @@ import Alert from '@/commoncomponents/popups/Alert';
 
 const ResetPassword = () => {
     const [showAlert, setAlert] = useState(false);
+    const [message, setMessage] = useState({
+        type: '',
+        message: '',
+    });
     const { resetPassword } = useAuth();
     const emailRef = useRef();
     const errorRef = useRef();
@@ -29,8 +33,21 @@ const ResetPassword = () => {
     const sendResetPasswordLink = async (e) => {
         e.preventDefault();
         if (validateEmail(emailRef.current.value)) {
-            resetPassword(emailRef.current.value);
-            setAlert(true);
+            try {
+                await resetPassword(emailRef.current.value);
+                setMessage({
+                    type: 'success',
+                    message:
+                        'We have emailed you a link for resetting your password if exists.',
+                });
+            } catch (e) {
+                setMessage({
+                    type: 'error',
+                    message: e.message,
+                });
+            } finally {
+                setAlert(true);
+            }
         } else {
             errorRef.current.innerText = 'Please enter valid e-mail!';
         }
@@ -74,8 +91,8 @@ const ResetPassword = () => {
             <Alert
                 show={showAlert}
                 setShow={setAlert}
-                type="success"
-                message="Reset Password link sent to you mail."
+                type={message.type}
+                message={message.message}
             />
         </>
     );

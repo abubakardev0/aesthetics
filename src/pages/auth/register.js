@@ -1,7 +1,9 @@
+import { useRef } from 'react';
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { Input, Radio } from '@nextui-org/react';
+import { Input } from '@nextui-org/react';
 import { useForm } from 'react-hook-form';
 
 import { auth } from '@/firebase/firebase-config';
@@ -20,13 +22,18 @@ function Register() {
     } = useForm();
     const router = useRouter();
 
+    const errorRef = useRef(null);
+
     if (auth.currentUser) {
         router.replace('/');
         return <Loader />;
     }
 
-    const onSubmit = async ({ name, email, password, gender }) => {
-        await signUp(name, email, password, gender);
+    const onSubmit = async ({ name, email, password }) => {
+        signUp(name, email, password);
+        if (error) {
+            errorRef.current.innerText = 'E-mail already exists!';
+        }
     };
 
     return (
@@ -46,8 +53,12 @@ function Register() {
                 <form
                     id="reg-form"
                     onSubmit={handleSubmit(onSubmit)}
-                    className="my-3 space-y-4"
+                    className="my-3 space-y-4 lg:space-y-5"
                 >
+                    <p
+                        className="text-sm font-medium text-red-500"
+                        ref={errorRef}
+                    />
                     <Input
                         width="100%"
                         clearable
@@ -58,11 +69,13 @@ function Register() {
                         placeholder="Your Name"
                         {...register('name', {
                             required: true,
+                            pattern:
+                                /^([A-Z][a-z]+([ ]?[a-z]?['-]?[A-Z][a-z]+)*)$/i,
                         })}
                     />
                     {errors.name && (
-                        <p className="text-xs italic text-red-500">
-                            Invalid name
+                        <p className="text-sm text-red-500">
+                            Is your name spelled right?
                         </p>
                     )}
                     <Input
@@ -74,12 +87,13 @@ function Register() {
                         autoComplete
                         placeholder="Your E-mail"
                         {...register('email', {
+                            required: true,
                             pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i,
                         })}
                     />
                     {errors.email && (
-                        <p className="text-xs italic text-red-500">
-                            Invalid e-mail
+                        <p className="text-sm text-red-500">
+                            Hmm… that email doesn&apos;t look valid
                         </p>
                     )}
                     <Input.Password
@@ -95,22 +109,10 @@ function Register() {
                         })}
                     />
                     {errors.password && (
-                        <p className="text-xs italic text-red-500">
-                            Invalid password
+                        <p className="text-sm text-red-500">
+                            Make sure it&apos;s at least 8 characters
                         </p>
                     )}
-                    <Radio.Group
-                        label="Select your gender:"
-                        defaultValue="male"
-                        size="sm"
-                        orientation="horizontal"
-                        isRequired
-                        {...register('gender')}
-                    >
-                        <Radio value="male">male</Radio>
-                        <Radio value="female">female</Radio>
-                        <Radio value="other">non-binary</Radio>
-                    </Radio.Group>
                     <button
                         type="submit"
                         className="w-full rounded-md bg-neutral-800 p-3 font-medium

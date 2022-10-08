@@ -15,7 +15,7 @@ import Loader from '@/commoncomponents/Loader';
 import Alert from '@/commoncomponents/popups/Alert';
 import Card from '@/payment/components/Card';
 import AddressForm from '@/user/profile/buyer/Address';
-import ShippingInfo from '@/illustrations/ShippingInfo';
+import ShippingInfo from 'src/common/utils/illustrations/ShippingInfo';
 import Lock from '@/icons/Lock';
 
 export default function CheckoutForm({ itemsId }) {

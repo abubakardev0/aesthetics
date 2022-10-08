@@ -2,12 +2,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import {
+    doc,
     collection,
     query,
     getDocs,
     orderBy,
     where,
     limit,
+    deleteDoc,
+    updateDoc,
 } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebase-config';
 
@@ -37,6 +40,8 @@ function Bids() {
                 image: doc.data().images[0],
                 currentBid: doc.data().currentBid,
                 endingTime: doc.data().endingTime,
+                lastBid: doc.data().lastBid,
+                startingBid: doc.data().startingBid,
             });
         });
         for (let i = 0; i < auctionDocs.length; i++) {
@@ -101,17 +106,70 @@ function Bid({ data }) {
     const time = useCountDown(data.endingTime.seconds);
     const handleBidCancellation = async () => {
         if (data.value === data.currentBid) {
-            alert('Highest Bidder');
+            await deleteDoc(
+                doc(db, 'artworks', `${data.artworkId}`, 'bids', `${data.id}`)
+            );
+            const ref = query(
+                collection(db, 'artworks', `${data.artworkId}`, 'bids'),
+                orderBy('value', 'desc'),
+                limit(2)
+            );
+            const docs = await getDocs(ref);
+            let documentData = [];
+            docs.forEach((doc) => {
+                documentData.push({ id: doc.id, ...doc.data() });
+            });
+            if (documentData.length === 0) {
+                await updateDoc(doc(db, 'artworks', `${data.artworkId}`), {
+                    currentBid: data.startingBid,
+                });
+            } else if (documentData.length === 1) {
+                await updateDoc(doc(db, 'artworks', `${data.artworkId}`), {
+                    currentBid: documentData[0].value,
+                    lastBid: null,
+                });
+            } else {
+                await updateDoc(doc(db, 'artworks', `${data.artworkId}`), {
+                    currentBid: documentData[0].value,
+                    lastBid: {
+                        bid: documentData[1].value,
+                        user: documentData[1].user,
+                    },
+                });
+            }
+            return;
         }
-        const ref = query(
-            collection(db, 'artworks', `${data.artworkId}`, 'bids'),
-            where('user', '==', auth.currentUser.uid),
-            limit(1)
+        if (data.value === data.lastBid.bid) {
+            await deleteDoc(
+                doc(db, 'artworks', `${data.artworkId}`, 'bids', `${data.id}`)
+            );
+            const ref = query(
+                collection(db, 'artworks', `${data.artworkId}`, 'bids'),
+                orderBy('value', 'desc'),
+                limit(2)
+            );
+            const docs = await getDocs(ref);
+            let documentData = [];
+            docs.forEach((doc) => {
+                documentData.push({ id: doc.id, ...doc.data() });
+            });
+            if (documentData.length === 2) {
+                await updateDoc(doc(db, 'artworks', `${data.artworkId}`), {
+                    lastBid: {
+                        bid: documentData[1].value,
+                        user: documentData[1].user,
+                    },
+                });
+            } else {
+                await updateDoc(doc(db, 'artworks', `${data.artworkId}`), {
+                    lastBid: null,
+                });
+            }
+            return;
+        }
+        await deleteDoc(
+            doc(db, 'artworks', `${data.artworkId}`, 'bids', `${data.id}`)
         );
-        const docs = await getDocs(ref);
-        docs.forEach((doc) => {
-            alert({ id: doc.id, ...doc.data() });
-        });
     };
     return (
         <li className="relative">

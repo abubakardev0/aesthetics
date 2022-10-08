@@ -100,13 +100,12 @@ function BasicInfo({ user }) {
                     )}
                     <Input
                         width="100%"
-                        color="black"
                         type="email"
                         label="E-mail"
                         aria-label="email"
                         size="lg"
                         initialValue={user.email}
-                        disabled
+                        readOnly
                     />
 
                     <Input
