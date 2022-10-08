@@ -6,6 +6,7 @@ import Plus from '@/icons/Plus';
 import Search from '@/icons/Search';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { db } from '@/firebase/firebase-config';
 import {
@@ -45,6 +46,7 @@ function SearchModel(props) {
                     title: document.data().title,
                     image: document.data().images[0],
                     artist: document.data().artist,
+                    type: document.data().type,
                 });
             });
             setResult(result);
@@ -97,33 +99,44 @@ function SearchModel(props) {
                         </button>
                     </div>
                     <input
-                        autocomplete="false"
+                        autocomplete="off"
                         type="text"
                         id="search"
                         onChange={handleSearch}
-                        className="block w-full bg-[#010101] p-2.5 pl-28 text-base text-white shadow-slate-700 focus:outline-none md:pl-36"
+                        className="block w-full appearance-none bg-[#010101] p-2.5 pl-28 text-base text-white shadow-slate-700 focus:outline-none md:pl-36"
                         placeholder="Search artworks"
                     />
                 </div>
             </div>
 
             <div className="min-h-48 relative mx-auto w-full rounded-b-2xl border-b bg-white py-4 px-3 shadow sm:w-5/6 sm:py-8 md:w-1/2">
-                <ul className="my-1 space-y-1">
-                    {searchResult ? (
+                <div className="my-1 space-y-1">
+                    {!searchResult && <Loading />}
+                    {searchResult.length > 0 ? (
                         searchResult.map((result) => {
                             return (
-                                <Item
+                                <Link
+                                    href={`/artworks${
+                                        result.type === 'auction'
+                                            ? '/auction'
+                                            : '/immediate'
+                                    }/${result.id}`}
                                     key={result.id}
-                                    title={result.title}
-                                    image={result.image}
-                                    artist={result.artist}
-                                />
+                                >
+                                    <a className="flex h-16 w-full items-center space-x-4 rounded py-2 pl-3 hover:bg-blue-200/50">
+                                        <Item
+                                            title={result.title}
+                                            image={result.image}
+                                            artist={result.artist}
+                                        />
+                                    </a>
+                                </Link>
                             );
                         })
                     ) : (
                         <p className="text-center">No Result</p>
                     )}
-                </ul>
+                </div>
             </div>
         </motion.div>
     );
@@ -132,7 +145,7 @@ export default SearchModel;
 
 function Item(props) {
     return (
-        <li className="flex h-16 w-full items-center space-x-4 rounded py-2 pl-3 hover:bg-blue-200/50">
+        <>
             <div className="relative h-10 w-10 md:h-12 md:w-12">
                 <Image
                     src={props.image}
@@ -149,6 +162,6 @@ function Item(props) {
                     by <span className="capitalize">{props.artist}</span>
                 </p>
             </div>
-        </li>
+        </>
     );
 }

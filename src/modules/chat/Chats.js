@@ -71,8 +71,11 @@ export default function Chat({ setChat }) {
                                 onClick={() => setChat(chat)}
                                 className="flex cursor-pointer items-center space-x-2 rounded-xl border-b px-1 py-2 transition delay-75 duration-300 ease-in-out last:border-0 hover:bg-gray-100 focus:outline-none"
                             >
-                                <Avatar size="lg" text={chat.name} />
-                                <span className="">{chat.name}</span>
+                                <Avatar
+                                    size="lg"
+                                    text={chat.name.toUpperCase()}
+                                />
+                                <span className="capitalize">{chat.name}</span>
                             </li>
                         );
                     })}

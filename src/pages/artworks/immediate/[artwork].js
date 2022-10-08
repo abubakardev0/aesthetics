@@ -27,7 +27,7 @@ import { formatCurrency } from '@/commoncomponents/functions';
 import Alert from '@/commoncomponents/popups/Alert';
 
 export default function Item({ artwork, hasError }) {
-     const [follow, setFollow] = useState(false);
+    const [follow, setFollow] = useState(false);
     const [save, setSave] = useState(false);
     const [addtoBag, setAddtoBag] = useState(false);
     const [show, setShow] = useState(false);
@@ -179,8 +179,10 @@ export default function Item({ artwork, hasError }) {
                                     {data.artist}
                                 </h3>
                             </div>
-                            <button onClick={handleFollow}
-                            className="h-8 w-20 rounded-full border-2 border-black bg-none text-base transition-all duration-100 hover:bg-neutral-800 hover:text-white active:bg-neutral-900 active:text-white sm:w-24 md:h-10 md:w-32">
+                            <button
+                                onClick={handleFollow}
+                                className="h-8 w-20 rounded-full border-2 border-black bg-none text-base transition-all duration-100 hover:bg-neutral-800 hover:text-white active:bg-neutral-900 active:text-white sm:w-24 md:h-10 md:w-32"
+                            >
                                 Follow
                             </button>
                         </div>
@@ -267,7 +269,11 @@ export default function Item({ artwork, hasError }) {
                         bordered
                         className="w-full md:w-3/5 lg:w-1/2"
                     >
-                        <p>{data.description ?? 'No Description'}</p>
+                        <p>
+                            {data.description
+                                ? data.description
+                                : 'No Description'}
+                        </p>
                     </Collapse>
                     <Collapse
                         title="Additional Details"
@@ -276,8 +282,9 @@ export default function Item({ artwork, hasError }) {
                     >
                         <h4 className="text-xl font-medium">Certificates</h4>
                         <p>
-                            {data.certificates ??
-                                'This artwork has no certification'}
+                            {data.certificates
+                                ? 'It is a certified piece of artwork'
+                                : 'It is not certified piece of artwork'}
                         </p>
                     </Collapse>
                 </div>

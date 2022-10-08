@@ -1,8 +1,10 @@
 import { useState } from 'react';
+
 import { Input } from '@nextui-org/react';
 
-const Details = ({ register, set, state, errors, trigger }) => {
+const Details = ({ state, register, setValue, trigger, errors }) => {
     const [measuringUnit, setmeasuringUnit] = useState('in');
+
     const nextStep = async () => {
         const isValid = await trigger([
             'artist',
@@ -17,7 +19,7 @@ const Details = ({ register, set, state, errors, trigger }) => {
     };
     return (
         <>
-            <div className="flex w-full flex-col space-y-5">
+            <section className="w-full space-y-4">
                 <Input
                     width="100%"
                     clearable
@@ -29,12 +31,14 @@ const Details = ({ register, set, state, errors, trigger }) => {
                     placeholder="Aida Bugg"
                     {...register('artist', {
                         required: true,
+                        pattern:
+                            /^([A-Z][a-z]+([ ]?[a-z]?['-]?[A-Z][a-z]+)*)$/i,
                     })}
                 />
                 {errors.artist && (
-                    <p className="bottom-0 text-xs italic text-red-500">
-                        Required field
-                    </p>
+                    <span className="text-sm text-red-500">
+                        Is artist name spelled right?
+                    </span>
                 )}
                 <Input
                     width="100%"
@@ -47,12 +51,14 @@ const Details = ({ register, set, state, errors, trigger }) => {
                     placeholder="The Sun"
                     {...register('title', {
                         required: true,
+                        pattern:
+                            /^([A-Z][a-z]+([ ]?[a-z]?['-]?[A-Z][a-z]+)*)$/i,
                     })}
                 />
                 {errors.title && (
-                    <p className="text-xs italic text-red-500">
-                        Required field
-                    </p>
+                    <span className="text-sm text-red-500">
+                        Is title of your artwork spelled right?
+                    </span>
                 )}
                 <label
                     htmlFor="rarity"
@@ -77,41 +83,36 @@ const Details = ({ register, set, state, errors, trigger }) => {
                     <option value="unknown">Unknown Edition</option>
                 </select>
                 {errors.rarity && (
-                    <p className="text-xs italic text-red-500">
-                        Required field
-                    </p>
+                    <span className="text-sm text-red-500">Required field</span>
                 )}
                 <div className="flex space-x-4">
                     <div>
                         <Input
                             width="100%"
-                            clearable
                             color="black"
-                            type="number"
                             label="Height"
                             aria-label="Height"
-                            placeholder="10"
+                            placeholder="89.5"
                             labelRight={measuringUnit}
                             {...register('height', {
                                 required: true,
+                                min: 0,
                                 pattern: /^\d+(\.\d+)?$/,
                             })}
                         />
                         {errors.height && (
-                            <p className="mt-1 text-xs italic text-red-500">
-                                Required field
-                            </p>
+                            <span className="mt-1 text-sm text-red-500">
+                                Is the height right?
+                            </span>
                         )}
                     </div>
                     <div>
                         <Input
                             width="100%"
-                            clearable
                             color="black"
-                            type="number"
                             label="Width"
                             aria-label="Width"
-                            placeholder="10"
+                            placeholder="105"
                             labelRight={measuringUnit}
                             {...register('width', {
                                 required: true,
@@ -119,26 +120,31 @@ const Details = ({ register, set, state, errors, trigger }) => {
                             })}
                         />
                         {errors.width && (
-                            <p className="mt-1 text-xs italic text-red-500">
-                                Required field
-                            </p>
+                            <span className="mt-1 text-sm text-red-500">
+                                Is the width right?
+                            </span>
                         )}
                     </div>
                 </div>
                 <div className="grid grid-flow-col place-content-center gap-6">
-                    <Input
-                        width="100%"
-                        clearable
-                        color="black"
-                        type="number"
-                        label="Depth (Optional)"
-                        aria-label="Depth"
-                        placeholder="10"
-                        labelRight={measuringUnit}
-                        {...register('depth', {
-                            pattern: /^\d+(\.\d+)?$/,
-                        })}
-                    />
+                    <div>
+                        <Input
+                            width="100%"
+                            color="black"
+                            label="Depth (Optional)"
+                            aria-label="Depth"
+                            placeholder="5"
+                            labelRight={measuringUnit}
+                            {...register('depth', {
+                                pattern: /^\d+(\.\d+)?$/,
+                            })}
+                        />
+                        {errors.depth && (
+                            <span className="mt-1 text-sm text-red-500">
+                                Is the depth right?
+                            </span>
+                        )}
+                    </div>
                     <label className="mb-2 place-self-end">
                         <input
                             type="radio"
@@ -162,14 +168,14 @@ const Details = ({ register, set, state, errors, trigger }) => {
                         cm
                     </label>
                 </div>
-                {set('unit', measuringUnit)}
+                {setValue('unit', measuringUnit)}
                 <button
                     className="focus:shadow-outline mt-5 w-full rounded-md bg-neutral-800 p-3 font-medium tracking-wide text-gray-100 shadow-lg hover:bg-neutral-900 focus:outline-none"
                     onClick={nextStep}
                 >
                     Next Step
                 </button>
-            </div>
+            </section>
         </>
     );
 };

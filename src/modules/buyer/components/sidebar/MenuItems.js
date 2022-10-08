@@ -31,7 +31,7 @@ export default function MenuItems() {
                 </button>
                 <div className="mt-10 mb-5 grid place-content-center space-y-4">
                     <Avatar
-                        text={auth.currentUser.displayName}
+                        text={auth.currentUser?.displayName}
                         className="mx-auto h-24 w-24 p-2 ring ring-blue-500 ring-offset-4"
                     />
                     <span className="text-lg font-semibold">{name}</span>
@@ -101,7 +101,7 @@ export default function MenuItems() {
                 </ul>
                 <button onClick={logout} className="absolute bottom-5">
                     <NavLink
-                        hhref="/see-you-later"
+                        hhref="/auth/login"
                         title={'Logout'}
                         icon={<Logout className="h-6 w-6 text-gray-700" />}
                     />

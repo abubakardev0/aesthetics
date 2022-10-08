@@ -136,16 +136,16 @@ const LoggedIn = ({ user }) => {
 const LoggedOut = () => {
     return (
         <>
-            <button className="w-full p-3 text-left text-sm text-slate-600 hover:bg-slate-100 ">
-                <Link href="/auth/login">
-                    <a>Log In</a>
-                </Link>
-            </button>
-            <button className="w-full p-3 text-left text-sm text-slate-600 hover:bg-slate-100 ">
-                <Link href="/auth/register">
-                    <a>Register</a>
-                </Link>
-            </button>
+            <Link href="/auth/login">
+                <button className="w-full p-3 text-left text-sm text-slate-600 hover:bg-slate-100 ">
+                    Log In
+                </button>
+            </Link>
+            <Link href="/auth/register">
+                <button className="w-full p-3 text-left text-sm text-slate-600 hover:bg-slate-100 ">
+                    Register
+                </button>
+            </Link>
         </>
     );
 };

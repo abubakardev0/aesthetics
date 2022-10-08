@@ -3,7 +3,7 @@ import Plus from '@/icons/Plus';
 
 function AuthLayout({ children }) {
     return (
-        <main className="grid h-screen w-screen place-content-center">
+        <main className="grid max-h-full min-h-screen w-screen place-content-center py-8">
             <div className="fixed top-3 right-3">
                 <Link href="/">
                     <a>

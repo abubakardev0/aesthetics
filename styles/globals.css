@@ -32,6 +32,7 @@
         background-color: #2d2d2d;
         border-radius: 20px;
     }
+
     .section-scrollbar::-webkit-scrollbar {
         width: 6px;
     }

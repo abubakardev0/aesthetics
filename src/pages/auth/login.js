@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useState } from 'react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -24,7 +24,7 @@ function Login() {
     } = useForm();
     const router = useRouter();
 
-    const errorRef = useRef(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
     if (auth.currentUser) {
         router.replace('/');
@@ -32,16 +32,17 @@ function Login() {
     }
 
     const onSubmit = async ({ logmeout, email, password }) => {
+        setErrorMessage('');
         if (logmeout) {
             sessionBasedSignin(email, password);
         } else {
             signIn(email, password);
         }
         if (error) {
-            const message = error.message.split(':');
-            errorRef.current.innerText = message[1];
+            setErrorMessage(error.split(':')[1]);
         }
     };
+
     return (
         <>
             <section className="w-full p-6 sm:w-[400px] sm:flex-col sm:rounded-xl sm:border-2 sm:border-slate-200 sm:px-10 sm:py-5 sm:shadow-slate-400 md:p-10">
@@ -58,10 +59,9 @@ function Login() {
                     onSubmit={handleSubmit(onSubmit)}
                     className="mt-5 space-y-5"
                 >
-                    <p
-                        className="text-sm font-medium text-red-500"
-                        ref={errorRef}
-                    />
+                    <p className="text-sm font-medium text-red-500">
+                        {errorMessage}
+                    </p>
                     <Input
                         width="100%"
                         clearable
@@ -77,9 +77,9 @@ function Login() {
                         })}
                     />
                     {errors.email && (
-                        <p className="text-sm text-red-500">
+                        <span className="text-sm text-red-500">
                             Hmm… that email doesn&apos;t look valid
-                        </p>
+                        </span>
                     )}
                     <Input.Password
                         width="100%"
@@ -94,9 +94,9 @@ function Login() {
                         })}
                     />
                     {errors.password && (
-                        <p className="text-sm text-red-500">
+                        <span className="text-sm text-red-500">
                             Make sure it&apos;s at least 8 characters
-                        </p>
+                        </span>
                     )}
                     <div className="flex items-center">
                         <div className="flex items-center">

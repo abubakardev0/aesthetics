@@ -6,7 +6,7 @@ import { getDoc, doc } from 'firebase/firestore';
 import { auth, db } from '@/firebase/firebase-config';
 
 import axios from 'axios';
-import { useForm } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { Loading } from '@nextui-org/react';
 
 import PrivateRoute from '@/commoncomponents/routes/Private';
@@ -25,8 +25,9 @@ function FormSubmission({ mediums, surfaces }) {
         handleSubmit,
         setValue,
         trigger,
+        setError,
         formState: { errors },
-    } = useForm({ mode: 'onChange' });
+    } = useForm();
 
     const onSubmit = async (data) => {
         setLoading(true);
@@ -86,9 +87,9 @@ function FormSubmission({ mediums, surfaces }) {
                 >
                     {formState === 1 && (
                         <Details
-                            register={register}
-                            set={setValue}
                             state={setFormState}
+                            register={register}
+                            setValue={setValue}
                             errors={errors}
                             trigger={trigger}
                         />
@@ -97,20 +98,25 @@ function FormSubmission({ mediums, surfaces }) {
                         <ChooseMaterial
                             mediums={mediums}
                             surfaces={surfaces}
-                            set={setValue}
                             state={setFormState}
+                            setValue={setValue}
+                            setError={setError}
                         />
                     )}
                     {formState === 3 && (
                         <>
-                            <Images set={setValue} state={setFormState} />
+                            <Images
+                                state={setFormState}
+                                setValue={setValue}
+                                setError={setError}
+                            />
                         </>
                     )}
                     {formState === 4 && (
                         <>
                             <UploadCertifications
-                                set={setValue}
                                 state={setFormState}
+                                setValue={setValue}
                             />
                             {setValue('uid', auth.currentUser.uid)}
                             <div className="mt-5 flex space-x-3">

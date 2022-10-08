@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 
 import Checkbox from './Checkbox';
 
-function ChooseMaterial({ mediums, surfaces, set, state }) {
+function ChooseMaterial({ mediums, surfaces, state, setValue, setError }) {
     const [selectedMediums, setSelectedMediums] = useState([]);
     const [selectedSurfaces, setSelectedSurfaces] = useState([]);
     const mediumRef = useRef();
@@ -10,10 +10,14 @@ function ChooseMaterial({ mediums, surfaces, set, state }) {
     const prevStep = () => {
         state((e) => e - 1);
     };
-    const nextStep = () => {
+    const nextStep = async () => {
         if (selectedMediums.length > 0 && selectedSurfaces.length > 0) {
             state((e) => e + 1);
         } else {
+            setError('mediums', {
+                type: 'custom',
+                message: 'criteria not fulfilled',
+            });
             selectedMediums.length === 0
                 ? (mediumRef.current.innerText = `Please select at least one medium`)
                 : (mediumRef.current.innerText = ``);
@@ -30,34 +34,32 @@ function ChooseMaterial({ mediums, surfaces, set, state }) {
                 <h2 className="text-lg font-semibold text-black ">
                     Choose Drawing Material
                 </h2>
-                <div className="mt-3 flex flex-wrap gap-4">
-                    <Checkbox
-                        list={mediums.list}
-                        selected={selectedMediums}
-                        setSelected={setSelectedMediums}
-                        max={3}
-                    />
-                    <span
-                        ref={mediumRef}
-                        className="text-sm text-red-500"
-                    ></span>
-                    {set('mediums', selectedMediums)}
+                <div className="mt-3">
+                    <div className="flex flex-wrap gap-4">
+                        <Checkbox
+                            list={mediums.list}
+                            selected={selectedMediums}
+                            setSelected={setSelectedMediums}
+                            max={3}
+                        />
+                    </div>
+                    <span ref={mediumRef} className="text-sm text-red-500" />
+                    {setValue('mediums', selectedMediums)}
                 </div>
                 <h2 className="mt-4 text-lg font-semibold text-black">
                     Choose Artwork Surface
                 </h2>
-                <div className="mt-3 flex flex-wrap gap-4">
-                    <Checkbox
-                        list={surfaces.list}
-                        selected={selectedSurfaces}
-                        setSelected={setSelectedSurfaces}
-                        max={3}
-                    />
-                    <span
-                        ref={surfaceRef}
-                        className="text-sm text-red-500"
-                    ></span>
-                    {set('surfaces', selectedSurfaces)}
+                <div className="mt-3">
+                    <div className="flex flex-wrap gap-4">
+                        <Checkbox
+                            list={surfaces.list}
+                            selected={selectedSurfaces}
+                            setSelected={setSelectedSurfaces}
+                            max={3}
+                        />
+                    </div>
+                    <span ref={surfaceRef} className="text-sm text-red-500" />
+                    {setValue('surfaces', selectedSurfaces)}
                 </div>
             </div>
             <div className="mt-5 flex space-x-3">

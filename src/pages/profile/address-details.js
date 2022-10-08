@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { db, auth } from '@/firebase/firebase-config';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
 
 import { useForm } from 'react-hook-form';
 
@@ -14,6 +14,7 @@ import SettingsLayout from '@/layouts/SettingsLayout';
 function Address() {
     const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false);
+    const [address, setAddress] = useState({});
     const [alert, setAlert] = useState({
         type: '',
         message: '',
@@ -24,6 +25,24 @@ function Address() {
         formState: { errors },
     } = useForm();
 
+    useEffect(() => {
+        async function getData() {
+            const ref = await getDoc(doc(db, 'users', auth.currentUser.uid));
+            if (ref.exists()) {
+                setAddress({
+                    address: ref.data().address,
+                });
+            }
+        }
+        getData();
+    }, []);
+    if (!address) {
+        return (
+            <div className="grid place-content-center">
+                <Loading />
+            </div>
+        );
+    }
     const onSubmit = async (data) => {
         setLoading(true);
         try {
@@ -34,12 +53,12 @@ function Address() {
             });
             setAlert({
                 type: 'success',
-                message: 'Address updated',
+                message: 'The address has been updated',
             });
         } catch (error) {
             setAlert({
-                type: 'danger',
-                message: error.message,
+                type: 'error',
+                message: 'Unable to update the address',
             });
         } finally {
             setLoading(false);
@@ -60,7 +79,7 @@ function Address() {
                         <AddressForm
                             errors={errors}
                             register={register}
-                            name={auth.currentUser.displayName}
+                            address={address.address}
                         />
                         <div className="flex space-x-3">
                             <button
@@ -74,7 +93,10 @@ function Address() {
                                 className="h-12 w-full rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
                             >
                                 {loading ? (
-                                    <Loading type="points" color="white" />
+                                    <Loading
+                                        type="points-opacity"
+                                        color="white"
+                                    />
                                 ) : (
                                     'Save'
                                 )}

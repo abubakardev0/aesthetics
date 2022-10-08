@@ -464,7 +464,11 @@ function Item({ artwork, notFound }) {
                         bordered
                         className="w-full md:w-3/5 lg:w-1/2"
                     >
-                        <p>{data.description ?? 'No Description'}</p>
+                        <p>
+                            {data.description
+                                ? data.description
+                                : 'No Description'}
+                        </p>
                     </Collapse>
                     <Collapse
                         title="Additional Details"
@@ -473,8 +477,9 @@ function Item({ artwork, notFound }) {
                     >
                         <h4 className="text-xl font-medium">Certificates</h4>
                         <p>
-                            {data.certificates ??
-                                'This artwork has no certification'}
+                            {data.certificates
+                                ? 'It is a certified piece of artwork'
+                                : 'It is not certified piece of artwork'}
                         </p>
                     </Collapse>
                 </div>

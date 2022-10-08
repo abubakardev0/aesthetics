@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useState } from 'react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -13,6 +13,7 @@ import Loader from '@/commoncomponents/Loader';
 import Google from '@/icons/Google';
 
 import AuthLayout from '@/layouts/AuthLayout';
+
 function Register() {
     const { signUp, signInwithGoogleAccount, error } = useAuth();
     const {
@@ -21,8 +22,7 @@ function Register() {
         formState: { errors },
     } = useForm();
     const router = useRouter();
-
-    const errorRef = useRef(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
     if (auth.currentUser) {
         router.replace('/');
@@ -30,9 +30,10 @@ function Register() {
     }
 
     const onSubmit = async ({ name, email, password }) => {
-        signUp(name, email, password);
+        setErrorMessage('');
+        await signUp(name, email, password);
         if (error) {
-            errorRef.current.innerText = 'E-mail already exists!';
+            setErrorMessage(error.split(':')[1]);
         }
     };
 
@@ -53,19 +54,17 @@ function Register() {
                 <form
                     id="reg-form"
                     onSubmit={handleSubmit(onSubmit)}
-                    className="my-3 space-y-4 lg:space-y-5"
+                    className="my-3 space-y-4"
                 >
-                    <p
-                        className="text-sm font-medium text-red-500"
-                        ref={errorRef}
-                    />
+                    <p className="text-sm font-medium text-red-500">
+                        {errorMessage}
+                    </p>
                     <Input
                         width="100%"
-                        clearable
                         color="black"
                         type="text"
                         label="Name"
-                        autoComplete
+                        helperColor="red"
                         placeholder="Your Name"
                         {...register('name', {
                             required: true,
@@ -74,17 +73,15 @@ function Register() {
                         })}
                     />
                     {errors.name && (
-                        <p className="text-sm text-red-500">
+                        <span className="text-sm text-red-500">
                             Is your name spelled right?
-                        </p>
+                        </span>
                     )}
                     <Input
                         width="100%"
-                        clearable
                         color="black"
                         type="email"
                         label="E-mail"
-                        autoComplete
                         placeholder="Your E-mail"
                         {...register('email', {
                             required: true,
@@ -92,9 +89,9 @@ function Register() {
                         })}
                     />
                     {errors.email && (
-                        <p className="text-sm text-red-500">
+                        <span className="text-sm text-red-500">
                             Hmm… that email doesn&apos;t look valid
-                        </p>
+                        </span>
                     )}
                     <Input.Password
                         width="100%"
@@ -105,13 +102,16 @@ function Register() {
                         placeholder="Your Password"
                         {...register('password', {
                             required: true,
-                            minLength: 8,
+                            pattern:
+                                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/i,
                         })}
                     />
                     {errors.password && (
-                        <p className="text-sm text-red-500">
-                            Make sure it&apos;s at least 8 characters
-                        </p>
+                        <span className="text-xs text-red-500">
+                            Make sure it has at least 8 characters, must contain
+                            at least 1 uppercase & lowercase letter and can
+                            contain special characters
+                        </span>
                     )}
                     <button
                         type="submit"

@@ -43,10 +43,8 @@ export const AuthProvider = ({ children }) => {
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     setUser(user);
-                    setLoading(false);
                 } else {
                     setUser(null);
-                    setLoading(true);
                 }
                 setInitialLoading(false);
             }),
@@ -78,7 +76,7 @@ export const AuthProvider = ({ children }) => {
             });
             setUser(user);
         } catch (err) {
-            setError(err);
+            setError(err.message);
         } finally {
             setLoading(false);
         }
@@ -90,7 +88,7 @@ export const AuthProvider = ({ children }) => {
                 return signInWithEmailAndPassword(auth, email, password);
             })
             .catch((error) => {
-                setError(error);
+                setError(error.message);
             })
             .finally(() => {
                 setLoading(false);
@@ -139,10 +137,9 @@ export const AuthProvider = ({ children }) => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredentials) => {
                 setUser(userCredentials.user);
-                router.push('/');
             })
             .catch((error) => {
-                setError(error);
+                setError(error.message);
             })
             .finally(() => {
                 setLoading(false);
@@ -150,17 +147,13 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => {
-        setLoading(true);
         signOut(auth)
             .then(() => {
                 setUser(null);
                 router.push('/auth/login');
             })
             .catch((error) => {
-                alert(error.message);
-            })
-            .finally(() => {
-                setLoading(false);
+                setError(error.message);
             });
     };
 

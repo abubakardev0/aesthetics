@@ -1,6 +1,31 @@
-import { Input } from '@nextui-org/react';
+import { useState, useEffect } from 'react';
 
-function AddressForm({ errors, register, name, trigger }) {
+import { db, auth } from '@/firebase/firebase-config';
+import { doc, getDoc } from 'firebase/firestore';
+
+import { Input, Loading } from '@nextui-org/react';
+
+function AddressForm({ errors, register }) {
+    const [address, setAddress] = useState({});
+
+    useEffect(() => {
+        async function getData() {
+            const ref = await getDoc(doc(db, 'users', auth.currentUser.uid));
+            if (ref.exists()) {
+                setAddress({
+                    ...ref.data().address,
+                });
+            }
+        }
+        getData();
+    }, []);
+    if (!address) {
+        return (
+            <div className="grid place-content-center">
+                <Loading />
+            </div>
+        );
+    }
     return (
         <>
             <Input
@@ -11,13 +36,17 @@ function AddressForm({ errors, register, name, trigger }) {
                 label="Full Name"
                 aria-label="name"
                 size="lg"
-                initialValue={name}
-                {...register('name', { required: true })}
+                initialValue={address.name}
+                placeholder="Your Name"
+                {...register('name', {
+                    required: true,
+                    pattern: /^([A-Z][a-z]+([ ]?[a-z]?['-]?[A-Z][a-z]+)*)$/i,
+                })}
             />
             {errors.name && (
-                <div className="text-sm text-red-500">
-                    {errors.name.message}
-                </div>
+                <span className="text-sm text-red-500">
+                    Is your name spelled right?
+                </span>
             )}
             <Input
                 width="100%"
@@ -27,6 +56,7 @@ function AddressForm({ errors, register, name, trigger }) {
                 labelLeft="+92"
                 aria-label="phone"
                 size="lg"
+                initialValue={address.phone}
                 placeholder="345-5896989"
                 className="text-gray-400"
                 {...register('phone', {
@@ -53,16 +83,68 @@ function AddressForm({ errors, register, name, trigger }) {
                     })}
                 >
                     <option disabled>Select your province</option>
-                    <option value="azad kashmir">Azad Kashmir</option>
-                    <option value="balochistan">Balochistan</option>
-                    <option value="fata">FATA</option>
-                    <option value="gilgit baltistan">Gilgit Baltistan</option>
-                    <option value="islamabad">Islamabad</option>
-                    <option value="khyber pakhtunkhwa">
+                    <option
+                        value="azad kashmir"
+                        selected={
+                            address.province === 'azad kashmir' ? true : false
+                        }
+                    >
+                        Azad Kashmir
+                    </option>
+                    <option
+                        value="balochistan"
+                        selected={
+                            address.province === 'balochistan' ? true : false
+                        }
+                    >
+                        Balochistan
+                    </option>
+                    <option
+                        value="fata"
+                        selected={address.province === 'fata' ? true : false}
+                    >
+                        FATA
+                    </option>
+                    <option
+                        value="gilgit baltistan"
+                        selected={
+                            address.province === 'gilgit baltistan'
+                                ? true
+                                : false
+                        }
+                    >
+                        Gilgit Baltistan
+                    </option>
+                    <option
+                        value="islamabad"
+                        selected={
+                            address.province === 'islamabad' ? true : false
+                        }
+                    >
+                        Islamabad
+                    </option>
+                    <option
+                        value="khyber pakhtunkhwa"
+                        selected={
+                            address.province === 'khyber pakhtunkhwa'
+                                ? true
+                                : false
+                        }
+                    >
                         Khyber Pakhtunkhwa
                     </option>
-                    <option value="sindh">Sindh</option>
-                    <option value="punjab">Punjab</option>
+                    <option
+                        value="sindh"
+                        selected={address.province === 'sindh' ? true : false}
+                    >
+                        Sindh
+                    </option>
+                    <option
+                        value="punjab"
+                        selected={address.province === 'punjab' ? true : false}
+                    >
+                        Punjab
+                    </option>
                 </select>
                 {errors.province && (
                     <span className="text-sm text-red-500">
@@ -79,6 +161,7 @@ function AddressForm({ errors, register, name, trigger }) {
                         label="City"
                         aria-label="city"
                         size="lg"
+                        initialValue={address.city}
                         helperText={
                             errors.city && (
                                 <span className="text-sm text-red-500">
@@ -90,8 +173,15 @@ function AddressForm({ errors, register, name, trigger }) {
                         className="text-gray-400"
                         {...register('city', {
                             required: true,
+                            pattern:
+                                /^([A-Z][a-z]+([ ]?[a-z]?['-]?[A-Z][a-z]+)*)$/i,
                         })}
                     />
+                    {errors.city && (
+                        <span className="text-sm text-red-500">
+                            Is your city spelled right?
+                        </span>
+                    )}
                 </div>
                 <div>
                     <Input
@@ -100,6 +190,7 @@ function AddressForm({ errors, register, name, trigger }) {
                         type="text"
                         label="Zip Code"
                         aria-label="zip code"
+                        initialValue={address.zip}
                         size="lg"
                         helperText={
                             errors.zip && (
@@ -124,6 +215,7 @@ function AddressForm({ errors, register, name, trigger }) {
                 label="Address"
                 aria-label="address"
                 size="lg"
+                initialValue={address.address}
                 placeholder="Your Complete Address"
                 className="text-gray-400"
                 {...register('address', {

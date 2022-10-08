@@ -1,8 +1,10 @@
 import { useState, useRef } from 'react';
+
 import Image from 'next/image';
+
 import Plus from '@/icons/Plus';
 
-function Images({ set, state }) {
+function Images({ state, setValue, setError }) {
     const [picture, setPicture] = useState([]);
     const errorRef = useRef();
 
@@ -39,9 +41,15 @@ function Images({ set, state }) {
         state((e) => e - 1);
     };
     const nextStep = () => {
-        picture.length > 0
-            ? state((e) => e + 1)
-            : (errorRef.current.innerText = 'Please select atleast 1 image');
+        if (picture.length > 0) {
+            state((e) => e + 1);
+        } else {
+            errorRef.current.innerText = 'Please select atleast 1 image';
+            setError('images', {
+                type: 'custom',
+                message: 'Please select atleast 1 image',
+            });
+        }
     };
     return (
         <>
@@ -126,7 +134,7 @@ function Images({ set, state }) {
                         </div>
                     )}
                 </div>
-                {set('images', picture)}
+                {setValue('images', picture)}
             </div>
             <div className="mt-5 flex space-x-3">
                 <button

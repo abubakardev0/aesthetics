@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
 
-function UploadCertifications({ set }) {
+function UploadCertifications({ setValue }) {
     const [docs, setDocs] = useState([]);
+
     const errorRef = useRef();
     const isUploadRef = useRef();
 
@@ -80,7 +81,7 @@ function UploadCertifications({ set }) {
                     />
                 </div>
             </div>
-            {set('certificates', docs)}
+            {setValue('certificates', docs)}
         </>
     );
 }

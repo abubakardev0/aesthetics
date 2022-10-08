@@ -14,7 +14,7 @@ const EditProfile = () => {
         <>
             <section className="grid h-screen place-content-center">
                 <div className="w-[300px] space-y-5 md:mt-0 md:w-[400px]">
-                    <BasicInfo user={user} />
+                    <BasicInfo />
                     <ChangePassword user={user} />
                     {!user.emailVerified && <VerifyEmail user={user} />}
 

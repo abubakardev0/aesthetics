@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input, Loading } from '@nextui-org/react';
 
-import { db } from '@/firebase/firebase-config';
-import { doc, updateDoc, Timestamp } from 'firebase/firestore';
+import { db, auth } from '@/firebase/firebase-config';
+import { doc, getDoc, updateDoc, Timestamp } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 
 import { useForm } from 'react-hook-form';
 import Alert from '@/commoncomponents/popups/Alert';
 
-function BasicInfo({ user }) {
+function BasicInfo() {
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState({});
     const [show, setShow] = useState(false);
     const [alert, setAlert] = useState({
         type: '',
@@ -21,57 +22,76 @@ function BasicInfo({ user }) {
         formState: { errors },
     } = useForm();
 
+    useEffect(() => {
+        async function getData() {
+            const ref = await getDoc(doc(db, 'users', auth.currentUser.uid));
+            if (ref.exists()) {
+                setUser({
+                    id: ref.id,
+                    name: ref.data().name,
+                    phone: ref.data().phone,
+                    email: ref.data().email,
+                });
+            }
+        }
+        getData();
+    }, []);
+    if (!user) {
+        return (
+            <div className="grid place-content-center">
+                <Loading />
+            </div>
+        );
+    }
     const onSubmit = async (data) => {
-        const name = data.name;
+        const name = data.name.toLocaleLowerCase();
         const phone = data.phone.replace(/[^0-9]/g, '');
-        if (name === user.displayName && phone === '') {
+        if (name === user.name && !phone) {
             return;
-        } else if (name === user.displayName && phone !== '') {
+        } else if (name === user.name && phone) {
             setLoading(true);
             try {
-                await updateDoc(doc(db, 'users', user.uid), {
-                    phone,
+                await updateDoc(doc(db, 'users', user.id), {
+                    phone: phone,
                     updatedAt: Timestamp.fromDate(new Date()),
                 });
-                setShow(true);
                 setAlert({
                     type: 'success',
-                    message: 'Phone number updated successfully',
+                    message: 'The phone number has been updated',
                 });
             } catch (error) {
-                setShow(true);
                 setAlert({
                     type: 'error',
-                    message: error.message,
+                    message: 'Unable to update phone number',
                 });
             } finally {
                 setLoading(false);
+                setShow(true);
                 return;
             }
         } else {
             setLoading(true);
             try {
-                await updateProfile(user, {
+                await updateProfile(auth.currentUser, {
                     displayName: name,
                 });
-                await updateDoc(doc(db, 'users', user.uid), {
-                    name,
-                    phone,
+                await updateDoc(doc(db, 'users', user.id), {
+                    name: name,
+                    phone: phone,
                     updatedAt: Timestamp.fromDate(new Date()),
                 });
-                setShow(true);
                 setAlert({
                     type: 'success',
-                    message: 'Phone number updated successfully',
+                    message: 'The name and phone number have been updated',
                 });
             } catch (error) {
-                setShow(true);
                 setAlert({
                     type: 'error',
-                    message: error.message,
+                    message: 'Unable to update name and phone number',
                 });
             } finally {
                 setLoading(false);
+                setShow(true);
             }
         }
     };
@@ -90,13 +110,18 @@ function BasicInfo({ user }) {
                         label="Full Name"
                         aria-label="name"
                         size="lg"
-                        initialValue={user.displayName}
-                        {...register('name', { required: true })}
+                        initialValue={user.name}
+                        className="capitalize"
+                        {...register('name', {
+                            required: true,
+                            pattern:
+                                /^([A-Z][a-z]+([ ]?[a-z]?['-]?[A-Z][a-z]+)*)$/i,
+                        })}
                     />
                     {errors.name && (
-                        <div className="text-sm text-red-500">
-                            {errors.name.message}
-                        </div>
+                        <p className="text-sm text-red-500">
+                            Is your name spelled right?
+                        </p>
                     )}
                     <Input
                         width="100%"
@@ -117,7 +142,7 @@ function BasicInfo({ user }) {
                         aria-label="phone"
                         size="lg"
                         placeholder="345-5896989"
-                        className="text-gray-400"
+                        initialValue={user.phone}
                         {...register('phone', {
                             pattern: /^[0-9]{3}[0-9]{7}$/i,
                         })}
@@ -139,7 +164,7 @@ function BasicInfo({ user }) {
                             className="h-12 w-full rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
                         >
                             {loading ? (
-                                <Loading type="points" color="white" />
+                                <Loading type="points-opacity" color="white" />
                             ) : (
                                 'Save'
                             )}

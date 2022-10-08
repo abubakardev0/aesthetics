@@ -6,7 +6,6 @@ import {
     deleteUser,
 } from 'firebase/auth';
 
-import useAuth from '@/hooks/useAuth';
 import { Input, Modal } from '@nextui-org/react';
 
 function DeleteAccount({ user, router }) {
