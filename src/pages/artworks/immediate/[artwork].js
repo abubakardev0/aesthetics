@@ -123,7 +123,7 @@ export default function Item({ artwork, hasError }) {
             });
         } else {
             await updateDoc(doc(db, 'users', auth.currentUser.uid), {
-                favourites: arrayRemove(data.artist),
+                favourites: arrayUnion(data.artist),
             });
         }
         setFollow(!follow);
@@ -181,9 +181,13 @@ export default function Item({ artwork, hasError }) {
                             </div>
                             <button
                                 onClick={handleFollow}
-                                className="h-8 w-20 rounded-full border-2 border-black bg-none text-base transition-all duration-100 hover:bg-neutral-800 hover:text-white active:bg-neutral-900 active:text-white sm:w-24 md:h-10 md:w-32"
+                                className={`${
+                                    follow
+                                        ? 'bg-neutral-900 text-white'
+                                        : 'bg-none text-black'
+                                } h-10 w-24 rounded-full border border-black text-base transition-all duration-100 hover:bg-neutral-800 hover:text-white sm:w-28 md:h-10 md:w-32`}
                             >
-                                Follow
+                                {follow ? 'Follwing' : 'Follow'}
                             </button>
                         </div>
                         <div className="space-y-2">

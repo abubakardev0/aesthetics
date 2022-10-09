@@ -12,9 +12,9 @@ import {
     onSnapshot,
     Timestamp,
     collection,
-    addDoc,
     arrayUnion,
     arrayRemove,
+    addDoc,
     increment,
     query,
     limit,
@@ -176,7 +176,7 @@ function Item({ artwork, notFound }) {
         return newValue > currentValue ? true : false;
     };
 
-    const updateBid = async () => {
+    const placeBid = async () => {
         if (!auth.currentUser) {
             router.push('/auth/login');
             return <Loader />;
@@ -211,34 +211,7 @@ function Item({ artwork, notFound }) {
         } else {
             setLoading(true);
             try {
-                await updateDoc(
-                    doc(
-                        db,
-                        'artworks',
-                        `${documentId}`,
-                        'bids',
-                        `${userBid.id}`
-                    ),
-                    {
-                        value: parseInt(newValue),
-                        time: Timestamp.fromDate(new Date()),
-                    }
-                );
-                if (data.currentBid === data.startingBid) {
-                    updateDoc(doc(db, 'artworks', `${documentId}`), {
-                        currentBid: parseInt(newValue),
-                        totalBids: increment(1),
-                    });
-                } else {
-                    updateDoc(doc(db, 'artworks', `${documentId}`), {
-                        currentBid: parseInt(newValue),
-                        lastBid: {
-                            user: auth.currentUser.uid,
-                            bid: parseInt(currentValue),
-                        },
-                        totalBids: increment(1),
-                    });
-                }
+                userBid ? await updateBid() : await newBid();
                 setUserBid((prev) => ({
                     ...prev,
                     value: parseInt(newValue),
@@ -249,6 +222,7 @@ function Item({ artwork, notFound }) {
                     message: 'A successful bid has been submitted',
                 });
             } catch (error) {
+                console.log(error);
                 setAlert({
                     type: 'error',
                     message: 'There was no success with the bid',
@@ -256,6 +230,52 @@ function Item({ artwork, notFound }) {
             } finally {
                 setShow(true);
                 setLoading(false);
+            }
+        }
+
+        async function updateBid() {
+            await updateDoc(
+                doc(db, 'artworks', `${documentId}`, 'bids', `${userBid.id}`),
+                {
+                    value: parseInt(newValue),
+                    time: Timestamp.fromDate(new Date()),
+                }
+            );
+            if (data.currentBid === data.startingBid) {
+                updateDoc(doc(db, 'artworks', `${documentId}`), {
+                    currentBid: parseInt(newValue),
+                });
+            } else {
+                updateDoc(doc(db, 'artworks', `${documentId}`), {
+                    currentBid: parseInt(newValue),
+                    lastBid: {
+                        user: auth.currentUser.uid,
+                        bid: parseInt(currentValue),
+                    },
+                });
+            }
+        }
+
+        async function newBid() {
+            await addDoc(collection(db, 'artworks', `${documentId}`, 'bids'), {
+                user: auth.currentUser.uid,
+                value: parseInt(newValue),
+                time: Timestamp.fromDate(new Date()),
+            });
+            if (data.currentBid === data.startingBid) {
+                updateDoc(doc(db, 'artworks', `${documentId}`), {
+                    currentBid: parseInt(newValue),
+                    totalBids: increment(1),
+                });
+            } else {
+                updateDoc(doc(db, 'artworks', `${documentId}`), {
+                    currentBid: parseInt(newValue),
+                    lastBid: {
+                        user: auth.currentUser.uid,
+                        bid: parseInt(currentValue),
+                    },
+                    totalBids: increment(1),
+                });
             }
         }
     };
@@ -394,7 +414,7 @@ function Item({ artwork, notFound }) {
                             </select>
                             <button
                                 disabled={countDown <= 0}
-                                onClick={updateBid}
+                                onClick={placeBid}
                                 className="h-12 w-1/2 rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
                             >
                                 {countDown <= 0 ? (

@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -11,6 +13,7 @@ import {
     limit,
     deleteDoc,
     updateDoc,
+    increment,
 } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebase-config';
 
@@ -24,49 +27,53 @@ import { formatCurrency } from '@/commoncomponents/functions';
 import Error from '@/commoncomponents/Error';
 
 function Bids() {
-    const { data: bids, error } = useSWR('bids', async () => {
-        let bids = [];
-        const auctionDocs = [];
-        const docSnap = await getDocs(
-            query(
-                collection(db, 'artworks'),
-                where('type', '==', 'auction'),
-                where('totalBids', '>', 0)
-            )
-        );
-        docSnap.forEach((doc) => {
-            auctionDocs.push({
-                artworkId: doc.id,
-                image: doc.data().images[0],
-                currentBid: doc.data().currentBid,
-                endingTime: doc.data().endingTime,
-                lastBid: doc.data().lastBid,
-                startingBid: doc.data().startingBid,
-            });
-        });
-        for (let i = 0; i < auctionDocs.length; i++) {
-            const childRef = query(
-                collection(
-                    db,
-                    'artworks',
-                    `${auctionDocs[i].artworkId}`,
-                    'bids'
-                ),
-                where('user', '==', `${auth.currentUser.uid}`),
-                orderBy('value', 'desc'),
-                limit(1)
+    const { data: bids, error } = useSWR(
+        'bids',
+        async () => {
+            let bids = [];
+            const auctionDocs = [];
+            const docSnap = await getDocs(
+                query(
+                    collection(db, 'artworks'),
+                    where('type', '==', 'auction'),
+                    where('totalBids', '>', 0)
+                )
             );
-            const querySnapshot = await getDocs(childRef);
-            querySnapshot.forEach((childDoc) => {
-                bids.push({
-                    id: childDoc.id,
-                    ...auctionDocs[i],
-                    ...childDoc.data(),
+            docSnap.forEach((doc) => {
+                auctionDocs.push({
+                    artworkId: doc.id,
+                    image: doc.data().images[0],
+                    currentBid: doc.data().currentBid,
+                    endingTime: doc.data().endingTime,
+                    lastBid: doc.data().lastBid,
+                    startingBid: doc.data().startingBid,
                 });
             });
-        }
-        return bids;
-    });
+            for (let i = 0; i < auctionDocs.length; i++) {
+                const childRef = query(
+                    collection(
+                        db,
+                        'artworks',
+                        `${auctionDocs[i].artworkId}`,
+                        'bids'
+                    ),
+                    where('user', '==', `${auth.currentUser.uid}`),
+                    orderBy('value', 'desc'),
+                    limit(1)
+                );
+                const querySnapshot = await getDocs(childRef);
+                querySnapshot.forEach((childDoc) => {
+                    bids.push({
+                        id: childDoc.id,
+                        ...auctionDocs[i],
+                        ...childDoc.data(),
+                    });
+                });
+            }
+            return bids;
+        },
+        { refreshInterval: 500 }
+    );
 
     if (error) {
         return <Error />;
@@ -88,7 +95,7 @@ function Bids() {
                 <h3 className="my-5 text-center text-xl font-medium md:text-2xl">
                     Your Bids
                 </h3>
-                <ul className="h-[500px] w-full space-y-4 overflow-auto">
+                <ul className="div-scrollbar h-[500px] w-full space-y-4 overflow-auto px-4">
                     {bids.map((data) => {
                         return <Bid key={data.id} data={data} />;
                     })}
@@ -103,8 +110,11 @@ Bids.title = 'Your Bids';
 Bids.Layout = SettingsLayout;
 
 function Bid({ data }) {
+    const [loading, setLoading] = useState(false);
     const time = useCountDown(data.endingTime.seconds);
+
     const handleBidCancellation = async () => {
+        setLoading(true);
         if (data.value === data.currentBid) {
             await deleteDoc(
                 doc(db, 'artworks', `${data.artworkId}`, 'bids', `${data.id}`)
@@ -122,11 +132,13 @@ function Bid({ data }) {
             if (documentData.length === 0) {
                 await updateDoc(doc(db, 'artworks', `${data.artworkId}`), {
                     currentBid: data.startingBid,
+                    totalBids: increment(-1),
                 });
             } else if (documentData.length === 1) {
                 await updateDoc(doc(db, 'artworks', `${data.artworkId}`), {
                     currentBid: documentData[0].value,
                     lastBid: null,
+                    totalBids: increment(-1),
                 });
             } else {
                 await updateDoc(doc(db, 'artworks', `${data.artworkId}`), {
@@ -135,8 +147,10 @@ function Bid({ data }) {
                         bid: documentData[1].value,
                         user: documentData[1].user,
                     },
+                    totalBids: increment(-1),
                 });
             }
+            setLoading(false);
             return;
         }
         if (data.value === data.lastBid.bid) {
@@ -159,17 +173,25 @@ function Bid({ data }) {
                         bid: documentData[1].value,
                         user: documentData[1].user,
                     },
+                    totalBids: increment(-1),
                 });
             } else {
                 await updateDoc(doc(db, 'artworks', `${data.artworkId}`), {
                     lastBid: null,
+                    totalBids: increment(-1),
                 });
             }
+            setLoading(false);
+
             return;
         }
         await deleteDoc(
             doc(db, 'artworks', `${data.artworkId}`, 'bids', `${data.id}`)
         );
+        await updateDoc(doc(db, 'artworks', `${data.artworkId}`), {
+            totalBids: increment(-1),
+        });
+        setLoading(false);
     };
     return (
         <li className="relative">
@@ -207,11 +229,16 @@ function Bid({ data }) {
                         Listed
                     </span>
                     <button
+                        disabled={loading ? true : false}
                         onClick={handleBidCancellation}
-                        className="rounded-full bg-red-100 px-4 py-[2px] text-sm text-red-500"
+                        className="rounded-full bg-red-100 px-4 py-[2px] text-center text-sm text-red-500"
                     >
                         <Tooltip content="Cancel Bid" color="invert">
-                            Cancel
+                            {loading ? (
+                                <Loading type="points-opacity" color="error" />
+                            ) : (
+                                'Cancel'
+                            )}
                         </Tooltip>
                     </button>
                 </div>

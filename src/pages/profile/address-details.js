@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { db, auth } from '@/firebase/firebase-config';
-import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 
 import { useForm } from 'react-hook-form';
 
@@ -14,7 +14,6 @@ import SettingsLayout from '@/layouts/SettingsLayout';
 function Address() {
     const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false);
-    const [address, setAddress] = useState({});
     const [alert, setAlert] = useState({
         type: '',
         message: '',
@@ -25,24 +24,6 @@ function Address() {
         formState: { errors },
     } = useForm();
 
-    useEffect(() => {
-        async function getData() {
-            const ref = await getDoc(doc(db, 'users', auth.currentUser.uid));
-            if (ref.exists()) {
-                setAddress({
-                    address: ref.data().address,
-                });
-            }
-        }
-        getData();
-    }, []);
-    if (!address) {
-        return (
-            <div className="grid place-content-center">
-                <Loading />
-            </div>
-        );
-    }
     const onSubmit = async (data) => {
         setLoading(true);
         try {
@@ -76,11 +57,7 @@ function Address() {
                         className="space-y-5"
                         onSubmit={handleSubmit(onSubmit)}
                     >
-                        <AddressForm
-                            errors={errors}
-                            register={register}
-                            address={address.address}
-                        />
+                        <AddressForm errors={errors} register={register} />
                         <div className="flex space-x-3">
                             <button
                                 type="reset"

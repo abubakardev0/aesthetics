@@ -231,6 +231,10 @@ function Artworks({ artworks, hasError }) {
                                         list.map((category) => {
                                             return (
                                                 <li
+                                                    key={
+                                                        Date.now() +
+                                                        Math.random()
+                                                    }
                                                     className="capitalize hover:underline"
                                                     onClick={() => {
                                                         filterCategory(
