@@ -13,9 +13,7 @@ import {
 } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebase-config';
 
-import { Avatar } from '@nextui-org/react';
-
-import Error from '@/commoncomponents/Error';
+import { Avatar, Loading } from '@nextui-org/react';
 
 const getChats = async () => {
     let chats = [];
@@ -71,6 +69,11 @@ export default function Chat() {
                 </Link>
             </div>
             <ul className="section-scrollbar h-[280px] space-y-3 overflow-y-auto">
+                {!chat && (
+                    <div className="grid h-full w-full place-content-center">
+                        <Loading />
+                    </div>
+                )}
                 {chat &&
                     chat.map((message) => (
                         <Link
@@ -90,6 +93,9 @@ export default function Chat() {
                             />
                         </Link>
                     ))}
+                {chat && chat.length === 0 && (
+                    <p className="py-[25%] text-center">No messages</p>
+                )}
             </ul>
         </div>
     );
@@ -98,9 +104,9 @@ export default function Chat() {
 export const Card = ({ name, text, date }) => {
     return (
         <li className="relative flex cursor-pointer rounded-md border-b bg-gray-50 p-2.5 drop-shadow">
-            <Avatar size="md" bordered text={name} />
+            <Avatar size="md" bordered text={name.toUpperCase()[0]} />
             <span className="flex flex-col px-2.5">
-                <h3 className="font-medium">{name}</h3>
+                <h3 className="font-medium capitalize">{name}</h3>
                 <p className="truncate whitespace-pre-wrap break-all text-sm md:text-base">
                     {text}
                 </p>

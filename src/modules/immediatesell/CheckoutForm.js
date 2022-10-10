@@ -72,7 +72,7 @@ export default function CheckoutForm({ itemsId }) {
             } catch (error) {
                 setAlert({
                     type: 'error',
-                    message: error.message,
+                    message: 'Sorry! we are unable to place your order',
                 });
             } finally {
                 setState(false);
@@ -81,7 +81,7 @@ export default function CheckoutForm({ itemsId }) {
         } else {
             setAlert({
                 type: 'error',
-                message: error.message,
+                message: 'Something went wrong',
             });
             setShow(true);
         }
@@ -101,7 +101,7 @@ export default function CheckoutForm({ itemsId }) {
     };
     return (
         <>
-            <div className="container mx-auto flex h-full w-full  space-x-0 md:space-x-5 md:py-12">
+            <div className="container mx-auto flex h-full min-h-screen w-full  space-x-0 md:space-x-5 md:py-12">
                 <div className="hidden w-1/2 self-center md:block">
                     <div className="mx-auto w-96">
                         <ShippingInfo className="h-80 w-80" />
@@ -132,6 +132,7 @@ export default function CheckoutForm({ itemsId }) {
                                 />
                                 <div className="flex space-x-3">
                                     <button
+                                        type="reset"
                                         onClick={() => {
                                             router.push('/bag');
                                             return <Loader />;
@@ -178,7 +179,7 @@ export default function CheckoutForm({ itemsId }) {
                                         />
                                         {state ? (
                                             <Loading
-                                                type="points"
+                                                type="points-opacity"
                                                 color="white"
                                             />
                                         ) : (

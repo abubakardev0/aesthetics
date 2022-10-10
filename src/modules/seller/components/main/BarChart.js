@@ -1,5 +1,5 @@
 import {
-    ComposedChart,
+    AreaChart,
     Area,
     XAxis,
     YAxis,
@@ -83,7 +83,7 @@ export default function Chart() {
                 Your Monthly Sales
             </h2>
             <ResponsiveContainer width="100%" height="90%">
-                <ComposedChart
+                <AreaChart
                     width={500}
                     height={300}
                     data={getSalesDataYearly()}
@@ -94,6 +94,20 @@ export default function Chart() {
                         bottom: 5,
                     }}
                 >
+                    <defs>
+                        <linearGradient id="sale" x1="0" y1="0" x2="0" y2="1">
+                            <stop
+                                offset="5%"
+                                stopColor="#8884d8"
+                                stopOpacity={0.8}
+                            />
+                            <stop
+                                offset="95%"
+                                stopColor="#8884d8"
+                                stopOpacity={0}
+                            />
+                        </linearGradient>
+                    </defs>
                     <CartesianGrid
                         horizontal={false}
                         strokeWidth="6"
@@ -113,8 +127,9 @@ export default function Chart() {
                         fill="#7dd3fc"
                         stroke="#0ea5e9"
                         strokeWidth="4"
+                        fillOpacity={0.7}
                     />
-                </ComposedChart>
+                </AreaChart>
             </ResponsiveContainer>
         </div>
     );

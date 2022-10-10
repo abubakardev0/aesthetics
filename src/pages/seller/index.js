@@ -106,7 +106,7 @@ function Dashboard() {
                         }
                     />
                 </div>
-                <section className="h-full max-h-[600px] min-h-[400px] w-screen px-2 md:col-span-6 md:col-start-1 md:row-span-3 md:row-start-2 md:w-full">
+                <section className="h-full max-h-[600px] min-h-[400px] w-screen px-2 md:col-span-6 md:col-start-1 md:row-span-3 md:row-start-2 md:w-full md:px-0">
                     <Chart />
                 </section>
                 <section className="h-[350px] w-screen px-2 md:col-span-3 md:col-start-7 md:row-span-2 md:row-start-1 md:w-full md:px-0">

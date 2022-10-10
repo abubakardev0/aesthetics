@@ -165,7 +165,7 @@ export default function Bag() {
                                         {formatCurrency(getTotalPrice())}
                                     </p>
                                 </div>
-                                <button className="h-12 w-full rounded-sm border border-[#2D2D2D] bg-none text-base transition-all hover:bg-[#2D2D2D] hover:text-white md:block">
+                                <button className="h-12 w-full rounded-sm border border-[#2D2D2D] bg-none text-base transition-all hover:bg-[#2D2D2D] hover:text-white">
                                     {selectedItems.length > 0 ? (
                                         <Link
                                             href={{

@@ -23,7 +23,7 @@ export default function Page({ posts }) {
                     },
                 }}
                 exit={{ opacity: 0 }}
-                className={`h-fit columns-2 gap-4 px-2 pb-4 sm:columns-3 md:columns-4 md:gap-6 md:px-4 lg:container lg:mx-auto`}
+                className="container mx-auto flex flex-wrap justify-start gap-6"
             >
                 {posts.map((item) => (
                     <Link

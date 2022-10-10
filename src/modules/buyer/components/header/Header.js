@@ -78,9 +78,9 @@ const LoggedIn = ({ user }) => {
     return (
         <>
             <div className="-mt-2 flex transform items-center border-b-2 border-slate-200 p-3 text-sm text-slate-600 transition-colors duration-200 hover:bg-slate-100">
-                <Avatar text={user.displayName} size="md" />
+                <Avatar text={user.displayName.toUpperCase()[0]} size="md" />
                 <div className="mx-2">
-                    <h1 className="overflow-hidden text-ellipsis text-sm font-semibold text-slate-700 ">
+                    <h1 className="overflow-hidden text-ellipsis text-sm font-semibold capitalize text-slate-700 ">
                         {user.displayName}
                     </h1>
                     <p className="overflow-hidden text-ellipsis text-sm text-slate-500 ">

@@ -39,7 +39,7 @@ function NewWorks() {
                 <p className="text-sm font-medium uppercase md:text-base">
                     epitome of creativity
                 </p>
-                <h2 className="mt-2 font-garamond text-4xl font-semibold md:text-5xl ">
+                <h2 className="mt-2 font-garamond text-2xl font-semibold md:text-4xl ">
                     See Latest Works
                 </h2>
             </div>

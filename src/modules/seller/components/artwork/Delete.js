@@ -9,12 +9,12 @@ import Delete from '@/icons/Delete';
 
 import Error from '@/icons/Error';
 
-function DeleteAccount({ id }) {
+function DeleteArtwork({ collection, id }) {
     const [visible, setVisible] = useState(false);
 
     async function handleDelete() {
         try {
-            await deleteDoc(doc(db, 'artworks', id));
+            await deleteDoc(doc(db, collection, id));
         } catch (error) {
             console.log(error);
         } finally {
@@ -33,7 +33,7 @@ function DeleteAccount({ id }) {
             </button>
             <Modal
                 closeButton
-                aria-labelledby="delete-account-modal"
+                aria-labelledby="delete-artwork-modal"
                 open={visible}
                 onClose={() => setVisible(false)}
             >
@@ -78,4 +78,4 @@ function DeleteAccount({ id }) {
     );
 }
 
-export default DeleteAccount;
+export default DeleteArtwork;

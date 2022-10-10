@@ -5,6 +5,8 @@ import { useState } from 'react';
 
 import Arrow from '@/icons/Arrow';
 
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+
 const Hero = ({ list }) => {
     const [currentIndex, setIndex] = useState(0);
     const [touchPosition, setTouchPosition] = useState(null);
@@ -42,9 +44,53 @@ const Hero = ({ list }) => {
             : setIndex(currentIndex - 1);
     };
 
+    const shouldReduceMotion = useReducedMotion();
+
+    const variants = {
+        scaleDown: {
+            scale: 0.8,
+            y: 100,
+            transition: {
+                duration: 0.8,
+            },
+        },
+        in: {
+            scale: 0.8,
+            y: 100,
+            x: '100%',
+            transition: {
+                duration: 0.8,
+            },
+        },
+        out: {
+            x: '-100%',
+            transition: {
+                duration: 0.8,
+                delay: 0.5,
+            },
+        },
+        center: {
+            x: 0,
+            scale: 0.8,
+            transformOrigin: 'top',
+            transition: {
+                duration: 0.4,
+            },
+        },
+        scaleUp: {
+            scale: 1,
+            y: 0,
+            transition: {
+                duration: 0.8,
+                delay: 0.5,
+                type: 'easeInOut',
+            },
+        },
+    };
+
     return (
-        <>
-            <section className="flex h-full w-full flex-col-reverse md:h-screen md:max-h-[700px] md:flex-row">
+        <AnimatePresence initial={false} exitBeforeEnter>
+            <motion.section className="relative flex h-full w-full flex-col-reverse md:h-screen md:max-h-[700px] md:flex-row">
                 <div className="flex h-auto w-full flex-col items-center justify-center pt-1  md:h-full md:w-1/2 md:flex-row md:justify-start md:pt-0">
                     <div className="mt-2 flex h-fit w-full items-center justify-center gap-5 self-center md:mt-0 md:h-4/6 md:w-1/12 md:flex-col ">
                         {list.map((img, index) => {
@@ -86,7 +132,14 @@ const Hero = ({ list }) => {
                         </button>
                     </div>
                 </div>
-                <div className="relative h-[420px] w-full md:h-full md:w-1/2">
+                <motion.div
+                    key={currentIndex}
+                    variants={!shouldReduceMotion ? variants : null}
+                    initial="in"
+                    animate={['center', 'scaleUp']}
+                    exit={['scaleDown', 'out']}
+                    className="relative h-[420px] w-full overflow-hidden md:h-full md:w-1/2"
+                >
                     <Image
                         src={list[currentIndex].image}
                         alt="hero"
@@ -98,17 +151,17 @@ const Hero = ({ list }) => {
                         onTouchStart={handleTouchStart}
                         onTouchMove={handleTouchMove}
                     />
-                    <div className="absolute bottom-2 -left-12 z-10 hidden gap-4 md:flex">
-                        <button onClick={prev}>
-                            <Arrow className="h-10 w-10 rotate-180 stroke-black" />
-                        </button>
-                        <button onClick={next}>
-                            <Arrow className="h-10 w-10 stroke-black" />
-                        </button>
-                    </div>
+                </motion.div>
+                <div className="absolute bottom-2 left-1/2 z-10 hidden -translate-x-1/2 gap-4 md:flex">
+                    <button onClick={prev}>
+                        <Arrow className="h-10 w-10 rotate-180 stroke-black" />
+                    </button>
+                    <button onClick={next}>
+                        <Arrow className="h-10 w-10 stroke-black" />
+                    </button>
                 </div>
-            </section>
-        </>
+            </motion.section>
+        </AnimatePresence>
     );
 };
 

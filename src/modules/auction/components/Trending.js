@@ -37,10 +37,10 @@ function Trending() {
     return (
         <>
             <div className="my-12 text-center">
-                <h4 className="text-sm font-medium uppercase">
+                <p className="text-sm font-medium uppercase md:text-base">
                     Bid It To Win It
-                </h4>
-                <h2 className="mt-1 mb-6 font-garamond text-3xl font-semibold capitalize">
+                </p>
+                <h2 className="mt-2 font-garamond text-2xl font-semibold md:text-4xl ">
                     Auction Lots
                 </h2>
             </div>

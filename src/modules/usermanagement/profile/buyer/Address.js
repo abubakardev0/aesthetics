@@ -152,8 +152,8 @@ function AddressForm({ errors, register }) {
                     </span>
                 )}
             </div>
-            <div className="flex items-center space-x-3">
-                <div>
+            <div className="flex items-center gap-x-3">
+                <div className="w-1/2">
                     <Input
                         width="100%"
                         color="black"
@@ -165,7 +165,7 @@ function AddressForm({ errors, register }) {
                         helperText={
                             errors.city && (
                                 <span className="text-sm text-red-500">
-                                    Make sure it's right
+                                    Is your city spelled right?
                                 </span>
                             )
                         }
@@ -177,13 +177,8 @@ function AddressForm({ errors, register }) {
                                 /^([A-Z][a-z]+([ ]?[a-z]?['-]?[A-Z][a-z]+)*)$/i,
                         })}
                     />
-                    {errors.city && (
-                        <span className="text-sm text-red-500">
-                            Is your city spelled right?
-                        </span>
-                    )}
                 </div>
-                <div>
+                <div className="w-1/2">
                     <Input
                         width="100%"
                         color="black"

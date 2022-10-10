@@ -302,7 +302,7 @@ function Item({ artwork, notFound }) {
                             <div className="inline-flex items-center space-x-3">
                                 <Avatar
                                     size="lg"
-                                    text={data.artist.toLocaleUpperCase()}
+                                    text={data.artist.toLocaleUpperCase()[0]}
                                     css={{ zIndex: 1 }}
                                 />
                                 <h3 className="text-base capitalize md:text-lg">
@@ -317,7 +317,7 @@ function Item({ artwork, notFound }) {
                                         : 'bg-none text-black'
                                 } h-10 w-24 rounded-full border border-black text-base transition-all duration-100 hover:bg-neutral-800 hover:text-white sm:w-28 md:h-10 md:w-32`}
                             >
-                                {follow ? 'Follwing' : 'Follow'}
+                                {follow ? 'Following' : 'Follow'}
                             </button>
                         </div>
                         <div>

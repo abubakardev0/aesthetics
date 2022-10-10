@@ -73,7 +73,7 @@ export default function Chat({ setChat }) {
                             >
                                 <Avatar
                                     size="lg"
-                                    text={chat.name.toUpperCase()}
+                                    text={chat.name.toUpperCase()[0]}
                                 />
                                 <span className="capitalize">{chat.name}</span>
                             </li>

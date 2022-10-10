@@ -31,7 +31,7 @@ export default function MenuItems() {
                 </button>
                 <div className="mt-10 mb-5 grid place-content-center space-y-4">
                     <Avatar
-                        text={auth.currentUser?.displayName}
+                        text={auth.currentUser?.displayName.toUpperCase()[0]}
                         className="mx-auto h-24 w-24 p-2 ring ring-blue-500 ring-offset-4"
                     />
                     <span className="text-lg font-semibold">{name}</span>

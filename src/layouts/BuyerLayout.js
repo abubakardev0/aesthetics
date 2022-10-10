@@ -20,7 +20,7 @@ function BuyerLayout({ children }) {
                 className={`${
                     scroll
                         ? 'bg-white'
-                        : 'bg-white bg-opacity-30 backdrop-blur-md'
+                        : 'bg-white bg-opacity-50 backdrop-blur-md'
                 } fixed top-0 z-40 w-full overflow-visible`}
             >
                 <Header />

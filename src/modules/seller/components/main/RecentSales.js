@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { User } from '@nextui-org/react';
+import { User, Loading } from '@nextui-org/react';
 
 import { formatCurrency } from '@/commoncomponents/functions';
 
@@ -15,7 +15,12 @@ export default function RecentSales({ recentSales }) {
                 </Link>
             </div>
             <ul className="section-scrollbar h-[300px] space-y-3 overflow-y-auto md:h-full ">
-                {recentSales ? (
+                {!recentSales && (
+                    <div className="grid h-full w-full place-content-center">
+                        <Loading />
+                    </div>
+                )}
+                {recentSales &&
                     recentSales.map((order) => {
                         return (
                             <Link href={`/orders/${order.id}`} key={order.id}>
@@ -26,9 +31,9 @@ export default function RecentSales({ recentSales }) {
                                 />
                             </Link>
                         );
-                    })
-                ) : (
-                    <p className="py-2 text-center">No Orders</p>
+                    })}
+                {recentSales && recentSales.length === 0 && (
+                    <p className="py-[25%] text-center">No Recent Orders</p>
                 )}
             </ul>
         </div>
@@ -43,7 +48,7 @@ const Card = ({ amount, time, name }) => {
                 bordered
                 name={name.split(' ')[0]}
                 description={new Date(time.seconds * 1000).toLocaleTimeString()}
-                text={name.toUpperCase()}
+                text={name.toUpperCase()[0]}
             />
             <span className="text-sm uppercase">{formatCurrency(amount)}</span>
         </li>

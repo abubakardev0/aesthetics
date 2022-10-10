@@ -36,8 +36,8 @@ function Header() {
                             bordered
                             size="md"
                             name={auth.currentUser.displayName}
-                            text={auth.currentUser.displayName}
-                            className="hidden md:flex"
+                            text={auth.currentUser.displayName.toUpperCase()[0]}
+                            className="hidden capitalize md:flex"
                         />
                     </div>
                 </div>

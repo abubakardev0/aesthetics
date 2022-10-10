@@ -43,7 +43,7 @@ export default function ArtworkCollection({ list, hasError }) {
                         />
                     </button>
                 </div>
-                <div>
+                <div className="min-h-screen">
                     {display === 'list' ? (
                         <CollectionList list={list} />
                     ) : (

@@ -100,7 +100,7 @@ const Room = ({ chat, setChat }) => {
     return (
         <>
             <div className="relative flex w-full items-center space-x-3 border-b py-3 px-4">
-                <Avatar size="sm" text={chat.name.toUpperCase()} />
+                <Avatar size="sm" text={chat.name.toUpperCase()[0]} />
                 <span className="capitalize">{chat.name}</span>
                 <button
                     onClick={() => dropdownRef.current.handler()}
@@ -213,7 +213,7 @@ function ChatMessage(props) {
                 </li>
             ) : (
                 <li className="flex justify-start space-x-2">
-                    <Avatar size="lg" text={name.toUpperCase()} />
+                    <Avatar size="lg" text={name.toUpperCase()[0]} />
                     <div>
                         <p className="max-w-[350px] break-all rounded-t-3xl rounded-br-3xl bg-slate-100 px-4 py-2  text-gray-700 shadow">
                             {text}

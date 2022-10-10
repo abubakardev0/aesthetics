@@ -16,7 +16,7 @@ import { Table, useAsyncList, useCollator, Tooltip } from '@nextui-org/react';
 import SellerLayout from '@/layouts/SellerLayout';
 import Edit from '@/icons/Edit';
 import { formatCurrency } from '@/commoncomponents/functions';
-import DeleteAccount from '@/seller/components/artwork/Delete';
+import DeleteArtwork from '@/seller/components/artwork/Delete';
 
 function Artworks() {
     const collator = useCollator({ numeric: true });
@@ -71,10 +71,15 @@ function Artworks() {
 
     return (
         <>
-            <section className="py-4 px-3">
-                <h3 className="my-2 text-center text-2xl font-medium">
+            <section className="relative px-3">
+                <h3 className="pb-8 text-center text-2xl font-medium uppercase">
                     Your Artworks
                 </h3>
+                <Link href="/seller/artworks/submissions">
+                    <a className="absolute top-2 right-5 text-base underline underline-offset-4">
+                        Your Submissions
+                    </a>
+                </Link>
                 <Table
                     bordered
                     aria-label="Artworks table"
@@ -226,7 +231,10 @@ function Artworks() {
                                             content="Delete Artwork"
                                             color="error"
                                         >
-                                            <DeleteAccount id={item.id} />
+                                            <DeleteArtwork
+                                                collection="artworks"
+                                                id={item.id}
+                                            />
                                         </Tooltip>
                                     </div>
                                 </Table.Cell>
