@@ -14,17 +14,18 @@ import { db, auth } from '@/firebase/firebase-config';
 
 import { Avatar, Collapse } from '@nextui-org/react';
 
+import Slider from '@/commoncomponents/Scrollers/Slider';
+import RelatedWorks from '@/buyer/components/artwork/RelatedWorks';
+import { formatCurrency } from '@/commoncomponents/functions';
+import Alert from '@/commoncomponents/popups/Alert';
+import Error from '@/commoncomponents/Error';
+
 import ARView from '@/icons/ARView';
 import Bookmark from '@/icons/Bookmark';
 import Chat from '@/icons/Chat';
 import Insta from '@/icons/Insta';
 import Twitter from '@/icons/Twitter';
 import Behance from '@/icons/Behance';
-
-import Slider from '@/commoncomponents/Scrollers/Slider';
-import RelatedWorks from '@/buyer/components/artwork/RelatedWorks';
-import { formatCurrency } from '@/commoncomponents/functions';
-import Alert from '@/commoncomponents/popups/Alert';
 
 export default function Item({ artwork, hasError }) {
     const [follow, setFollow] = useState(false);
@@ -147,7 +148,7 @@ export default function Item({ artwork, hasError }) {
     }, []);
 
     if (hasError) {
-        return 'Not Found';
+        return <Error />;
     }
 
     return (
@@ -159,7 +160,13 @@ export default function Item({ artwork, hasError }) {
                 <div className="grid h-[450px] w-full place-content-center pt-0 md:h-full md:w-1/2 md:pt-14">
                     <Slider images={data.images} />
                     <div className="mt-3 flex justify-center">
-                        <Link href="/">
+                        <Link
+                            href={{
+                                pathname:
+                                    'https://model-viewer-ar-xwsb.vercel.app',
+                                query: { id: data.images[0] },
+                            }}
+                        >
                             <a>
                                 <ARView className="h-12 w-12 md:h-16 md:w-16" />
                             </a>
@@ -233,16 +240,31 @@ export default function Item({ artwork, hasError }) {
                                     Save Artwork
                                 </span>
                             </button>
-                            <div className="flex space-x-5 border-l-2 border-r-2 border-black/25 px-3">
-                                <button>
-                                    <Insta className="h-6 w-6 hover:scale-105" />
-                                </button>
-                                <button>
-                                    <Behance className="h-6 w-6 hover:scale-105" />
-                                </button>
-                                <button>
-                                    <Twitter className="h-6 w-6 hover:scale-105" />
-                                </button>
+                            <div className="flex items-center gap-x-5 border-l-2 border-r-2 border-black/25 px-3">
+                                <Link
+                                    href="https://www.instagram.com/"
+                                    passHref={true}
+                                >
+                                    <a>
+                                        <Insta className="h-6 w-6 hover:scale-105" />
+                                    </a>
+                                </Link>
+                                <Link
+                                    href="https://www.behance.net/"
+                                    passHref={true}
+                                >
+                                    <a>
+                                        <Behance className="h-6 w-6 hover:scale-105" />
+                                    </a>
+                                </Link>
+                                <Link
+                                    href="https://www.twitter.com/"
+                                    passHref={true}
+                                >
+                                    <a>
+                                        <Twitter className="h-6 w-6 hover:scale-105" />
+                                    </a>
+                                </Link>
                             </div>
                             <Link
                                 href={{

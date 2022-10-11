@@ -40,7 +40,11 @@ const OrderSuccess = () => {
                         <p className="text-base font-medium leading-6 text-gray-600">
                             {new Date(
                                 orderDetails.placedAt.seconds * 1000
-                            ).toUTCString()}
+                            ).toLocaleDateString('en-US', {
+                                hour12: true,
+                                hour: 'numeric',
+                                minute: 'numeric',
+                            })}
                         </p>
                     </div>
                     <div className="jusitfy-center mt-10 flex w-full flex-col items-stretch  space-y-4 md:space-y-6 xl:flex-row xl:space-x-8 xl:space-y-0">

@@ -72,7 +72,7 @@ Orders.Layout = SettingsLayout;
 
 function Order({ data }) {
     return (
-        <li className="relative w-full cursor-pointer space-y-3 rounded-lg border px-2 py-3 hover:bg-gray-50 md:w-[500px] md:px-4">
+        <li className="relative w-full cursor-pointer space-y-3 rounded-lg border px-2 py-3 hover:bg-gray-50 md:w-[450px] md:px-4">
             <Link href={`/profile/orders/${data.id}`}>
                 <a className="absolute top-4 right-3">
                     <Tooltip content="View Details" color="invert">
@@ -101,7 +101,7 @@ function Order({ data }) {
                 <div className="w-1/2 border-l-2 pl-3">
                     <h6 className="font-medium">Placed At</h6>
                     <p className="text-sm leading-6 text-gray-600">
-                        {new Date(data.placedAt.seconds * 1000).toUTCString()}
+                        {new Date(data.placedAt.seconds * 1000).toDateString()}
                     </p>
                 </div>
             </div>

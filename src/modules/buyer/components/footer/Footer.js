@@ -1,9 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import Plane from '../../../../common/utils/icons/Plane';
-import Insta from '../../../../common/utils/icons/Insta';
-import Twitter from '../../../../common/utils/icons/Twitter';
-import Behance from '../../../../common/utils/icons/Behance';
+import Plane from '@/icons/Plane';
+import Insta from '@/icons/Insta';
+import Twitter from '@/icons/Twitter';
+import Behance from '@/icons/Behance';
 import { Input } from '@nextui-org/react';
 
 function Footer() {

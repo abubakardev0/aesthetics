@@ -212,17 +212,11 @@ function Item({ artwork, notFound }) {
             setLoading(true);
             try {
                 userBid ? await updateBid() : await newBid();
-                setUserBid((prev) => ({
-                    ...prev,
-                    value: parseInt(newValue),
-                    time: Timestamp.fromDate(new Date()),
-                }));
                 setAlert({
                     type: 'success',
                     message: 'A successful bid has been submitted',
                 });
             } catch (error) {
-                console.log(error);
                 setAlert({
                     type: 'error',
                     message: 'There was no success with the bid',
@@ -254,14 +248,22 @@ function Item({ artwork, notFound }) {
                     },
                 });
             }
+            setUserBid((prev) => ({
+                ...prev,
+                value: parseInt(newValue),
+                time: Timestamp.fromDate(new Date()),
+            }));
         }
 
         async function newBid() {
-            await addDoc(collection(db, 'artworks', `${documentId}`, 'bids'), {
-                user: auth.currentUser.uid,
-                value: parseInt(newValue),
-                time: Timestamp.fromDate(new Date()),
-            });
+            const ref = await addDoc(
+                collection(db, 'artworks', `${documentId}`, 'bids'),
+                {
+                    user: auth.currentUser.uid,
+                    value: parseInt(newValue),
+                    time: Timestamp.fromDate(new Date()),
+                }
+            );
             if (data.currentBid === data.startingBid) {
                 updateDoc(doc(db, 'artworks', `${documentId}`), {
                     currentBid: parseInt(newValue),
@@ -277,6 +279,12 @@ function Item({ artwork, notFound }) {
                     totalBids: increment(1),
                 });
             }
+            setUserBid((prev) => ({
+                ...prev,
+                id: ref.id,
+                value: parseInt(newValue),
+                time: Timestamp.fromDate(new Date()),
+            }));
         }
     };
 
@@ -289,7 +297,13 @@ function Item({ artwork, notFound }) {
                 <div className="grid h-[450px] w-full place-content-center md:h-full md:w-1/2">
                     <Slider images={data.images} />
                     <div className="mt-3 flex justify-center">
-                        <Link href="/">
+                        <Link
+                            href={{
+                                pathname:
+                                    'https://model-viewer-ar-xwsb.vercel.app',
+                                query: { id: data.images[0] },
+                            }}
+                        >
                             <a>
                                 <ARView className="h-12 w-12 md:h-16 md:w-16" />
                             </a>
@@ -444,16 +458,31 @@ function Item({ artwork, notFound }) {
                                     Save Artwork
                                 </span>
                             </button>
-                            <div className="flex space-x-5 border-l-2 border-r-2 border-black/25 px-3">
-                                <button>
-                                    <Insta className="h-6 w-6 hover:scale-105" />
-                                </button>
-                                <button>
-                                    <Behance className="h-6 w-6 hover:scale-105" />
-                                </button>
-                                <button>
-                                    <Twitter className="h-6 w-6 hover:scale-105" />
-                                </button>
+                            <div className="flex items-center gap-x-5 border-l-2 border-r-2 border-black/25 px-3">
+                                <Link
+                                    href="https://www.instagram.com/"
+                                    passHref={true}
+                                >
+                                    <a>
+                                        <Insta className="h-6 w-6 hover:scale-105" />
+                                    </a>
+                                </Link>
+                                <Link
+                                    href="https://www.behance.net/"
+                                    passHref={true}
+                                >
+                                    <a>
+                                        <Behance className="h-6 w-6 hover:scale-105" />
+                                    </a>
+                                </Link>
+                                <Link
+                                    href="https://www.twitter.com/"
+                                    passHref={true}
+                                >
+                                    <a>
+                                        <Twitter className="h-6 w-6 hover:scale-105" />
+                                    </a>
+                                </Link>
                             </div>
                             <Link
                                 href={{

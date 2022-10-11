@@ -14,20 +14,24 @@ import DeleteArtwork from '@/seller/components/artwork/Delete';
 import Error from '@/commoncomponents/Error';
 
 function Submissions() {
-    const { data: list, error } = useSWR('submissions', async () => {
-        const list = [];
-        const docRef = await getDocs(
-            query(
-                collection(db, 'submittedArtworks'),
-                where('uid', '==', `${auth.currentUser.uid}`),
-                orderBy('submittedAt', 'desc')
-            )
-        );
-        docRef.forEach((doc) => {
-            list.push({ id: doc.id, ...doc.data() });
-        });
-        return list;
-    });
+    const { data: list, error } = useSWR(
+        'submissions',
+        async () => {
+            const list = [];
+            const docRef = await getDocs(
+                query(
+                    collection(db, 'submittedArtworks'),
+                    where('uid', '==', `${auth.currentUser.uid}`),
+                    orderBy('submittedAt', 'desc')
+                )
+            );
+            docRef.forEach((doc) => {
+                list.push({ id: doc.id, ...doc.data() });
+            });
+            return list;
+        },
+        { refreshInterval: 1000 }
+    );
     if (error) {
         return <Error />;
     }

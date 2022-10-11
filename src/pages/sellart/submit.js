@@ -6,14 +6,16 @@ import { getDoc, doc } from 'firebase/firestore';
 import { auth, db } from '@/firebase/firebase-config';
 
 import axios from 'axios';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Loading } from '@nextui-org/react';
 
+import EmptyLayout from '@/layouts/EmptyLayout';
 import PrivateRoute from '@/commoncomponents/routes/Private';
 import Details from '@/seller/uploadartwork/Details';
 import ChooseMaterial from '@/seller/uploadartwork/ChooseMaterial';
 import Images from '@/seller/uploadartwork/Images';
 import UploadCertifications from '@/seller/uploadartwork/Certification';
+import Arrow from '@/icons/Arrow';
 
 function FormSubmission({ mediums, surfaces }) {
     const router = useRouter();
@@ -30,6 +32,7 @@ function FormSubmission({ mediums, surfaces }) {
     } = useForm();
 
     const onSubmit = async (data) => {
+        console.log('submit');
         setLoading(true);
         try {
             const res = await axios.post('/api/submit-artwork', {
@@ -52,7 +55,13 @@ function FormSubmission({ mediums, surfaces }) {
 
     return (
         <PrivateRoute>
-            <main className="grid place-content-center py-10 md:gap-5">
+            <button
+                onClick={() => router.back()}
+                className="fixed left-2 top-2 rounded-full border bg-white p-2 hover:bg-gray-50 md:left-6 md:top-8"
+            >
+                <Arrow className="h-6 w-6 -rotate-180" />
+            </button>
+            <main className="grid place-content-center pt-12 pb-5 md:gap-5 md:py-10">
                 <div className="flex w-full items-center justify-center px-2 pt-3 sm:w-[500px]">
                     <Steps
                         current={formState}
@@ -79,75 +88,80 @@ function FormSubmission({ mediums, surfaces }) {
                         isLast={true}
                     />
                 </div>
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    name="submit-artwork"
-                    id="submit-artwork"
-                    className="mt-5 w-full place-self-center px-5 py-6 sm:w-[400px] sm:flex-col sm:rounded-xl sm:border-2 sm:border-slate-200 sm:shadow-slate-400"
-                >
-                    {formState === 1 && (
-                        <Details
-                            state={setFormState}
-                            register={register}
-                            setValue={setValue}
-                            errors={errors}
-                            trigger={trigger}
-                        />
-                    )}
-                    {formState === 2 && (
-                        <ChooseMaterial
-                            mediums={mediums}
-                            surfaces={surfaces}
-                            state={setFormState}
-                            setValue={setValue}
-                            setError={setError}
-                        />
-                    )}
-                    {formState === 3 && (
-                        <>
-                            <Images
+                <section className="mt-5 w-full place-self-center px-5 py-6 sm:w-[400px] sm:flex-col sm:rounded-xl sm:border-2 sm:border-slate-200 sm:shadow-slate-400">
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        name="submit-artwork"
+                        id="submit-artwork"
+                    >
+                        {formState === 1 && (
+                            <Details
+                                state={setFormState}
+                                register={register}
+                                setValue={setValue}
+                                errors={errors}
+                                trigger={trigger}
+                            />
+                        )}
+                        {formState === 2 && (
+                            <ChooseMaterial
+                                mediums={mediums}
+                                surfaces={surfaces}
                                 state={setFormState}
                                 setValue={setValue}
                                 setError={setError}
                             />
-                        </>
-                    )}
-                    {formState === 4 && (
-                        <>
-                            <UploadCertifications
-                                state={setFormState}
-                                setValue={setValue}
-                            />
-                            {setValue('uid', auth.currentUser.uid)}
-                            <div className="mt-5 flex space-x-3">
-                                <button
-                                    className="w-full rounded-xl bg-neutral-200 py-2 text-neutral-800 active:bg-neutral-300"
-                                    onClick={() => setFormState((e) => e - 1)}
-                                >
-                                    Prev Step
-                                </button>
-                                <button
-                                    type="submit"
-                                    form="submit-artwork"
-                                    className="w-full rounded-md bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg hover:bg-neutral-900"
-                                >
-                                    {loading ? (
-                                        <Loading
-                                            type="points-opacity"
-                                            color="currentColor"
-                                            size="sm"
-                                        />
-                                    ) : (
-                                        'Submit'
-                                    )}
-                                </button>
-                            </div>
-                            <span
-                                ref={errorRef}
-                                className="mt-2 text-base text-red-500"
-                            />
-                        </>
-                    )}
+                        )}
+                        {formState === 3 && (
+                            <>
+                                <Images
+                                    state={setFormState}
+                                    setValue={setValue}
+                                    setError={setError}
+                                />
+                            </>
+                        )}
+                        {formState === 4 && (
+                            <>
+                                <UploadCertifications
+                                    state={setFormState}
+                                    setValue={setValue}
+                                />
+                                {setValue('uid', auth.currentUser.uid)}
+                                {console.log('logged')}
+                                <div className="mt-5 flex space-x-3">
+                                    <button
+                                        className="w-full rounded-xl bg-neutral-200 py-2 text-neutral-800 active:bg-neutral-300"
+                                        onClick={() =>
+                                            setFormState((e) => e - 1)
+                                        }
+                                    >
+                                        Prev Step
+                                    </button>
+                                    <button
+                                        disabled={loading ? true : false}
+                                        type="submit"
+                                        form="submit-artwork"
+                                        className="w-full rounded-md bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg hover:bg-neutral-900"
+                                    >
+                                        {loading ? (
+                                            <Loading
+                                                type="points-opacity"
+                                                color="currentColor"
+                                                size="sm"
+                                            />
+                                        ) : (
+                                            'Submit'
+                                        )}
+                                    </button>
+                                </div>
+                                <span
+                                    ref={errorRef}
+                                    className="mt-2 text-base text-red-500"
+                                />
+                            </>
+                        )}
+                    </form>
                     {formState === 5 && (
                         <>
                             <h4 className="my-2 text-center text-xl font-medium">
@@ -175,7 +189,7 @@ function FormSubmission({ mediums, surfaces }) {
                             </div>
                         </>
                     )}
-                </form>
+                </section>
             </main>
         </PrivateRoute>
     );
@@ -184,6 +198,7 @@ function FormSubmission({ mediums, surfaces }) {
 export default FormSubmission;
 
 FormSubmission.title = 'Submit Artwork';
+FormSubmission.Layout = EmptyLayout;
 
 const Steps = ({ current, number, isLast }) => {
     return (

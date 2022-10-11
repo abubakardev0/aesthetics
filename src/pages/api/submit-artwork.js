@@ -72,6 +72,7 @@ export default async function handler(req, res) {
                 unit: data.unit.toLocaleLowerCase(),
                 mediums: data.mediums,
                 surfaces: data.surfaces,
+                status: 'pending',
                 submittedAt: Timestamp.fromDate(new Date()),
             };
             await addDoc(collection(db, 'submittedArtworks'), artwork);

@@ -235,7 +235,7 @@ function Artworks({ artworks, hasError }) {
                                                         Date.now() +
                                                         Math.random()
                                                     }
-                                                    className="capitalize hover:underline"
+                                                    className="cursor-pointer capitalize hover:underline"
                                                     onClick={() => {
                                                         filterCategory(
                                                             category
@@ -251,7 +251,7 @@ function Artworks({ artworks, hasError }) {
                             <Collapse title="Type">
                                 <ul className="list-inside list-disc">
                                     <li
-                                        className="hover:underline"
+                                        className="cursor-pointer hover:underline"
                                         onClick={() => {
                                             filterType('immediate');
                                         }}
@@ -259,7 +259,7 @@ function Artworks({ artworks, hasError }) {
                                         Immediate Buy
                                     </li>
                                     <li
-                                        className="hover:underline"
+                                        className="cursor-pointer hover:underline"
                                         onClick={() => {
                                             filterType('auction');
                                         }}

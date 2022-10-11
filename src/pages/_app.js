@@ -3,7 +3,7 @@ import { NextUIProvider } from '@nextui-org/react';
 import { AuthProvider } from '@/hooks/useAuth';
 import { Suspense } from 'react';
 import { ParallaxProvider } from 'react-scroll-parallax';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 import Loader from '@/commoncomponents/Loader';
 import BuyerLayout from '@/layouts/BuyerLayout';
@@ -16,14 +16,14 @@ function App({ Component, pageProps, router }) {
 
     const variants = {
         pageInitial: {
-            opacity: 0,
+            opacity: 0.5,
         },
         pageAnimate: {
             opacity: 1,
         },
     };
     return (
-        <AnimatePresence initial={false} exitBeforeEnter>
+        <>
             <Head>
                 <title>{Component.title}</title>
             </Head>
@@ -45,7 +45,7 @@ function App({ Component, pageProps, router }) {
                     </Suspense>
                 </AuthProvider>
             </NextUIProvider>
-        </AnimatePresence>
+        </>
     );
 }
 

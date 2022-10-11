@@ -47,7 +47,14 @@ const Card = ({ amount, time, name }) => {
                 size="lg"
                 bordered
                 name={name.split(' ')[0]}
-                description={new Date(time.seconds * 1000).toLocaleTimeString()}
+                description={new Date(time.seconds * 1000).toLocaleDateString(
+                    'en-US',
+                    {
+                        hour12: true,
+                        hour: 'numeric',
+                        minute: 'numeric',
+                    }
+                )}
                 text={name.toUpperCase()[0]}
             />
             <span className="text-sm uppercase">{formatCurrency(amount)}</span>
