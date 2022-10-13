@@ -123,7 +123,7 @@ export default async function handler(req, res) {
         });
 
         res.status(200).json({
-            url: `http://localhost:3000/success?order_id=${docRef.id}`,
+            url: `https://fyp-aesthetics.vercel.app/success?order_id=${docRef.id}`,
         });
     } catch (error) {
         res.status(400).json(error.message);
