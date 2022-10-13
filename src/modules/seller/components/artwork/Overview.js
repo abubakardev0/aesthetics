@@ -1,7 +1,37 @@
+import { useRef } from 'react';
+
+import { db } from '@/firebase/firebase-config';
+import { doc, updateDoc } from 'firebase/firestore';
+
 import Slider from '@/commoncomponents/Scrollers/Slider';
 import { formatCurrency } from '@/commoncomponents/functions';
 
 function Overview({ data }) {
+    // const priceRef = useRef(null);
+    const descriptionRef = useRef(null);
+    // const updatePrice = async () => {
+    //     const price = priceRef.current?.value;
+    //     if (!price) {
+    //         return;
+    //     }
+    //     if (price === data.price) {
+    //         return;
+    //     }
+    //     await updateDoc(doc(db, 'artworks', data.id), {
+    //         price: parseInt(price),
+    //     });
+    // };
+    const updateDescription = async () => {
+        const description = descriptionRef.current?.value;
+        alert(description);
+        if (!description) {
+            return;
+        }
+        await updateDoc(doc(db, 'artworks', `${data.id}`), {
+            description: description,
+        });
+    };
+
     return (
         <div className="flex h-[80vh] w-full lg:pr-10">
             <div className="h-full w-full space-y-5 lg:w-4/12">
@@ -17,7 +47,7 @@ function Overview({ data }) {
                         {data.artist}
                     </p>
                 </div>
-                <div>
+                <div className="relative">
                     <label className="font-medium">
                         {data.type === 'immediate' ? 'Price' : 'Current Bid'}
                     </label>
@@ -56,11 +86,21 @@ function Overview({ data }) {
                         </p>
                     </label>
                 </div>
-                <div className="w-[700px]">
+                <div className="relative w-[700px]">
+                    <button
+                        onClick={updateDescription}
+                        className="absolute right-1 top-0 text-sm text-green-500"
+                    >
+                        Update
+                    </button>
                     <label className="font-medium">Description</label>
-                    <p className="mt-1 rounded-md border p-4 capitalize">
+                    <textarea
+                        ref={descriptionRef}
+                        resize="none"
+                        className="mt-1 w-full rounded-md border p-4 capitalize"
+                    >
                         {data.description ? data.description : 'No Description'}
-                    </p>
+                    </textarea>
                 </div>
             </div>
             <div className="w-4/12 space-y-4 lg:px-10">
@@ -70,11 +110,11 @@ function Overview({ data }) {
                         <p
                             className={`${
                                 data.status === 'listed' &&
-                                'bg-green-100 text-green-500'
-                            } mt-1 w-fit rounded-full border border-green-300 px-6 py-[4px] capitalize
+                                'border border-green-300 bg-green-100 text-green-500 '
+                            } mt-1 w-fit rounded-full px-6 py-[4px] capitalize
                                     ${
                                         data.status === 'sold' &&
-                                        'bg-orange-100 text-orange-500'
+                                        'border border-orange-300 bg-orange-100 text-orange-500 '
                                     }
                                     `}
                         >

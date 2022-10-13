@@ -7,7 +7,6 @@ import { doc, getDoc } from 'firebase/firestore';
 import SellerLayout from '@/layouts/SellerLayout';
 
 import Overview from '@/seller/components/artwork/Overview';
-// import EditDetails from '@/seller/components/artwork/EditDetails';
 import ViewBids from '@/seller/components/artwork/ViewBids';
 
 function Artwork({ artwork }) {
@@ -28,14 +27,6 @@ function Artwork({ artwork }) {
                     >
                         Overview
                     </li>
-                    {/* <li
-                        onClick={() => setMode('edit')}
-                        className={`${
-                            mode === 'edit' ? ' bg-gray-200' : 'bg-none'
-                        } mb-0 cursor-pointer rounded-t-lg px-3 py-2.5 text-gray-800`}
-                    >
-                        Edit Details
-                    </li> */}
                     {data.type === 'auction' && (
                         <li
                             onClick={() => setMode('bids')}
@@ -48,13 +39,6 @@ function Artwork({ artwork }) {
                     )}
                 </ul>
                 {mode === 'overview' && <Overview data={data} />}
-                {/* {mode === 'edit' && (
-                    <EditDetails
-                        title={data.title}
-                        price={data.price}
-                        description={data.description}
-                    />
-                )} */}
                 {mode === 'bids' && (
                     <ViewBids
                         id={data.id}
