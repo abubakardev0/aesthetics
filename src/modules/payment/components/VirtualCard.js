@@ -17,7 +17,7 @@ const VirtualCard = ({ userName, cardNumber, expiryDate, cardType }) => {
                     <h5 className="text-sm uppercase tracking-wide text-gray-500 ">
                         Card Holder
                     </h5>
-                    <p className="whitespace-pre-wrap text-base font-medium text-gray-800 md:text-lg">
+                    <p className="whitespace-pre-wrap text-base font-medium capitalize text-gray-800 md:text-lg">
                         {userName}
                     </p>
                 </div>

@@ -294,21 +294,18 @@ function Item({ artwork, notFound }) {
                 <title>{data.title.toLocaleUpperCase()}</title>
             </Head>
             <section className="container mx-auto flex h-full w-full flex-col md:h-screen md:flex-row md:gap-5">
-                <div className="grid h-[450px] w-full place-content-center md:h-full md:w-1/2">
+                <div className="grid h-[450px] w-full place-content-center pb-2 md:h-full md:w-1/2">
                     <Slider images={data.images} />
-                    <div className="mt-3 flex justify-center">
-                        <Link
-                            href={{
-                                pathname:
-                                    'https://model-viewer-ar-xwsb.vercel.app',
-                                query: { id: data.images[0] },
-                            }}
-                        >
-                            <a>
-                                <ARView className="h-12 w-12 md:h-16 md:w-16" />
-                            </a>
-                        </Link>
-                    </div>
+                    <Link
+                        href={{
+                            pathname: 'https://model-viewer-ar-xwsb.vercel.app',
+                            query: { id: data.images[0] },
+                        }}
+                    >
+                        <a className="mt-3 flex justify-center">
+                            <ARView className="h-12 w-12 md:h-16 md:w-16" />
+                        </a>
+                    </Link>
                 </div>
                 <div className="h-full w-full py-2 md:w-1/2 md:px-16">
                     <div className="h-full w-full flex-col-reverse space-y-8 p-4 md:flex-col md:rounded-lg md:p-12">
@@ -505,7 +502,7 @@ function Item({ artwork, notFound }) {
                     </div>
                 </div>
             </section>
-            <section className="container mx-auto py-6 md:py-16">
+            <section className="container mx-auto px-2 py-6 md:px-0 md:py-16">
                 <div className="mb-5 flex w-full flex-col items-center justify-center space-y-5 md:mb-10">
                     <Collapse
                         title="About This Artwork"

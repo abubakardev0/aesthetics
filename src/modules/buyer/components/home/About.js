@@ -48,7 +48,7 @@ function About() {
                         />
                     </div>
                 </div>
-                <div className="mt-20 w-full space-y-4 text-left text-base md:mt-0 md:w-96 md:text-lg">
+                <div className="mt-20 w-full space-y-4 px-2 text-left text-base md:mt-0 md:w-96 md:px-0 md:text-lg">
                     <p className="text-lg font-medium md:text-2xl">
                         Aesthetics is an online gallery that lets you interact
                         with amazing artworks in AR. It's like stepping inside

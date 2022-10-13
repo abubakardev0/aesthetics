@@ -75,7 +75,7 @@ function Images({ state, setValue, setError }) {
                             Add Photos here
                         </h1>
                         <p className="text-sm text-neutral-600 md:text-base">
-                            Files Supported: JPG, PNG, Webp
+                            Files Supported: JPG,JPEG, PNG, Webp
                         </p>
                         <p className="mb-6 text-sm text-neutral-600 md:text-base">
                             Maximum Size: 20MB

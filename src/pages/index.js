@@ -22,7 +22,7 @@ function Home({ data, hasError }) {
             <section className="container relative flex h-fit w-full flex-col items-center justify-between py-10 px-2 md:mx-auto md:flex-row md:py-20 md:px-0">
                 <Category />
             </section>
-            <section className="container mx-auto px-2 pt-5 md:px-5">
+            <section className="container mx-auto px-3 pt-5 md:px-5">
                 <NewWorks />
             </section>
         </>

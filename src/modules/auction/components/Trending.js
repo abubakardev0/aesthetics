@@ -36,7 +36,7 @@ function Trending() {
     }
     return (
         <>
-            <div className="my-12 text-center">
+            <div className="mt-8 mb-4 text-center md:mt-12">
                 <p className="text-sm font-medium uppercase md:text-base">
                     Bid It To Win It
                 </p>

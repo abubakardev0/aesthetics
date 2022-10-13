@@ -23,7 +23,7 @@ export default function Page({ posts }) {
                     },
                 }}
                 exit={{ opacity: 0 }}
-                className="container mx-auto flex flex-wrap justify-start gap-6"
+                className="container mx-auto flex flex-wrap justify-center gap-0 md:gap-6 lg:justify-start"
             >
                 {posts.map((item) => (
                     <Link

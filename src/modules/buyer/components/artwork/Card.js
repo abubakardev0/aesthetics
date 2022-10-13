@@ -21,7 +21,7 @@ function Card({
     return (
         <div
             ref={ref}
-            className="mb-8 inline-block h-auto w-fit min-w-[140px] max-w-[300px] text-left md:min-w-[180px] lg:min-w-[240px]"
+            className="mb-8 inline-block h-auto w-fit min-w-[170px] max-w-[300px] text-left md:min-w-[180px] lg:min-w-[240px]"
             style={{
                 transform: isInView ? 'none' : 'translateY(10px)',
                 opacity: isInView ? 1 : 0,

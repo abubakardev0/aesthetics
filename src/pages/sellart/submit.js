@@ -57,7 +57,7 @@ function FormSubmission({ mediums, surfaces }) {
         <PrivateRoute>
             <button
                 onClick={() => router.back()}
-                className="fixed left-2 top-2 rounded-full border bg-white p-2 hover:bg-gray-50 md:left-6 md:top-8"
+                className="fixed left-2 top-2 z-20 rounded-full border bg-white p-2 hover:bg-gray-50 md:left-6 md:top-8"
             >
                 <Arrow className="h-6 w-6 -rotate-180" />
             </button>

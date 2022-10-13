@@ -157,21 +157,18 @@ export default function Item({ artwork, hasError }) {
                 <title>{data.title.toLocaleUpperCase()}</title>
             </Head>
             <section className="container mx-auto flex h-full w-full flex-col md:h-[600px] md:flex-row md:gap-5">
-                <div className="grid h-[450px] w-full place-content-center pt-0 md:h-full md:w-1/2 md:pt-14">
+                <div className="grid h-[450px] w-full place-content-center pt-0 pb-2 md:h-full md:w-1/2 md:pt-14">
                     <Slider images={data.images} />
-                    <div className="mt-3 flex justify-center">
-                        <Link
-                            href={{
-                                pathname:
-                                    'https://model-viewer-ar-xwsb.vercel.app',
-                                query: { id: data.images[0] },
-                            }}
-                        >
-                            <a>
-                                <ARView className="h-12 w-12 md:h-16 md:w-16" />
-                            </a>
-                        </Link>
-                    </div>
+                    <Link
+                        href={{
+                            pathname: 'https://model-viewer-ar-xwsb.vercel.app',
+                            query: { id: data.images[0] },
+                        }}
+                    >
+                        <a className="mt-3 flex justify-center">
+                            <ARView className="h-12 w-12 md:h-16 md:w-16" />
+                        </a>
+                    </Link>
                 </div>
                 <div className="h-full w-full py-5 md:w-1/2 md:px-16">
                     <div className="h-full w-full flex-col-reverse space-y-6 p-4 md:flex-col md:space-y-12 md:rounded-lg md:p-12">
@@ -287,7 +284,7 @@ export default function Item({ artwork, hasError }) {
                     </div>
                 </div>
             </section>
-            <section className="container mx-auto py-6 md:py-16">
+            <section className="container mx-auto py-6 px-2 md:py-16 md:px-0">
                 <div className="mb-5 flex w-full flex-col items-center justify-center space-y-5 md:mb-10">
                     <Collapse
                         title="About This Artwork"

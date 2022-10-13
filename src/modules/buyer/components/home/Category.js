@@ -67,7 +67,7 @@ function Category() {
     };
     return (
         <>
-            <div className="w-full md:w-1/2">
+            <div className="w-full px-2 md:w-1/2 md:px-0">
                 <h4 className="m text-sm font-medium uppercase">
                     Our Collections
                 </h4>
@@ -96,7 +96,7 @@ function Category() {
                 </div>
             </div>
 
-            <div className="h-full w-full md:w-1/2">
+            <div className="h-full w-full px-2 md:w-1/2 md:px-0">
                 <ul
                     ref={carousel}
                     className="no-scrollbar flex snap-x snap-mandatory items-end gap-x-6 overflow-x-auto overflow-y-hidden ease-in-out"

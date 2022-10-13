@@ -27,20 +27,23 @@ export default function PaymentModal() {
     const onSubmit = async (data) => {
         setValue('cardNumber', value);
         try {
-            // await updateDoc(doc(db, 'users', auth.currentUser.uid), {
-            //     paymentInfo: {
-            //         ...data,
-            //     },
-            // });
-            console.log(data);
+            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                paymentInfo: {
+                    name: data.name.toLowerCase(),
+                    cvv: parseInt(data.cvv),
+                    cardNumber: parseInt(data.cardNumber),
+                    type: data.type,
+                    expiry: data.expiry,
+                },
+            });
             setAlert({
                 type: 'success',
-                message: 'Address updated',
+                message: 'Payment details updated',
             });
         } catch (error) {
             setAlert({
-                type: 'danger',
-                message: error.message,
+                type: 'error',
+                message: 'Unable to update payment details',
             });
         } finally {
             setVisible(false);
@@ -70,13 +73,13 @@ export default function PaymentModal() {
         if (isMastercard(value)) {
             return {
                 icon: <Mastercard className="h-6 w-6 " />,
-                text: '',
+                text: 'mastercard',
                 color: 'primary',
             };
         } else if (isVisa(value)) {
             return {
                 icon: <Visa className="h-6 w-6 " />,
-                text: '',
+                text: 'visa',
                 color: 'primary',
             };
         } else {
@@ -91,7 +94,7 @@ export default function PaymentModal() {
         <>
             <button
                 onClick={() => setVisible(true)}
-                className="mt-10 h-12 w-full rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
+                className="mt-10 h-12 w-full rounded-md bg-neutral-900 px-5 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300 md:px-8"
             >
                 Add Payment Details
             </button>
@@ -134,7 +137,9 @@ export default function PaymentModal() {
                             label="Card Number"
                             placeholder="1589558955956688"
                             fullWidth
+                            {...register('cardNumber', { required: true })}
                         />
+                        {setValue('type', helper.text)}
                         <div className="flex items-center justify-between space-x-4">
                             <Input
                                 shadow={false}
