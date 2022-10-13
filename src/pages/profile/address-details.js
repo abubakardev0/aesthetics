@@ -29,7 +29,12 @@ function Address() {
         try {
             await updateDoc(doc(db, 'users', auth.currentUser.uid), {
                 address: {
-                    ...data,
+                    address: data.address,
+                    phone: parseInt(data.phone),
+                    city: data.city,
+                    name: data.name,
+                    province: data.province,
+                    zip: parseInt(data.zip),
                 },
             });
             setAlert({

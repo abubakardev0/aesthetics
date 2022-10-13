@@ -52,7 +52,7 @@ function BasicInfo() {
             setLoading(true);
             try {
                 await updateDoc(doc(db, 'users', user.id), {
-                    phone: phone,
+                    phone: parseInt(phone),
                     updatedAt: Timestamp.fromDate(new Date()),
                 });
                 setAlert({
@@ -77,7 +77,7 @@ function BasicInfo() {
                 });
                 await updateDoc(doc(db, 'users', user.id), {
                     name: name,
-                    phone: phone,
+                    phone: parseInt(phone),
                     updatedAt: Timestamp.fromDate(new Date()),
                 });
                 setAlert({
