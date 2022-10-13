@@ -92,7 +92,7 @@ const Hero = ({ list }) => {
         <AnimatePresence initial={false} exitBeforeEnter>
             <motion.section className="relative flex h-full w-full flex-col-reverse overflow-hidden md:h-screen md:max-h-[700px] md:flex-row">
                 <div className="flex h-auto w-full flex-col items-center justify-center pt-1  md:h-full md:w-1/2 md:flex-row md:justify-start md:pt-0">
-                    <div className="mt-2 flex h-fit w-full items-center justify-center gap-5 self-center md:mt-0 md:h-4/6 md:w-1/12 md:flex-col ">
+                    <div className="z-10 mt-2 flex h-fit w-full items-center justify-center gap-5 self-center md:mt-0 md:h-4/6 md:w-1/12 md:flex-col ">
                         {list.map((img, index) => {
                             return (
                                 <div

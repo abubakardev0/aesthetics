@@ -165,9 +165,9 @@ export default function Item({ artwork, hasError }) {
                             query: { id: data.images[0] },
                         }}
                     >
-                        <a className="mt-3 flex justify-center">
+                        <button className="mt-3 flex justify-center">
                             <ARView className="h-12 w-12 md:h-16 md:w-16" />
-                        </a>
+                        </button>
                     </Link>
                 </div>
                 <div className="h-full w-full py-5 md:w-1/2 md:px-16">
@@ -284,7 +284,7 @@ export default function Item({ artwork, hasError }) {
                     </div>
                 </div>
             </section>
-            <section className="container mx-auto py-6 px-2 md:py-16 md:px-0">
+            <section className="container mx-auto py-6 px-3 md:py-16 md:px-0">
                 <div className="mb-5 flex w-full flex-col items-center justify-center space-y-5 md:mb-10">
                     <Collapse
                         title="About This Artwork"
