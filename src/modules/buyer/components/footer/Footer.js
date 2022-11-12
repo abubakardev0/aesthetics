@@ -49,6 +49,7 @@ function Footer() {
                 </h3>
                 <Input
                     clearable
+                    bordered
                     contentRightStyling={false}
                     type="email"
                     placeholder="Enter E-mail"

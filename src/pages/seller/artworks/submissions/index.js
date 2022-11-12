@@ -6,42 +6,62 @@ import { db, auth } from '@/firebase/firebase-config';
 
 import useSWR from 'swr';
 
-import { Tooltip, Loading } from '@nextui-org/react';
+import {
+    Loading,
+    Table,
+    useAsyncList,
+    useCollator,
+    Tooltip,
+} from '@nextui-org/react';
 
 import SellerLayout from '@/layouts/SellerLayout';
 import Plus from '@/icons/Plus';
 import DeleteArtwork from '@/seller/components/artwork/Delete';
-import Error from '@/commoncomponents/Error';
+import Edit from '@/icons/Edit';
 
 function Submissions() {
-    const { data: list, error } = useSWR(
-        'submissions',
-        async () => {
-            const list = [];
-            const docRef = await getDocs(
-                query(
-                    collection(db, 'submittedArtworks'),
-                    where('uid', '==', `${auth.currentUser.uid}`),
-                    orderBy('submittedAt', 'desc')
-                )
-            );
-            docRef.forEach((doc) => {
-                list.push({ id: doc.id, ...doc.data() });
-            });
-            return list;
-        },
-        { refreshInterval: 1000 }
-    );
-    if (error) {
-        return <Error />;
-    }
-    if (!list) {
-        return (
-            <div className="grid h-screen place-content-center">
-                <Loading />
-            </div>
+    const collator = useCollator({ numeric: true });
+    const columns = [
+        { name: 'ITEM', uid: 'title' },
+        { name: 'DIMENSIONS', uid: 'dimensions' },
+        { name: 'MEDIUM', uid: 'mediums' },
+        { name: 'SURFACE', uid: 'surfaces' },
+        { name: 'STATUS', uid: 'status' },
+        { name: 'SUBMITTED AT', uid: 'submittedAt' },
+        { name: 'ACTIONS', uid: 'actions' },
+    ];
+
+    async function load() {
+        const list = [];
+        const docRef = await getDocs(
+            query(
+                collection(db, 'submittedArtworks'),
+                where('uid', '==', `${auth.currentUser.uid}`),
+                orderBy('submittedAt', 'desc')
+            )
         );
+        docRef.forEach((doc) => {
+            list.push({ id: doc.id, ...doc.data() });
+        });
+        return {
+            items: list,
+        };
     }
+    async function sort({ items, sortDescriptor }) {
+        return {
+            items: items.sort((a, b) => {
+                let first = a[sortDescriptor.column];
+                let second = b[sortDescriptor.column];
+                let cmp = collator.compare(first, second);
+                console.log(a[sortDescriptor.column]);
+                if (sortDescriptor.direction === 'descending') {
+                    cmp *= -1;
+                }
+                return cmp;
+            }),
+        };
+    }
+    const list = useAsyncList({ load, sort });
 
     return (
         <>
@@ -51,96 +71,153 @@ function Submissions() {
                 </h3>
                 <div className="my-5 flex items-center justify-between">
                     <div className="space-x-4">
-                        <span className="rounded-full border border-sky-100 bg-sky-100 px-5 py-2.5 text-sky-500">
+                        <span className="rounded-full border border-sky-100 bg-sky-100 px-3 py-2.5 text-xs text-sky-500 sm:px-3 sm:text-sm md:px-5 md:text-base">
                             All Submissions
                         </span>
                     </div>
                     <Link href="/sellart/submit">
-                        <a className="inline-flex items-center gap-x-2 rounded-md bg-neutral-800 py-2.5 px-5 text-base text-white hover:bg-neutral-700 active:bg-neutral-900">
-                            <Plus className="h-5 w-5 text-white" />
+                        <a className="inline-flex items-center gap-x-2 rounded-md bg-neutral-800 py-2.5 px-2 text-xs text-white hover:bg-neutral-700 active:bg-neutral-900 sm:px-3 sm:text-sm md:px-5 md:text-base">
+                            <Plus className="h-4 w-4 text-white md:h-5 md:w-5" />
                             Add New
                         </a>
                     </Link>
                 </div>
-                <div className="relative overflow-x-auto rounded-md border">
-                    <table className="w-full text-left text-sm text-gray-500">
-                        <thead className="border-b bg-slate-100 text-xs uppercase text-gray-600">
-                            <tr>
-                                <th scope="col" className="py-3 px-6">
-                                    Item
-                                </th>
-                                <th scope="col" className="py-3 px-6">
-                                    Dimensions
-                                </th>
-                                <th scope="col" className="py-3 px-6">
-                                    Medium
-                                </th>
-                                <th scope="col" className="py-3 px-6">
-                                    Surface
-                                </th>
-                                <th scope="col" className="py-3 px-6">
-                                    Submission Date
-                                </th>
-                                <th scope="col" className="py-3 px-6">
-                                    Status
-                                </th>
-                                <th scope="col" className="py-3 px-6">
-                                    Action
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {list.map((item) => {
-                                return (
-                                    <tr
-                                        className="border-b bg-white"
-                                        key={item.id}
+                {list.items.length > 0 ? (
+                    <Table
+                        bordered
+                        aria-label="Submitted Artworks table"
+                        css={{
+                            minWidth: '100%',
+                            minHeight: 'fit-content',
+                            maxHeight: 'calc($space$14 * 12)',
+                            backgroundColor: 'white',
+                            overflowX: 'scroll',
+                            zIndex: 0,
+                        }}
+                        selectionMode="none"
+                        sortDescriptor={list.sortDescriptor}
+                        onSortChange={list.sort}
+                    >
+                        <Table.Header columns={columns}>
+                            <Table.Column
+                                key="title"
+                                width="300px"
+                                allowsSorting
+                            >
+                                ITEM
+                            </Table.Column>
+                            <Table.Column key="dimensions" width="180px">
+                                DIMENSIONS
+                            </Table.Column>
+                            <Table.Column
+                                key="mediums"
+                                width="130px"
+                                allowsSorting
+                            >
+                                MEDIUM
+                            </Table.Column>
+                            <Table.Column
+                                key="surfaces"
+                                width="130px"
+                                allowsSorting
+                            >
+                                SURFACE
+                            </Table.Column>
+                            <Table.Column
+                                key="status"
+                                width="100px"
+                                allowsSorting
+                            >
+                                STATUS
+                            </Table.Column>
+                            <Table.Column
+                                key="submittedAt"
+                                width="150px"
+                                allowsSorting
+                            >
+                                SUBMISSION DATE
+                            </Table.Column>
+                            <Table.Column key="actions" width="100px">
+                                ACTIONS
+                            </Table.Column>
+                        </Table.Header>
+                        <Table.Body
+                            items={list.items}
+                            loadingState={list.loadingState}
+                            onLoadMore={list.loadMore}
+                        >
+                            {(item) => (
+                                <Table.Row
+                                    key={item.id}
+                                    css={{
+                                        borderBottom: '1px solid #f1f5f9',
+                                    }}
+                                >
+                                    <Table.Cell
+                                        css={{
+                                            width: '300px',
+                                        }}
                                     >
-                                        <th
-                                            scope="row"
-                                            className="flex items-center gap-x-3 whitespace-nowrap py-4 px-6"
-                                        >
-                                            <Image
-                                                src={item.images[0]}
-                                                height={70}
-                                                width={60}
-                                                alt="no image"
-                                                className="object-cover"
-                                            />
+                                        <div className="flex items-center gap-x-3 whitespace-nowrap">
+                                            <div className="h-16 w-14 overflow-hidden">
+                                                <Image
+                                                    src={item.images[0]}
+                                                    height={70}
+                                                    width={60}
+                                                    alt="no image"
+                                                    className="object-cover"
+                                                />
+                                            </div>
                                             <div>
-                                                <h5 className="text-xl font-medium capitalize">
+                                                <h5 className="text-wrap text-sm font-medium capitalize sm:text-base md:text-xl">
                                                     {item.title}
                                                 </h5>
-                                                <p className="capitalize first-letter:lowercase">
+                                                <p className="ms:text-sm text-xs capitalize first-letter:lowercase md:text-base">
                                                     by {item.artist}
                                                 </p>
                                             </div>
-                                        </th>
-                                        <td className="py-4 px-6">
-                                            {`${item.height}H - ${
-                                                item.width
-                                            }W - ${
-                                                item.depth ? item.depth : 0
-                                            }D cm`}
-                                        </td>
-                                        <td className="py-4 px-6 capitalize">
-                                            {item.mediums.join(', ')}
-                                        </td>
-                                        <td className="py-4 px-6 capitalize">
-                                            {item.surfaces.join(', ')}
-                                        </td>
-                                        <td className="py-4 px-6">
-                                            {new Date(
-                                                item.submittedAt.seconds * 1000
-                                            ).toDateString()}
-                                        </td>
-                                        <td className="py-4 px-6">
-                                            <span
-                                                className={`${
-                                                    item.status ===
-                                                        'approved' &&
-                                                    'bg-green-100 text-green-500'
-                                                } rounded-full px-5 py-2.5 text-sm capitalize
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell
+                                        css={{
+                                            width: '180px',
+                                        }}
+                                    >
+                                        {`${item.height}H - ${item.width}W `}
+                                        {item.depth && (
+                                            <span>
+                                                {`- ${item.depth}
+                                                D `}
+                                            </span>
+                                        )}
+                                        cm
+                                    </Table.Cell>
+                                    <Table.Cell
+                                        css={{
+                                            width: '130px',
+                                            textTransform: 'capitalize',
+                                        }}
+                                    >
+                                        {item.mediums.join(', ')}
+                                    </Table.Cell>
+                                    <Table.Cell
+                                        css={{
+                                            width: '130px',
+                                            textTransform: 'capitalize',
+                                        }}
+                                    >
+                                        {item.surfaces.join(', ')}
+                                    </Table.Cell>
+                                    <Table.Cell
+                                        css={{
+                                            width: '100px',
+                                        }}
+                                    >
+                                        <span
+                                            className={`${
+                                                item.status === 'accepted' &&
+                                                'bg-green-100 text-green-500'
+                                            } rounded-full px-4 py-1 text-sm capitalize
                                     ${
                                         item.status === 'pending' &&
                                         'bg-orange-100 text-orange-500'
@@ -150,11 +227,39 @@ function Submissions() {
                                         'bg-red-100 text-red-500'
                                     }
                                     `}
+                                        >
+                                            {item.status}
+                                        </span>
+                                    </Table.Cell>
+                                    <Table.Cell
+                                        css={{
+                                            width: '150px',
+                                        }}
+                                    >
+                                        {new Date(
+                                            item.submittedAt.seconds * 1000
+                                        ).toDateString()}
+                                    </Table.Cell>
+                                    <Table.Cell
+                                        css={{
+                                            width: '100px',
+                                        }}
+                                    >
+                                        <div className="inline-flex gap-x-4">
+                                            <Tooltip
+                                                content="View Details"
+                                                color="invert"
                                             >
-                                                {item.status}
-                                            </span>
-                                        </td>
-                                        <td className="py-4 px-6">
+                                                <Link
+                                                    href={`/seller/artworks/submissions/${item.id}`}
+                                                >
+                                                    <Edit
+                                                        className="h-5 w-5"
+                                                        fill="none"
+                                                        stroke="#374151"
+                                                    />
+                                                </Link>
+                                            </Tooltip>
                                             <Tooltip
                                                 content="Delete Artwork"
                                                 color="error"
@@ -164,18 +269,15 @@ function Submissions() {
                                                     id={item.id}
                                                 />
                                             </Tooltip>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                    {list.length === 0 && (
-                        <p className="w-full py-[5%] text-center">
-                            No Submissions
-                        </p>
-                    )}
-                </div>
+                                        </div>
+                                    </Table.Cell>
+                                </Table.Row>
+                            )}
+                        </Table.Body>
+                    </Table>
+                ) : (
+                    <p className="text-center">No Submissions Found</p>
+                )}
             </section>
         </>
     );

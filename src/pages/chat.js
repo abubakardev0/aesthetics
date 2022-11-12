@@ -59,13 +59,15 @@ export async function getServerSideProps(context) {
         };
     }
     const { currentUser, otherUser } = context.query;
+    if (currentUser === otherUser) {
+        return {
+            props: {
+                noQuery: true,
+            },
+        };
+    }
     let chatId = null;
-    if (
-        otherUser !== null &&
-        otherUser !== undefined &&
-        currentUser !== null &&
-        currentUser !== undefined
-    ) {
+    if (otherUser && currentUser) {
         const docSnap = await getDocs(
             query(
                 collection(db, 'chat'),

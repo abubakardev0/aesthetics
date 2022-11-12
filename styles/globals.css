@@ -15,6 +15,22 @@
         background-color: #ffffff;
         scroll-behavior: smooth;
     }
+    ::-moz-selection {
+        color: white;
+        background: #2d2d2d;
+    }
+
+    ::selection {
+        color: white;
+        background: #2d2d2d;
+    }
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number'] {
+        -webkit-appearance: none;
+        margin: 0;
+        -moz-appearance: textfield !important;
+    }
     .no-scrollbar::-webkit-scrollbar {
         display: none;
     }
@@ -32,7 +48,16 @@
         background-color: #2d2d2d;
         border-radius: 20px;
     }
-
+    .nav:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        background: currentColor;
+        width: 5px;
+        height: 5px;
+        border-radius: 100%;
+        left: calc(50% - 8px);
+    }
     .section-scrollbar::-webkit-scrollbar {
         width: 6px;
     }
@@ -57,7 +82,6 @@
         padding: 12px 12px;
         width: 100%;
         color: #32325d;
-        background-color: ;
         border: 1px solid transparent;
         border-radius: 15px;
         box-shadow: 0 1px 3px 0 #e6ebf1;

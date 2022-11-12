@@ -65,6 +65,7 @@ function Login() {
                     <Input
                         width="100%"
                         clearable
+                        bordered
                         color="black"
                         type="email"
                         label="E-mail"
@@ -84,6 +85,7 @@ function Login() {
                     <Input.Password
                         width="100%"
                         clearable
+                        bordered
                         color="black"
                         type="password"
                         label="Password"

@@ -75,7 +75,7 @@ export default function Chat() {
                     </div>
                 )}
                 {chat &&
-                    chat.map((message) => (
+                    chat.slice(0, 4).map((message) => (
                         <Link
                             href={{
                                 pathname: '/chat',

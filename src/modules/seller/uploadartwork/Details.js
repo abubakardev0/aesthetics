@@ -23,6 +23,7 @@ const Details = ({ state, register, setValue, trigger, errors }) => {
                 <Input
                     width="100%"
                     clearable
+                    bordered
                     color="black"
                     animated={false}
                     type="text"
@@ -43,6 +44,7 @@ const Details = ({ state, register, setValue, trigger, errors }) => {
                 <Input
                     width="100%"
                     clearable
+                    bordered
                     color="black"
                     animated={false}
                     type="text"
@@ -69,7 +71,7 @@ const Details = ({ state, register, setValue, trigger, errors }) => {
                 <select
                     id="rarity"
                     name="rarity"
-                    className="block w-full rounded-xl border border-gray-100 bg-gray-100 p-2.5 text-[14px] text-gray-400"
+                    className="block w-full rounded-xl border-2 border-gray-300 p-2 text-[14px] text-black transition-colors delay-75 duration-300 hover:border-black active:border-black"
                     required
                     value={state.rarity}
                     {...register('rarity', {
@@ -86,11 +88,12 @@ const Details = ({ state, register, setValue, trigger, errors }) => {
                     <span className="text-sm text-red-500">Required field</span>
                 )}
                 <div className="flex space-x-4">
-                    <div>
+                    <div className="w-1/2">
                         <Input
                             width="100%"
                             color="black"
                             label="Height"
+                            bordered
                             aria-label="Height"
                             placeholder="89.5"
                             labelRight={measuringUnit}
@@ -106,11 +109,12 @@ const Details = ({ state, register, setValue, trigger, errors }) => {
                             </span>
                         )}
                     </div>
-                    <div>
+                    <div className="w-1/2">
                         <Input
                             width="100%"
                             color="black"
                             label="Width"
+                            bordered
                             aria-label="Width"
                             placeholder="105"
                             labelRight={measuringUnit}
@@ -126,12 +130,13 @@ const Details = ({ state, register, setValue, trigger, errors }) => {
                         )}
                     </div>
                 </div>
-                <div className="grid grid-flow-col place-content-center gap-6">
-                    <div>
+                <div className="flex items-center justify-between">
+                    <div className="w-4/6">
                         <Input
                             width="100%"
                             color="black"
                             label="Depth (Optional)"
+                            bordered
                             aria-label="Depth"
                             placeholder="5"
                             labelRight={measuringUnit}
@@ -145,25 +150,25 @@ const Details = ({ state, register, setValue, trigger, errors }) => {
                             </span>
                         )}
                     </div>
-                    <label className="mb-2 place-self-end">
+                    <label className="mb-2 self-end">
                         <input
                             type="radio"
                             name="measuringUnit"
                             value="in"
                             checked={measuringUnit === 'in'}
                             onChange={() => setmeasuringUnit('in')}
-                            className="mr-2"
+                            className="mr-2 accent-black"
                         />
                         in
                     </label>
-                    <label className="mb-2 place-self-end">
+                    <label className="mb-2 self-end">
                         <input
                             type="radio"
                             name="measuringUnit"
                             value="cm"
                             checked={measuringUnit === 'cm'}
                             onChange={() => setmeasuringUnit('cm')}
-                            className="mr-2"
+                            className="mr-2 accent-black"
                         />
                         cm
                     </label>

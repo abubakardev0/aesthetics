@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import Card from '@/buyer/components/artwork/Card';
 import Link from 'next/link';
 import Arrow from '@/icons/Arrow';
+import DottedCircle from '@/icons/DottedCircle';
+
 export default function Carousel({ list }) {
     const maxScrollWidth = useRef(0);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -55,10 +57,12 @@ export default function Carousel({ list }) {
                     className={
                         isDisabled('prev')
                             ? 'hidden'
-                            : 'absolute left-4 top-40 z-20 hidden rounded-full border bg-neutral-50 p-3 text-neutral-700 transition-all duration-300 ease-in-out active:bg-neutral-600 active:text-white active:ring-8 active:ring-neutral-200 disabled:cursor-not-allowed disabled:opacity-25 md:block'
+                            : 'group absolute left-4 top-40 z-20 hidden h-14 w-14 rounded-full bg-neutral-50 transition-all duration-300 ease-in-out hover:scale-125 disabled:cursor-not-allowed disabled:opacity-25 md:block'
                     }
                 >
-                    <Arrow className="h-8 w-8 rotate-180" />
+                    <DottedCircle className="absolute inset-0 m-auto h-12 w-12 group-hover:animate-spinning" />
+
+                    <Arrow className="absolute inset-0 m-auto h-6 w-6 rotate-180 stroke-current" />
                 </button>
 
                 <div
@@ -97,10 +101,12 @@ export default function Carousel({ list }) {
                     className={
                         isDisabled('next')
                             ? 'hidden'
-                            : 'absolute right-4 top-40 z-20 hidden rounded-full border bg-neutral-50 p-3 text-neutral-700 transition-all duration-300 ease-in-out active:bg-neutral-600 active:text-white active:ring-8 active:ring-neutral-200 disabled:cursor-not-allowed disabled:opacity-25 md:block'
+                            : 'group  absolute right-4 top-40 z-20 hidden h-14 w-14 rounded-full bg-neutral-50 transition-all duration-300  ease-in-out hover:scale-125 disabled:cursor-not-allowed disabled:opacity-25 md:block'
                     }
                 >
-                    <Arrow className="h-8 w-8" />
+                    <DottedCircle className="absolute inset-0 m-auto h-12 w-12 group-hover:animate-spinning" />
+
+                    <Arrow className="absolute inset-0 m-auto h-6 w-6 stroke-current" />
                 </button>
             </div>
         </>

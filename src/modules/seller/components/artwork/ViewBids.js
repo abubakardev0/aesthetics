@@ -1,10 +1,11 @@
-import { doc, getDocs, query, orderBy, collection } from 'firebase/firestore';
+import { getDocs, query, orderBy, collection } from 'firebase/firestore';
 import { db } from '@/firebase/firebase-config';
 
 import { Table } from '@nextui-org/react';
 
 import useSWR from 'swr';
 import { formatCurrency } from '@/commoncomponents/functions';
+import Error from '@/commoncomponents/Error';
 
 function ViewBids({ id, totalBids, startingBid, currentBid, estimate }) {
     const { data: bids, error } = useSWR('bids', async () => {
@@ -21,12 +22,16 @@ function ViewBids({ id, totalBids, startingBid, currentBid, estimate }) {
         return list;
     });
     if (error) {
-        return <p>Something went wrong!</p>;
+        return <Error />;
     }
     const columns = [
         {
-            key: 'userId',
-            label: 'USER ID',
+            key: 'username',
+            label: 'NAME',
+        },
+        {
+            key: 'userEmail',
+            label: 'EMAIL',
         },
         {
             key: 'bidAmount',
@@ -64,7 +69,7 @@ function ViewBids({ id, totalBids, startingBid, currentBid, estimate }) {
                 </label>
             </div>
 
-            <div className="lg:w-7/12">
+            <div className="lg:w-8/12">
                 {bids ? (
                     <Table
                         bordered
@@ -72,7 +77,7 @@ function ViewBids({ id, totalBids, startingBid, currentBid, estimate }) {
                         css={{
                             minWidth: '100%',
                             height: '100%',
-                            maxHeight: '500px',
+                            maxHeight: '800px',
                             overflowX: 'scroll',
                             backgroundColor: 'white',
                             zIndex: 0,
@@ -94,30 +99,19 @@ function ViewBids({ id, totalBids, startingBid, currentBid, estimate }) {
                                         borderBottom: '1px solid #f1f5f9',
                                     }}
                                 >
-                                    <Table.Cell
-                                        css={{
-                                            width: '180px',
-                                        }}
-                                    >
-                                        <span className="capitalize">
-                                            {item.user}
-                                        </span>
+                                    <Table.Cell>
+                                        <p>{item.name}</p>
                                     </Table.Cell>
-                                    <Table.Cell
-                                        css={{
-                                            width: '150px',
-                                        }}
-                                    >
+                                    <Table.Cell>
+                                        <p>{item.email}</p>
+                                    </Table.Cell>
+                                    <Table.Cell>
                                         <p>{formatCurrency(item.value)}</p>
                                     </Table.Cell>
-                                    <Table.Cell
-                                        css={{
-                                            width: '200px',
-                                        }}
-                                    >
+                                    <Table.Cell>
                                         {new Date(
                                             item.time.seconds * 1000
-                                        ).toUTCString()}
+                                        ).toDateString()}
                                     </Table.Cell>
                                 </Table.Row>
                             )}

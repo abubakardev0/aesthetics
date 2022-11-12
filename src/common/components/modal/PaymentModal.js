@@ -111,6 +111,7 @@ export default function PaymentModal() {
                     <form className="space-y-8">
                         <Input
                             clearable
+                            bordered
                             shadow={false}
                             type="string"
                             label="Name on Card"
@@ -128,6 +129,7 @@ export default function PaymentModal() {
                         <Input
                             {...bindings}
                             shadow={false}
+                            bordered
                             status={helper.color}
                             color={helper.color}
                             helperColor={helper.color}
@@ -143,6 +145,7 @@ export default function PaymentModal() {
                         <div className="flex items-center justify-between space-x-4">
                             <Input
                                 shadow={false}
+                                bordered
                                 type="month"
                                 label="Expiry Date"
                                 width="55%"
@@ -157,8 +160,8 @@ export default function PaymentModal() {
                             />
                             <Input
                                 clearable
+                                bordered
                                 shadow={false}
-                                type="number"
                                 label="CVV"
                                 placeholder="234"
                                 width="45%"

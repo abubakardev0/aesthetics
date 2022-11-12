@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 
-import Link from 'next/link';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -8,59 +7,46 @@ import {
     doc,
     updateDoc,
     getDoc,
-    getDocs,
     onSnapshot,
     Timestamp,
     collection,
-    arrayUnion,
-    arrayRemove,
     addDoc,
     increment,
-    query,
-    limit,
-    where,
 } from 'firebase/firestore';
 
 import { db, auth } from '@/firebase/firebase-config';
 
-import { Avatar, Collapse, Loading } from '@nextui-org/react';
+import { Loading } from '@nextui-org/react';
+import axios from 'axios';
 
 import { useCountDown } from '@/hooks/useCountDown';
+import { useTimeout } from '@/hooks/useTimeout';
 
-import Slider from '@/commoncomponents/Scrollers/Slider';
+import Social from '@/artworkexperience/pages/Social';
+import Details from '@/artworkexperience/pages/Details';
+import ImageView from '@/artworkexperience/pages/ImageView';
+import Attributes from '@/artworkexperience/pages/Attributes';
+import BiddingDetails from '@/artworkexperience/pages/BiddingDetails';
+
 import Loader from '@/commoncomponents/Loader';
 import RelatedWorks from '@/buyer/components/artwork/RelatedWorks';
 import ShowCounter from '@/commoncomponents/ShowCounter';
 import Alert from '@/commoncomponents/popups/Alert';
-import { formatCurrency } from '@/commoncomponents/functions';
 import Error from '@/commoncomponents/Error';
-
-import ARView from '@/icons/ARView';
-import Bookmark from '@/icons/Bookmark';
-import Chat from '@/icons/Chat';
-import Insta from '@/icons/Insta';
-import Twitter from '@/icons/Twitter';
-import Behance from '@/icons/Behance';
 
 function Item({ artwork, notFound }) {
     const [data, setData] = useState(JSON.parse(artwork));
-    const [userBid, setUserBid] = useState(null);
-    const [follow, setFollow] = useState(false);
-    const [save, setSave] = useState(false);
     const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false);
     const [alert, setAlert] = useState({
         type: '',
         message: '',
     });
+
     const router = useRouter();
     const bidValueRef = useRef();
     const countDown = useCountDown(data.endingTime.seconds);
     const documentId = data.id;
-    const users = {
-        currentUser: auth.currentUser && auth.currentUser.uid,
-        otherUser: data.sellerId,
-    };
 
     useEffect(() => {
         const docRef = doc(db, 'artworks', documentId);
@@ -69,106 +55,25 @@ function Item({ artwork, notFound }) {
         });
     }, [data]);
 
+    useTimeout(() => {
+        (async function handleAuctionEnd() {
+            if (countDown > 0) return;
+            if (data.status === 'sold' || data.status === 'archived') return;
+            if (data.currentBid < data.price) {
+                await updateDoc(doc(db, 'artworks', `${documentId}`), {
+                    status: 'archived',
+                });
+                return;
+            }
+            axios.post('/api/auction-end', {
+                documentId: documentId,
+            });
+        })();
+    }, countDown);
+
     if (notFound) {
         return <Error />;
     }
-
-    async function handler(document, set, type) {
-        if (type) {
-            await updateDoc(doc(db, document, auth.currentUser.uid), {
-                artworks: arrayRemove(data.id),
-            });
-            set(false);
-        } else {
-            await updateDoc(doc(db, document, auth.currentUser.uid), {
-                artworks: arrayUnion(data.id),
-            });
-            set(true);
-        }
-    }
-
-    async function inCollection(document, set) {
-        const docRef = doc(db, document, auth.currentUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const artworks = docSnap.data().artworks;
-            const index = artworks.indexOf(data.id);
-            if (index !== -1) {
-                set(true);
-                return;
-            }
-        }
-    }
-
-    function handleWishList() {
-        if (!auth.currentUser) {
-            setAlert({
-                type: 'Not Logged In',
-                message: 'Please login to save this item',
-            });
-            setShow(true);
-            return;
-        } else if (auth.currentUser.uid === data.sellerId) {
-            setAlert({
-                type: 'Error',
-                message: 'Oops! You don`t have permission to save this artwork',
-            });
-            setShow(true);
-            return;
-        } else {
-            handler('saves', setSave, save);
-        }
-    }
-    async function handleFollow() {
-        if (!auth.currentUser) {
-            setAlert({
-                type: 'Not Logged In',
-                message: 'Please login to use this feature',
-            });
-            setShow(true);
-            return;
-        }
-        if (follow) {
-            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
-                favourites: arrayRemove(data.artist),
-            });
-        } else {
-            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
-                favourites: arrayUnion(data.artist),
-            });
-        }
-        setFollow(!follow);
-    }
-    async function checkFollow() {
-        const ref = await getDoc(doc(db, 'users', auth.currentUser.uid));
-        if (ref.exists()) {
-            if (ref.data().favourites.includes(data.artist)) {
-                setFollow(true);
-                return;
-            }
-            setFollow(false);
-        }
-    }
-
-    async function checkBid() {
-        const ref = query(
-            collection(db, 'artworks', `${data.id}`, 'bids'),
-            where('user', '==', auth.currentUser.uid),
-            limit(1)
-        );
-        const docs = await getDocs(ref);
-        docs.forEach((doc) => {
-            setUserBid({ id: doc.id, ...doc.data() });
-        });
-    }
-
-    useEffect(() => {
-        if (auth.currentUser) {
-            inCollection('saves', setSave);
-            checkFollow(auth.currentUser.uid);
-            checkBid();
-        }
-    }, []);
 
     const validateBidValue = (newValue, currentValue) => {
         newValue = parseInt(newValue);
@@ -294,94 +199,25 @@ function Item({ artwork, notFound }) {
                 <title>{data.title.toLocaleUpperCase()}</title>
             </Head>
             <section className="container mx-auto flex h-full w-full flex-col md:h-screen md:flex-row md:gap-5">
-                <div className="grid h-[450px] w-full place-content-center pb-2 md:h-full md:w-1/2">
-                    <Slider images={data.images} />
-                    <Link
-                        href={{
-                            pathname: 'https://model-viewer-ar-xwsb.vercel.app',
-                            query: { id: data.images[0] },
-                        }}
-                    >
-                        <button className="mt-3 flex justify-center">
-                            <ARView className="h-12 w-12 md:h-16 md:w-16" />
-                        </button>
-                    </Link>
-                </div>
+                <ImageView images={data.images} />
                 <div className="h-full w-full py-2 md:w-1/2 md:px-16">
                     <div className="h-full w-full flex-col-reverse space-y-8 p-4 md:flex-col md:rounded-lg md:p-12">
-                        <div className="flex w-full items-center justify-between">
-                            <div className="inline-flex items-center space-x-3">
-                                <Avatar
-                                    size="lg"
-                                    text={data.artist.toLocaleUpperCase()[0]}
-                                    css={{ zIndex: 1 }}
-                                />
-                                <h3 className="text-base capitalize md:text-lg">
-                                    {data.artist}
-                                </h3>
-                            </div>
-                            <button
-                                onClick={handleFollow}
-                                className={`${
-                                    follow
-                                        ? 'bg-neutral-900 text-white'
-                                        : 'bg-none text-black'
-                                } h-10 w-24 rounded-full border border-black text-base transition-all duration-100 hover:bg-neutral-800 hover:text-white sm:w-28 md:h-10 md:w-32`}
-                            >
-                                {follow ? 'Following' : 'Follow'}
-                            </button>
-                        </div>
-                        <div>
-                            <h2 className="mb-1 text-xl font-medium capitalize sm:text-2xl md:text-3xl">
-                                {data.title}
-                            </h2>
-                            <p>
-                                <span className="mr-1 text-lg capitalize italic md:text-xl">
-                                    {data.mediums && data.mediums.join(' and ')}
-                                </span>
-                                on
-                                <span className="ml-1 text-lg capitalize md:text-xl">
-                                    {data.surfaces}
-                                </span>
-                                <br />
-                                {data.dimensions.height} H x{' '}
-                                {data.dimensions.width} W {data.dimensions.unit}
-                            </p>
-                        </div>
-                        <div className="w-full">
-                            <p className="text-lg font-medium">
-                                Estimates:
-                                <span className="ml-1">
-                                    {formatCurrency(data.price)}
-                                </span>
-                            </p>
-                            <p className="text-lg font-medium ">
-                                {data.currentBid === data.startingBid ? (
-                                    <>
-                                        Starting bid:
-                                        <span className="ml-1">
-                                            {formatCurrency(data.startingBid)}
-                                        </span>
-                                    </>
-                                ) : (
-                                    <>
-                                        Current bid:
-                                        <span className="ml-1">
-                                            {formatCurrency(data.currentBid)}
-                                        </span>
-                                    </>
-                                )}
-                                <br />
-                                {userBid !== null && (
-                                    <>
-                                        Your bid:
-                                        <span className="ml-1">
-                                            {formatCurrency(userBid.value)}
-                                        </span>
-                                    </>
-                                )}
-                            </p>
-                        </div>
+                        <Attributes
+                            artist={data.artist}
+                            setAlert={setAlert}
+                            setShow={setShow}
+                            title={data.title}
+                            surfaces={data.surfaces}
+                            mediums={data.mediums}
+                            dimensions={data.dimensions}
+                        />
+
+                        <BiddingDetails
+                            id={data.id}
+                            price={data.price}
+                            startingBid={data.startingBid}
+                            currentBid={data.currentBid}
+                        />
                         <div>
                             {countDown >= 0 && (
                                 <ShowCounter countDown={countDown} />
@@ -441,96 +277,23 @@ function Item({ artwork, notFound }) {
                                 )}
                             </button>
                         </div>
-                        <div className="flex justify-center space-x-5 md:justify-start md:space-x-3">
-                            <button
-                                className="flex items-center space-x-2"
-                                onClick={handleWishList}
-                            >
-                                <Bookmark
-                                    className="delay-50 h-8 w-8 transition-colors "
-                                    fill={save ? 'black' : 'none'}
-                                    stroke="black"
-                                />
-                                <span className="hidden font-medium  md:block">
-                                    Save Artwork
-                                </span>
-                            </button>
-                            <div className="flex items-center gap-x-5 border-l-2 border-r-2 border-black/25 px-3">
-                                <Link
-                                    href="https://www.instagram.com/"
-                                    passHref={true}
-                                >
-                                    <a>
-                                        <Insta className="h-6 w-6 hover:scale-105" />
-                                    </a>
-                                </Link>
-                                <Link
-                                    href="https://www.behance.net/"
-                                    passHref={true}
-                                >
-                                    <a>
-                                        <Behance className="h-6 w-6 hover:scale-105" />
-                                    </a>
-                                </Link>
-                                <Link
-                                    href="https://www.twitter.com/"
-                                    passHref={true}
-                                >
-                                    <a>
-                                        <Twitter className="h-6 w-6 hover:scale-105" />
-                                    </a>
-                                </Link>
-                            </div>
-                            <Link
-                                href={{
-                                    pathname: '/chat',
-                                    query: auth.currentUser ? users : '',
-                                }}
-                            >
-                                <a className="flex items-center space-x-2">
-                                    <Chat
-                                        className="h-8 w-8"
-                                        stroke="black"
-                                        strokeWidth={1}
-                                    />
-                                    <span className="hidden font-medium md:block">
-                                        Chat
-                                    </span>
-                                </a>
-                            </Link>
-                        </div>
+                        <Social
+                            id={data.id}
+                            sellerId={data.sellerId}
+                            setAlert={setAlert}
+                            setShow={setShow}
+                        />
                     </div>
                 </div>
             </section>
-            <section className="container mx-auto px-3 py-6 md:px-0 md:py-16">
-                <div className="mb-5 flex w-full flex-col items-center justify-center space-y-5 md:mb-10">
-                    <Collapse
-                        title="About This Artwork"
-                        expanded
-                        bordered
-                        className="w-full md:w-3/5 lg:w-1/2"
-                    >
-                        <p>
-                            {data.description
-                                ? data.description
-                                : 'No Description'}
-                        </p>
-                    </Collapse>
-                    <Collapse
-                        title="Additional Details"
-                        bordered
-                        className="w-full md:w-3/5 lg:w-1/2"
-                    >
-                        <h4 className="text-xl font-medium">Certificates</h4>
-                        <p>
-                            {data.certificates
-                                ? 'It is a certified piece of artwork'
-                                : 'It is not certified piece of artwork'}
-                        </p>
-                    </Collapse>
-                </div>
+            <Details
+                description={data.description}
+                certificates={data.certificates}
+            />
+            <section className="container mx-auto px-3 py-6 md:px-0">
                 <RelatedWorks category={data.category} />
             </section>
+
             <Alert
                 show={show}
                 setShow={setShow}

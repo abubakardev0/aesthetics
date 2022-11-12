@@ -16,7 +16,7 @@ import Artwork from '@/icons/Artwork';
 
 import AnalyticsCard from '@/seller/components/main/AnalyticsCard';
 import SellerLayout from '@/layouts/SellerLayout';
-import Chart from '@/seller/components/main/BarChart';
+import Chart from '@/seller/components/main/Chart';
 import RecentChat from '@/seller/components/main/RecentChat';
 import RecentSales from '@/seller/components/main/RecentSales';
 import Error from '@/commoncomponents/Error';
@@ -39,20 +39,18 @@ function Dashboard() {
             )
         );
         orderSnap.forEach((order) => {
-            if (order.exists()) {
-                totalOrders++;
-                recentSales.push({
-                    id: order.id,
-                    name: order.data().shippingDetails.name,
-                    amount: order.data().totalAmount,
-                    time: order.data().placedAt,
-                });
-                order.data().items.map((item) => {
-                    if (item.sellerId === auth.currentUser.uid) {
-                        totalSales += parseInt(item.price);
-                    }
-                });
-            }
+            totalOrders++;
+            recentSales.push({
+                id: order.id,
+                name: order.data().shippingDetails.name,
+                amount: order.data().totalAmount,
+                time: order.data().placedAt,
+            });
+            order.data().items.map((item) => {
+                if (item.sellerId === auth.currentUser.uid) {
+                    totalSales += parseInt(item.price);
+                }
+            });
         });
         return {
             totalSales,
@@ -66,7 +64,7 @@ function Dashboard() {
     }
     return (
         <>
-            <main className="md:grid-row-4 grid h-screen grid-flow-row gap-3 md:grid-cols-9 md:gap-5">
+            <main className="md:grid-row-4 grid h-screen grid-flow-row gap-3 pb-5 md:grid-cols-9 md:gap-5">
                 <div className="w-screen px-2 md:col-span-2 md:col-start-1 md:row-span-1 md:row-start-1 md:h-full md:w-full md:px-0">
                     <AnalyticsCard
                         title="Total Artworks"

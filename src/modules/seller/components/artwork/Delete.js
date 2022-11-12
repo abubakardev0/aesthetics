@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { doc, deleteDoc } from 'firebase/firestore';
+import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase/firebase-config';
 
 import { Modal } from '@nextui-org/react';
@@ -15,6 +15,11 @@ function DeleteArtwork({ collection, id }) {
     async function handleDelete() {
         try {
             await deleteDoc(doc(db, collection, id));
+            if (collection === 'artworks') {
+                await updateDoc(doc(db, 'users', `${auth.currentUser.uid}`), {
+                    uploadedWorks: increment(-1),
+                });
+            }
         } catch (error) {
             console.log(error);
         } finally {

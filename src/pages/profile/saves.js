@@ -64,7 +64,7 @@ function Saves() {
                 <h3 className="my-5 text-center text-xl font-medium md:text-2xl">
                     Your Saves
                 </h3>
-                <ul className="h-[500px] w-full space-y-4 overflow-auto">
+                <ul className="section-scrollbar h-[500px] w-full space-y-4 overflow-auto">
                     {items.map((item) => (
                         <Item key={item.id} item={item} />
                     ))}

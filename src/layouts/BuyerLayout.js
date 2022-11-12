@@ -21,7 +21,7 @@ function BuyerLayout({ children }) {
                     scroll
                         ? 'bg-white'
                         : 'bg-white bg-opacity-50 backdrop-blur-md'
-                } fixed top-0 z-40 w-full overflow-visible`}
+                } fixed top-0 z-40 w-full overflow-visible text-[#2d2d2d]`}
             >
                 <Header />
             </header>

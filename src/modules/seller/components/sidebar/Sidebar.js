@@ -10,7 +10,7 @@ function Sidebar() {
     const { logout } = useAuth();
     return (
         <>
-            <ul className="relative flex h-full w-full items-center justify-around rounded-full bg-black pt-3 md:flex-col md:justify-center md:space-y-8 md:rounded-none md:bg-gray-50 md:pt-0">
+            <ul className="relative flex h-full w-full items-center justify-around rounded-full bg-black pt-3 md:flex-col md:justify-center md:space-y-6 md:rounded-none md:bg-gray-50 md:pt-0">
                 <IconLink
                     icon={
                         <Grid
@@ -64,7 +64,11 @@ function Sidebar() {
                 />
                 <li className="absolute bottom-4 hidden md:block">
                     <button onClick={logout}>
-                        <Logout className="h-6 w-6 stroke-black md:h-7 md:w-7" />
+                        <Logout
+                            className="h-6 w-6 stroke-current md:h-7 md:w-7"
+                            strokeWidth={1.5}
+                            fill="none"
+                        />
                     </button>
                 </li>
             </ul>

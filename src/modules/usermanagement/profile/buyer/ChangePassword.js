@@ -66,6 +66,7 @@ const ChangePassword = ({ user }) => {
                 <Modal.Body>
                     <Input.Password
                         width="100%"
+                        bordered
                         clearable
                         color="black"
                         type="password"
@@ -76,6 +77,7 @@ const ChangePassword = ({ user }) => {
                     <Input.Password
                         width="100%"
                         clearable
+                        bordered
                         color="black"
                         type="password"
                         label="New Password"

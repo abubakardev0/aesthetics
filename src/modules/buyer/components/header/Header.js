@@ -24,7 +24,7 @@ function Header() {
 
     return (
         <>
-            <div className="flex items-center justify-between px-3 py-3 md:py-4 lg:container lg:mx-auto">
+            <div className="flex items-center justify-between px-3 py-3 text-current md:py-4 lg:container lg:mx-auto">
                 <div className="font-garamond text-lg font-bold sm:text-xl md:text-2xl">
                     <Link href="/">
                         <a>
@@ -38,14 +38,14 @@ function Header() {
                 <Navbar />
                 <div className="flex items-center justify-center gap-2 sm:gap-3 lg:gap-4 xl:gap-6">
                     <button onClick={() => setIsSearchOpen(true)}>
-                        <Search className="h-6 w-6 opacity-75 transition hover:opacity-90 active:opacity-100 sm:h-7 sm:w-7" />
+                        <Search className="h-6 w-6 stroke-current opacity-75 transition hover:opacity-90 active:opacity-100 sm:h-7 sm:w-7" />
                     </button>
                     {isSearchOpen && (
                         <SearchModel openSearchModel={setIsSearchOpen} />
                     )}
                     <Link href="/bag">
-                        <a className="flex cursor-pointer text-[#2D2D2D] opacity-75 transition hover:opacity-90 active:opacity-100">
-                            <Bag className="h-6 w-6 sm:h-7 sm:w-7" />
+                        <a className="flex cursor-pointer opacity-75 transition hover:opacity-90 active:opacity-100">
+                            <Bag className="h-6 w-6 text-current sm:h-7 sm:w-7" />
                         </a>
                     </Link>
                     <div className="relative inline-block font-medium ">
@@ -53,7 +53,7 @@ function Header() {
                             onClick={() => dropdownRef.current.handler()}
                             className="relative z-10 flex items-center rounded-full border border-transparent"
                         >
-                            <User className="h-6 w-6 opacity-75 transition hover:opacity-90 active:opacity-100 sm:h-7 sm:w-7" />
+                            <User className="h-6 w-6 stroke-current text-current opacity-75 transition hover:opacity-90 active:opacity-100 sm:h-7 sm:w-7" />
                         </button>
                         <Modal ref={dropdownRef}>
                             <div className="absolute right-0 z-20 mt-4 w-60 overflow-hidden rounded-md border-2 border-slate-200 bg-white py-2 shadow-xl md:mt-5 lg:w-64">
@@ -89,7 +89,7 @@ const LoggedIn = ({ user }) => {
                 </div>
             </div>
             <Link href="/seller">
-                <a className="flex transform items-center px-3 py-2 text-base capitalize text-slate-600 transition-colors duration-200 hover:bg-slate-100">
+                <a className="flex transform items-center px-3 py-2 text-sm capitalize text-slate-600 transition-colors duration-200 hover:bg-slate-100">
                     <Switch
                         className="mx-1 h-6 w-6"
                         strokeWidth={1.5}
@@ -124,9 +124,13 @@ const LoggedIn = ({ user }) => {
             </Link>
             <button
                 onClick={logout}
-                className="flex w-full transform items-center p-3 text-sm capitalize text-slate-600 transition-colors duration-200 hover:bg-slate-100 "
+                className="flex w-full transform items-center p-3 text-sm font-medium capitalize text-slate-600 transition-colors duration-200 hover:bg-slate-100 "
             >
-                <Logout className="mx-1 h-6 w-6" />
+                <Logout
+                    className="mx-1 h-6 w-6 stroke-current"
+                    strokeWidth={1.5}
+                    fill="none"
+                />
                 <span className="mx-1 pt-1">Log out</span>
             </button>
         </>

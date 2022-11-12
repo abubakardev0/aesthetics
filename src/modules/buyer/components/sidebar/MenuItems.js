@@ -41,7 +41,9 @@ export default function MenuItems() {
                         <NavLink
                             hhref="/profile"
                             title={'Edit Profile'}
-                            icon={<User className="h-6 w-6 text-gray-700" />}
+                            icon={
+                                <User className="h-6 w-6 stroke-current text-gray-700" />
+                            }
                         />
                     </li>
                     <li>
@@ -103,7 +105,13 @@ export default function MenuItems() {
                     <NavLink
                         hhref="/auth/login"
                         title={'Logout'}
-                        icon={<Logout className="h-6 w-6 text-gray-700" />}
+                        icon={
+                            <Logout
+                                className="h-6 w-6 stroke-current text-gray-700"
+                                fill="none"
+                                strokeWidth="1.5"
+                            />
+                        }
                     />
                 </button>
             </div>

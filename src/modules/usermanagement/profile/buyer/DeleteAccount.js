@@ -68,6 +68,7 @@ function DeleteAccount({ user, router }) {
                 <Modal.Body>
                     <Input.Password
                         width="100%"
+                        bordered
                         clearable
                         color="black"
                         type="password"

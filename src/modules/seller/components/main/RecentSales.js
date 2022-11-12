@@ -5,7 +5,7 @@ import { formatCurrency } from '@/commoncomponents/functions';
 
 export default function RecentSales({ recentSales }) {
     return (
-        <div className=" min-h-fit w-full space-y-3 overflow-hidden rounded-2xl border-2 bg-white p-4 drop-shadow-lg md:h-full">
+        <div className="min-h-fit w-full space-y-3 overflow-hidden rounded-2xl border-2 bg-white p-4 drop-shadow-lg md:h-full">
             <div className="flex justify-between">
                 <h3 className="text-lg font-medium">Recent Sales</h3>
                 <Link href="/seller/orders">
@@ -14,14 +14,14 @@ export default function RecentSales({ recentSales }) {
                     </a>
                 </Link>
             </div>
-            <ul className="section-scrollbar h-[300px] space-y-3 overflow-y-auto md:h-full ">
+            <ul className="section-scrollbar h-[300px] space-y-3 overflow-y-auto last:scroll-pb-3 md:h-full">
                 {!recentSales && (
                     <div className="grid h-full w-full place-content-center">
                         <Loading />
                     </div>
                 )}
                 {recentSales &&
-                    recentSales.map((order) => {
+                    recentSales.slice(0, 4).map((order) => {
                         return (
                             <Link href={`/orders/${order.id}`} key={order.id}>
                                 <Card

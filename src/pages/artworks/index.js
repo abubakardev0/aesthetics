@@ -169,7 +169,7 @@ function Artworks({ artworks, hasError }) {
             </h2>
             <main className="relative">
                 <Page posts={posts} />
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 transform">
+                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2  transform md:-bottom-3">
                     <button
                         onClick={getMorePosts}
                         className={
@@ -182,7 +182,7 @@ function Artworks({ artworks, hasError }) {
                             <Loading
                                 type="points"
                                 color="currentColor"
-                                size="md"
+                                size="sm"
                             />
                         ) : (
                             'Load More'
@@ -196,7 +196,7 @@ function Artworks({ artworks, hasError }) {
                     )}
                 </div>
             </main>
-            <div className="sticky bottom-[72px] my-6 flex w-full flex-col items-center justify-center md:bottom-8">
+            <div className="sticky bottom-[72px] my-6 flex w-full flex-col items-end justify-end pr-3 md:bottom-8 md:items-center md:justify-center md:pr-0">
                 <Modal ref={filterRef}>
                     <div className="absolute bottom-10 mb-3 h-fit w-56 rounded-md border-2 border-gray-100 bg-white px-2 drop-shadow-lg transition delay-200 duration-1000 md:w-64">
                         <Collapse.Group width="100%">
@@ -273,9 +273,9 @@ function Artworks({ artworks, hasError }) {
                 </Modal>
                 <button
                     onClick={() => filterRef.current.handler()}
-                    className="flex w-56 items-center justify-between rounded bg-black py-2 px-4 text-lg text-white md:w-64"
+                    className="flex w-fit items-center justify-between rounded-full bg-black p-3 text-lg text-white md:w-64 md:rounded md:py-2 md:px-4"
                 >
-                    Filter
+                    <span className="hidden md:block">Filter</span>
                     <Plus className="h-4 w-4" />
                 </button>
             </div>

@@ -4,6 +4,13 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 module.exports = {
     content: ['./src/**/*.{js,ts,jsx,tsx}'],
     theme: {
+        screens: {
+            sm: '640px',
+            md: '768px',
+            lg: '1024px',
+            xl: '1280px',
+            '2xl': '1536px',
+        },
         extend: {
             fontFamily: {
                 garamond: ['EB Garamond'],
@@ -13,6 +20,7 @@ module.exports = {
                 hero: 'hero 8s',
                 text: 'slideUp 1s',
                 opacity: 'opacity 2s',
+                spinning: 'spinning 12s linear infinite',
             },
             keyframes: {
                 hero: {
@@ -23,6 +31,15 @@ module.exports = {
                         transform: 'translate3d(0px, 0, 0) scale(1)',
                     },
                 },
+                spinning: {
+                    '0%': {
+                        transform: 'rotate(0deg)',
+                    },
+                    '100%': {
+                        transform: 'rotate(360deg)',
+                    },
+                },
+
                 slideUp: {
                     from: {
                         transform: 'translate3d(0px, 20px, 0)',

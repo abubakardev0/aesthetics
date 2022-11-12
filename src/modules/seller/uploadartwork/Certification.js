@@ -1,10 +1,13 @@
 import { useState, useRef } from 'react';
+import { useStateMachine } from 'little-state-machine';
+
+import updateAction from '@/commoncomponents/updateAction';
 
 function UploadCertifications({ setValue }) {
-    const [docs, setDocs] = useState([]);
+    const { state, actions } = useStateMachine({ updateAction });
+    const [docs, setDocs] = useState(state.details.certificates);
 
     const errorRef = useRef();
-    const isUploadRef = useRef();
 
     const handleUploadDocument = (e) => {
         if (docs.length > 2) {
@@ -25,12 +28,11 @@ function UploadCertifications({ setValue }) {
                 return;
             }
             errorRef.current.innerText = '';
-            isUploadRef.current.innerText = 'Uploading...';
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => {
                 setDocs((doc) => [...doc, reader.result]);
-                isUploadRef.current.innerText = 'Uploaded';
+                actions.updateAction({ certificates: docs });
             };
             reader.onerror = () => {
                 console.log(reader.error);
@@ -65,17 +67,10 @@ function UploadCertifications({ setValue }) {
                     <p className="mb-6 text-sm text-neutral-600 md:text-base">
                         Maximum Size: 3MB
                     </p>
-                    <label
-                        ref={isUploadRef}
-                        htmlFor="image-file"
-                        className="mb-2 rounded-full border border-black px-5 py-2 shadow-md active:bg-neutral-800 active:text-white"
-                    >
-                        Add Document
-                    </label>
                     <input
-                        id="image-file"
+                        id="certificate-file"
                         type="file"
-                        className="hidden"
+                        className="block w-fit text-sm text-gray-500 file:mr-4 file:rounded-full file:border file:border-black file:bg-white file:py-2 file:px-5 file:text-sm file:font-medium file:text-black  hover:file:bg-gray-100"
                         onChange={handleUploadDocument}
                         multiple
                     />

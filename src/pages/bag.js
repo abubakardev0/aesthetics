@@ -44,7 +44,9 @@ export default function Bag() {
         router.replace('/auth/login');
         return <Loader />;
     }
-    const { data: items, error } = useSWR('bagItems', getArtworks);
+    const { data: items, error } = useSWR('bagItems', getArtworks, {
+        refreshInterval: 1000,
+    });
     const [selectedItems, setSelectedItems] = useState([]);
     const [show, setShow] = useState(false);
     const [alert, setAlert] = useState({

@@ -18,7 +18,9 @@
             "@/chat/*": ["src/modules/chat/*"],
             "@/immediatesell/*": ["src/modules/immediatesell/*"],
             "@/payment/*": ["src/modules/payment/*"],
-            "@/user/*": ["src/modules/usermanagement/*"]
+            "@/user/*": ["src/modules/usermanagement/*"],
+            "@/competition/*": ["src/modules/competition/*"],
+            "@/order/*": ["src/modules/order/*"]
         }
     }
 }

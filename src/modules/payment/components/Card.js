@@ -11,7 +11,7 @@ export default function Card() {
             </label>
             <span
                 id="card"
-                className="block w-full cursor-text rounded-xl bg-slate-100 p-3 text-sm text-gray-900"
+                className="block rounded-xl border-2 border-gray-300 py-2.5 px-2 transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black active:-translate-y-[2px] active:border-black"
             >
                 <CardElement options={CARD_ELEMENT_OPTIONS} />
             </span>

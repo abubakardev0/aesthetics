@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import Arrow from '@/icons/Arrow';
+import DottedCircle from '@/icons/DottedCircle';
 
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
@@ -90,7 +91,7 @@ const Hero = ({ list }) => {
 
     return (
         <AnimatePresence initial={false} exitBeforeEnter>
-            <motion.section className="relative flex h-full w-full flex-col-reverse overflow-hidden md:h-screen md:max-h-[700px] md:flex-row">
+            <motion.section className="relative flex h-full w-full flex-col-reverse overflow-hidden md:h-screen md:max-h-[900px] md:flex-row">
                 <div className="flex h-auto w-full flex-col items-center justify-center pt-1  md:h-full md:w-1/2 md:flex-row md:justify-start md:pt-0">
                     <div className="z-10 mt-2 flex h-fit w-full items-center justify-center gap-5 self-center md:mt-0 md:h-4/6 md:w-1/12 md:flex-col ">
                         {list.map((img, index) => {
@@ -99,9 +100,9 @@ const Hero = ({ list }) => {
                                     key={new Date().getTime() + index}
                                     className={`${
                                         currentIndex === index
-                                            ? ' bg-gray-400'
-                                            : 'bg-none'
-                                    } h-2 w-2 rounded-full border-2 border-gray-400 transition-transform delay-200 duration-75 md:h-3 md:w-3 md:border-4`}
+                                            ? ' h-2 w-6 bg-gray-300 md:h-6 md:w-2'
+                                            : 'h-2 w-2 bg-none'
+                                    } rounded-full border border-gray-300 md:border-4`}
                                 />
                             );
                         })}
@@ -152,12 +153,21 @@ const Hero = ({ list }) => {
                         onTouchMove={handleTouchMove}
                     />
                 </motion.div>
-                <div className="absolute bottom-2 left-1/2 z-10 hidden -translate-x-1/2 gap-4 md:flex">
-                    <button onClick={prev}>
-                        <Arrow className="h-10 w-10 rotate-180 stroke-black" />
+                <div className="absolute bottom-16 left-1/2 z-10 hidden -translate-x-1/2 md:block">
+                    <button
+                        onClick={prev}
+                        className="group absolute right-1 h-14 w-14 rounded-full bg-neutral-50 transition-all duration-300 ease-in-out hover:scale-125"
+                    >
+                        <DottedCircle className="absolute inset-0 m-auto h-12 w-12 group-hover:animate-spinning" />
+                        <Arrow className="absolute inset-0 m-auto h-6 w-6 rotate-180 stroke-current" />
                     </button>
-                    <button onClick={next}>
-                        <Arrow className="h-10 w-10 stroke-black" />
+                    <button
+                        onClick={next}
+                        className="group absolute left-1 h-14 w-14 rounded-full bg-neutral-50 transition-all duration-300 ease-in-out hover:scale-125"
+                    >
+                        <DottedCircle className="absolute inset-0 m-auto h-12 w-12 group-hover:animate-spinning" />
+
+                        <Arrow className="absolute inset-0 m-auto h-6 w-6  stroke-current" />
                     </button>
                 </div>
             </motion.section>

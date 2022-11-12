@@ -9,9 +9,10 @@ import {
     updateDoc,
 } from 'firebase/firestore';
 
-const nodemailer = require('nodemailer');
-
+const sendgrid = require('@sendgrid/mail');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+sendgrid.setApiKey(process.env.SENTGRID_SECRET_KEY);
 
 async function getDocument(id) {
     try {
@@ -44,16 +45,6 @@ async function removeFromBag(itemsId, userId) {
 
 export default async function handler(req, res) {
     const { id, contact, email, items, shippingDetails, userId } = req.body;
-    let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-            user: 'noreplyaesthetics@gmail.com',
-            pass: 'eepb fwhz ofnh jbdl',
-        },
-    });
     let subtotal = 0;
     const shipping = 0;
     const lineItems = [];
@@ -107,25 +98,21 @@ export default async function handler(req, res) {
         }
         await removeFromBag(itemsId, userId);
 
-        const mailOptions = {
-            from: 'Aesthetics <noreplyaesthetics@gmail.com>',
+        await sendgrid.send({
             to: email,
+            from: 'keyowe1568@migonom.com',
             subject: 'Order Confirmation',
             html: `<p style="font-size: 16px; text-align:center">Order id: ${docRef.id}</p>
                 <br />
-                Hey, ${shippingDetails.name} Your order has been placed.
+                Hey ${shippingDetails.name},
+                     Your order has been placed.
             `,
-        };
-
-        transporter.sendMail(mailOptions, function (err, info) {
-            if (err) console.log(err);
-            else console.log(info);
         });
 
         res.status(200).json({
             url: `https://fyp-aesthetics.vercel.app/success?order_id=${docRef.id}`,
         });
     } catch (error) {
-        res.status(400).json(error.message);
+        res.status(400).json({ message: error.message });
     }
 }

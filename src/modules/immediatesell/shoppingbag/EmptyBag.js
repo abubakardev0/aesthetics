@@ -12,7 +12,7 @@ const EmptyBag = () => {
             <p className="mt-4 text-sm md:text-base">
                 Looks like that you haven`t made your choice yet
             </p>
-            <button className="mt-4 h-fit w-fit border-2 border-black px-5 py-3 text-xs transition duration-200 hover:bg-black hover:text-white sm:text-sm md:text-base">
+            <button className="mt-4 h-fit w-fit border border-black px-5 py-3 text-xs transition duration-200 hover:bg-black hover:text-white sm:text-sm md:text-base">
                 <Link href="/artworks">
                     <a>Explore artworks</a>
                 </Link>

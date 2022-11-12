@@ -20,7 +20,7 @@ const NotFound = () => {
                     </p>
                     <button
                         onClick={() => router.back()}
-                        className="h-fit w-fit border-2 border-black px-4 py-2 text-sm transition duration-200 hover:bg-black hover:text-white sm:text-sm md:text-base"
+                        className="h-fit w-fit border border-black px-4 py-2 text-sm transition duration-200 hover:bg-black hover:text-white sm:text-sm md:text-base"
                     >
                         Go Back
                     </button>

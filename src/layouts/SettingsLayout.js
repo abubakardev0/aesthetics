@@ -4,11 +4,11 @@ import PrivateRoute from '@/commoncomponents/routes/Private';
 function SettingsLayout({ children }) {
     return (
         <PrivateRoute>
-            <main className="">
+            <main>
                 <aside className="fixed left-0 z-10 h-screen">
                     <Sidebar />
                 </aside>
-                <section>{children}</section>
+                <section className="ml-0 lg:ml-64">{children}</section>
             </main>
         </PrivateRoute>
     );

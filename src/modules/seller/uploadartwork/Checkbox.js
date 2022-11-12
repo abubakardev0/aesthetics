@@ -8,7 +8,7 @@ const Checkbox = ({ list, selected, setSelected, max = 3 }) => {
             setSelected(selected.filter((medium) => medium !== current));
         } else {
             if (selected.length >= max) {
-                errorRef.current.innerText = `You can select up to ${max} items`;
+                errorRef.current.innerText = `You can select up to ${max} options`;
                 return;
             }
             errorRef.current.innerText = ``;
@@ -26,7 +26,7 @@ const Checkbox = ({ list, selected, setSelected, max = 3 }) => {
                         onChange={select}
                         className="peer hidden"
                     />
-                    <div className="w-fit rounded-full border px-3 py-2 text-sm capitalize peer-checked:border-blue-400 peer-checked:bg-blue-400 peer-checked:text-white">
+                    <div className="w-fit rounded-full border-2 border-gray-300 px-3 py-2 text-sm capitalize peer-checked:border-blue-400 peer-checked:bg-blue-400 peer-checked:text-white">
                         {item}
                     </div>
                 </label>

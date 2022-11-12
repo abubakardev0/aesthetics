@@ -55,7 +55,7 @@ function Orders() {
                 <h3 className="my-5 text-center text-xl font-medium md:text-2xl">
                     Your Orders
                 </h3>
-                <ul className="h-[500px] w-full overflow-auto">
+                <ul className="section-scrollbar h-[500px] w-full overflow-auto px-1">
                     {orders.map((data) => {
                         return <Order key={data.id} data={data} />;
                     })}

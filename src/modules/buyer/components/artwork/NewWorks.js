@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 
 import Carousel from '@/commoncomponents/Scrollers/Carousel';
+import { Loading } from '@nextui-org/react';
 
 function NewWorks() {
     const { data: items, error } = useSWR('new-uploaded-artworks', async () => {
@@ -33,9 +34,16 @@ function NewWorks() {
     if (error) {
         return <p>Error fetching data!</p>;
     }
+    if (!items) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <Loading />
+            </div>
+        );
+    }
     return (
         <>
-            <div className="my-12 text-center">
+            <div className="my-8 text-center md:my-12">
                 <p className="text-sm font-medium uppercase md:text-base">
                     epitome of creativity
                 </p>
@@ -43,7 +51,7 @@ function NewWorks() {
                     See Latest Works
                 </h2>
             </div>
-            {items && <Carousel list={items} />}
+            <Carousel list={items} />
         </>
     );
 }

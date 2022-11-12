@@ -1,4 +1,4 @@
-const User = ({ stroke = '#2D2D2D', ...props }) => {
+const User = ({ ...props }) => {
     return (
         <svg
             data-name="Iconly/Curved/Profile"
@@ -11,14 +11,12 @@ const User = ({ stroke = '#2D2D2D', ...props }) => {
                 cx="11.579"
                 cy="7.278"
                 r="4.778"
-                stroke={stroke}
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="1.5"
             ></circle>
             <path
                 fillRule="evenodd"
-                stroke={stroke}
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="1.5"

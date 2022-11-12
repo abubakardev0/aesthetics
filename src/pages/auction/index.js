@@ -7,6 +7,7 @@ import Card from '@/buyer/components/artwork/Card';
 import Hero from '@/auction/components/Hero';
 import Trending from '@/auction/components/Trending';
 import Error from '@/commoncomponents/Error';
+import TransparentLayout from '@/layouts/TransparentLayout';
 
 function Auction({ artworks, hasError }) {
     if (hasError) {
@@ -62,6 +63,7 @@ function Auction({ artworks, hasError }) {
 export default Auction;
 
 Auction.title = 'Auction';
+Auction.Layout = TransparentLayout;
 
 export async function getServerSideProps() {
     const data = [];

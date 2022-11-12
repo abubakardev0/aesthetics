@@ -25,35 +25,24 @@ function Artworks() {
         { name: 'ARTIST', uid: 'artist' },
         { name: 'STATUS', uid: 'status' },
         { name: 'PRICE', uid: 'price' },
-        { name: 'UPLOADED AT', uid: 'date' },
+        { name: 'UPLOADED AT', uid: 'uploadedAt' },
         { name: 'ACTIONS', uid: 'actions' },
     ];
-    async function load({ signal, cursor }) {
-        const querySnapshot = await getDocs(
-            cursor
-                ? query(
-                      collection(db, 'artworks'),
-                      where('sellerId', '==', auth.currentUser.uid),
-                      startAfter(cursor),
-                      limit(10)
-                  )
-                : query(
-                      collection(db, 'artworks'),
-                      where('sellerId', '==', auth.currentUser.uid),
-                      limit(10)
-                  ),
-            { signal }
-        );
-        const data = [];
-        querySnapshot.forEach((doc) => {
-            data.push({ id: doc.id, ...doc.data() });
-        });
-        let lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-        return {
-            items: data,
-            cursor: lastVisible,
-        };
-    }
+     async function load() {
+         const list = [];
+         const docRef = await getDocs(
+             query(
+                 collection(db, 'artworks'),
+                 where('sellerId', '==', auth.currentUser.uid)
+             )
+         );
+         docRef.forEach((doc) => {
+             list.push({ id: doc.id, ...doc.data() });
+         });
+         return {
+             items: list,
+         };
+     }
     async function sort({ items, sortDescriptor }) {
         return {
             items: items.sort((a, b) => {
@@ -71,177 +60,224 @@ function Artworks() {
 
     return (
         <>
-            <section className="relative px-3">
+            <section className="relative min-h-[80vh] p-5">
                 <h3 className="pb-8 text-center text-2xl font-medium uppercase">
                     Your Artworks
                 </h3>
-                <Link href="/seller/artworks/submissions">
-                    <a className="absolute top-2 right-5 text-base underline underline-offset-4">
-                        Your Submissions
-                    </a>
-                </Link>
-                <Table
-                    bordered
-                    aria-label="Artworks table"
-                    css={{
-                        minWidth: '100%',
-                        height: 'calc($space$14 * 12)',
-                        backgroundColor: 'white',
-                        overflowX: 'scroll',
-                        zIndex: 0,
-                    }}
-                    selectionMode="none"
-                    sortDescriptor={list.sortDescriptor}
-                    onSortChange={list.sort}
-                >
-                    <Table.Header columns={columns}>
-                        <Table.Column
-                            key="title"
-                            css={{
-                                width: '280px',
-                            }}
-                            allowsSorting
-                        >
-                            TITLE
-                        </Table.Column>
-                        <Table.Column key="artist" width="180px" allowsSorting>
-                            ARTIST
-                        </Table.Column>
-                        <Table.Column key="price" width="150px" allowsSorting>
-                            PRICE
-                        </Table.Column>
-                        <Table.Column key="type" width="100px" allowsSorting>
-                            TYPE
-                        </Table.Column>
-                        <Table.Column key="status" width="100px" allowsSorting>
-                            STATUS
-                        </Table.Column>
-                        <Table.Column key="date" width="200px" allowsSorting>
-                            UPLOADED AT
-                        </Table.Column>
-                        <Table.Column key="actions" width="80px">
-                            ACTIONS
-                        </Table.Column>
-                    </Table.Header>
-                    <Table.Body
-                        items={list.items}
-                        loadingState={list.loadingState}
-                        onLoadMore={list.loadMore}
+                <div className="my-5 flex items-center justify-between">
+                    <div className="space-x-4">
+                        <span className="rounded-full border border-sky-100 bg-sky-100 px-3 py-2.5 text-xs text-sky-500 sm:px-3 sm:text-sm md:px-5 md:text-base">
+                            All Artworks
+                        </span>
+                    </div>
+                    <Link href="/seller/artworks/submissions">
+                        <a className="inline-flex items-center gap-x-2 rounded-md bg-neutral-800 py-2.5 px-2 text-xs text-white hover:bg-neutral-700 active:bg-neutral-900 sm:px-3 sm:text-sm md:px-5 md:text-base">
+                            Your Submissions
+                        </a>
+                    </Link>
+                </div>
+                {list.items.length > 0 ? (
+                    <Table
+                        bordered
+                        aria-label="Artworks table"
+                        css={{
+                            minWidth: '100%',
+                            minHeight: 'fit-content',
+                            maxHeight: 'calc($space$14 * 12)',
+                            backgroundColor: 'white',
+                            overflowX: 'scroll',
+                            zIndex: 0,
+                        }}
+                        selectionMode="none"
+                        sortDescriptor={list.sortDescriptor}
+                        onSortChange={list.sort}
                     >
-                        {(item) => (
-                            <Table.Row
-                                key={item.id}
-                                css={{
-                                    borderBottom: '1px solid #f1f5f9',
-                                }}
+                        <Table.Header columns={columns}>
+                            <Table.Column
+                                key="title"
+                                width="300px"
+                                allowsSorting
                             >
-                                <Table.Cell
+                                ITEM
+                            </Table.Column>
+                            <Table.Column key="dimensions" width="180px">
+                                DIMENSIONS
+                            </Table.Column>
+                            <Table.Column
+                                key="price"
+                                width="150px"
+                                allowsSorting
+                            >
+                                PRICE
+                            </Table.Column>
+                            <Table.Column
+                                key="type"
+                                width="100px"
+                                allowsSorting
+                            >
+                                TYPE
+                            </Table.Column>
+                            <Table.Column
+                                key="status"
+                                width="100px"
+                                allowsSorting
+                            >
+                                STATUS
+                            </Table.Column>
+                            <Table.Column
+                                key="uploadedAt"
+                                width="150px"
+                                allowsSorting
+                            >
+                                UPLOADED AT
+                            </Table.Column>
+                            <Table.Column key="actions" width="100px">
+                                ACTIONS
+                            </Table.Column>
+                        </Table.Header>
+                        <Table.Body
+                            items={list.items}
+                            loadingState={list.loadingState}
+                            onLoadMore={list.loadMore}
+                        >
+                            {(item) => (
+                                <Table.Row
+                                    key={item.id}
                                     css={{
-                                        width: '280px',
+                                        borderBottom: '1px solid #f1f5f9',
                                     }}
                                 >
-                                    <div className="inline-flex w-full items-center space-x-2">
-                                        <div className="h-14 w-14">
-                                            <Image
-                                                src={item.images[0]}
-                                                height={50}
-                                                width={50}
-                                                className="object-cover"
-                                            />
+                                    <Table.Cell
+                                        css={{
+                                            width: '300px',
+                                        }}
+                                    >
+                                        <div className="flex items-center gap-x-3 whitespace-nowrap">
+                                            <div className="h-16 w-14 overflow-hidden">
+                                                <Image
+                                                    src={item.images[0]}
+                                                    height={70}
+                                                    width={60}
+                                                    alt="no image"
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                            <div>
+                                                <h5 className="text-wrap text-sm font-medium capitalize sm:text-base md:text-xl">
+                                                    {item.title}
+                                                </h5>
+                                                <p className="ms:text-sm text-xs capitalize first-letter:lowercase md:text-base">
+                                                    by {item.artist}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="w-full overflow-hidden ">
-                                            <h5 className="capitalize">
-                                                {item.title}
-                                            </h5>
-                                        </div>
-                                    </div>
-                                </Table.Cell>
-                                <Table.Cell
-                                    css={{
-                                        width: '180px',
-                                    }}
-                                >
-                                    <span className="capitalize">
-                                        {item.artist}
-                                    </span>
-                                </Table.Cell>
-                                <Table.Cell
-                                    css={{
-                                        width: '150px',
-                                    }}
-                                >
-                                    <p>{formatCurrency(item.price)}</p>
-                                </Table.Cell>
-                                <Table.Cell
-                                    css={{
-                                        width: '100px',
-                                    }}
-                                >
-                                    <p className="capitalize">{item.type}</p>
-                                </Table.Cell>
-                                <Table.Cell
-                                    css={{
-                                        width: '100px',
-                                    }}
-                                >
-                                    <span
-                                        className={`${
-                                            item.status === 'listed' &&
-                                            'bg-green-100 text-green-500'
-                                        } rounded-full px-4 py-1 text-sm capitalize
+                                    </Table.Cell>
+                                    <Table.Cell
+                                        css={{
+                                            width: '180px',
+                                        }}
+                                    >
+                                        {`${item.dimensions.height}H - ${item.dimensions.width}W `}
+                                        {item.dimensions.depth && (
+                                            <span>
+                                                {`- ${item.dimensions.depth}
+                                                D `}
+                                            </span>
+                                        )}
+                                        cm
+                                    </Table.Cell>
+                                    <Table.Cell
+                                        css={{
+                                            width: '150px',
+                                        }}
+                                    >
+                                        <p>{formatCurrency(item.price)}</p>
+                                    </Table.Cell>
+                                    <Table.Cell
+                                        css={{
+                                            width: '100px',
+                                        }}
+                                    >
+                                        <p className="capitalize">
+                                            {item.type}
+                                        </p>
+                                    </Table.Cell>
+                                    <Table.Cell
+                                        css={{
+                                            width: '100px',
+                                        }}
+                                    >
+                                        <span
+                                            className={`${
+                                                item.status === 'listed' &&
+                                                'bg-green-100 text-green-500'
+                                            } rounded-full px-4 py-1 text-sm capitalize
+                                             ${
+                                                 item.status === 'archived' &&
+                                                 'bg-amber-100 text-amber-600'
+                                             }
                                     ${
                                         item.status === 'sold' &&
                                         'bg-orange-100 text-orange-500'
                                     }
                                     `}
+                                        >
+                                            {item.status}
+                                        </span>
+                                    </Table.Cell>
+                                    <Table.Cell
+                                        css={{
+                                            width: '150px',
+                                        }}
                                     >
-                                        {item.status}
-                                    </span>
-                                </Table.Cell>
-                                <Table.Cell
-                                    css={{
-                                        width: '200px',
-                                    }}
-                                >
-                                    {new Date(
-                                        item.uploadedAt.seconds * 1000
-                                    ).toUTCString()}
-                                </Table.Cell>
-                                <Table.Cell
-                                    css={{
-                                        width: '80px',
-                                    }}
-                                >
-                                    <div className="inline-flex gap-x-4">
-                                        <Tooltip
-                                            content="View Details"
-                                            color="invert"
-                                        >
-                                            <Link
-                                                href={`/seller/artworks/${item.id}`}
+                                        {new Date(
+                                            item.uploadedAt.seconds * 1000
+                                        ).toDateString()}
+                                    </Table.Cell>
+                                    <Table.Cell
+                                        css={{
+                                            width: '100px',
+                                        }}
+                                    >
+                                        <div className="inline-flex gap-x-4">
+                                            <Tooltip
+                                                content="View Details"
+                                                color="invert"
                                             >
-                                                <Edit
-                                                    className="h-5 w-5"
-                                                    fill="none"
-                                                    stroke="#979797"
+                                                <Link
+                                                    href={`/seller/artworks/${item.id}`}
+                                                >
+                                                    <Edit
+                                                        className="h-5 w-5"
+                                                        fill="none"
+                                                        stroke="#464646"
+                                                    />
+                                                </Link>
+                                            </Tooltip>
+                                            <Tooltip
+                                                content="Delete Artwork"
+                                                color="error"
+                                            >
+                                                <DeleteArtwork
+                                                    collection="artworks"
+                                                    id={item.id}
                                                 />
-                                            </Link>
-                                        </Tooltip>
-                                        <Tooltip
-                                            content="Delete Artwork"
-                                            color="error"
-                                        >
-                                            <DeleteArtwork
-                                                collection="artworks"
-                                                id={item.id}
-                                            />
-                                        </Tooltip>
-                                    </div>
-                                </Table.Cell>
-                            </Table.Row>
-                        )}
-                    </Table.Body>
-                </Table>
+                                            </Tooltip>
+                                        </div>
+                                    </Table.Cell>
+                                </Table.Row>
+                            )}
+                        </Table.Body>
+                         <Table.Pagination
+                            shadow
+                            noMargin
+                            align="left"
+                            rowsPerPage={10}
+                        />
+                    </Table>
+                ) : (
+                    <p className="text-center">No Artworks Found</p>
+                )}
             </section>
         </>
     );

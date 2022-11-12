@@ -2,10 +2,14 @@ import { useState, useRef } from 'react';
 
 import Image from 'next/image';
 
+import { useStateMachine } from 'little-state-machine';
+
+import updateAction from '@/commoncomponents/updateAction';
 import Plus from '@/icons/Plus';
 
-function Images({ state, setValue, setError }) {
-    const [picture, setPicture] = useState([]);
+function Images({ formState, setValue, setError }) {
+    const { state, actions } = useStateMachine({ updateAction });
+    const [picture, setPicture] = useState(state.details.images);
     const errorRef = useRef();
 
     const handleImageUpload = (e) => {
@@ -38,11 +42,13 @@ function Images({ state, setValue, setError }) {
         }
     };
     const prevStep = () => {
-        state((e) => e - 1);
+        actions.updateAction({ images: picture });
+        formState((e) => e - 1);
     };
     const nextStep = () => {
         if (picture.length > 0) {
-            state((e) => e + 1);
+            actions.updateAction({ images: picture });
+            formState((e) => e + 1);
         } else {
             errorRef.current.innerText = 'Please select atleast 1 image';
             setError('images', {
@@ -53,7 +59,7 @@ function Images({ state, setValue, setError }) {
     };
     return (
         <>
-            <div className="">
+            <div>
                 <div className="space-y-2 px-1">
                     <h2 className="text-lg font-semibold text-black md:text-2xl">
                         Upload photos of your artwork
@@ -80,16 +86,13 @@ function Images({ state, setValue, setError }) {
                         <p className="mb-6 text-sm text-neutral-600 md:text-base">
                             Maximum Size: 20MB
                         </p>
-                        <label
-                            htmlFor="image-file"
-                            className="mb-2 rounded-full border border-black px-5 py-2 shadow-md active:bg-neutral-800 active:text-white"
-                        >
+                        <label htmlFor="image-file" className="sr-only">
                             Add Photo
                         </label>
                         <input
                             id="image-file"
                             type="file"
-                            className="hidden"
+                            className="block w-fit text-sm text-gray-500 file:mr-4 file:rounded-full file:border file:border-black file:bg-white file:py-2 file:px-5 file:text-sm file:font-medium file:text-black  hover:file:bg-gray-100"
                             onChange={handleImageUpload}
                             multiple
                         />

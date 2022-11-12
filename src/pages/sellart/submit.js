@@ -8,6 +8,7 @@ import { auth, db } from '@/firebase/firebase-config';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { Loading } from '@nextui-org/react';
+import { StateMachineProvider, createStore } from 'little-state-machine';
 
 import EmptyLayout from '@/layouts/EmptyLayout';
 import PrivateRoute from '@/commoncomponents/routes/Private';
@@ -30,9 +31,15 @@ function FormSubmission({ mediums, surfaces }) {
         setError,
         formState: { errors },
     } = useForm();
-
+    createStore({
+        details: {
+            mediums: [],
+            surfaces: [],
+            images: [],
+            certificates: [],
+        },
+    });
     const onSubmit = async (data) => {
-        console.log('submit');
         setLoading(true);
         try {
             const res = await axios.post('/api/submit-artwork', {
@@ -89,79 +96,80 @@ function FormSubmission({ mediums, surfaces }) {
                     />
                 </div>
                 <section className="mt-5 w-full place-self-center px-5 py-6 sm:w-[400px] sm:flex-col sm:rounded-xl sm:border-2 sm:border-slate-200 sm:shadow-slate-400">
-                    <form
-                        onSubmit={handleSubmit(onSubmit)}
-                        name="submit-artwork"
-                        id="submit-artwork"
-                    >
-                        {formState === 1 && (
-                            <Details
-                                state={setFormState}
-                                register={register}
-                                setValue={setValue}
-                                errors={errors}
-                                trigger={trigger}
-                            />
-                        )}
-                        {formState === 2 && (
-                            <ChooseMaterial
-                                mediums={mediums}
-                                surfaces={surfaces}
-                                state={setFormState}
-                                setValue={setValue}
-                                setError={setError}
-                            />
-                        )}
-                        {formState === 3 && (
-                            <>
-                                <Images
+                    <StateMachineProvider>
+                        <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            name="submit-artwork"
+                            id="submit-artwork"
+                        >
+                            {formState === 1 && (
+                                <Details
                                     state={setFormState}
+                                    register={register}
+                                    setValue={setValue}
+                                    errors={errors}
+                                    trigger={trigger}
+                                />
+                            )}
+                            {formState === 2 && (
+                                <ChooseMaterial
+                                    mediums={mediums}
+                                    surfaces={surfaces}
+                                    formState={setFormState}
                                     setValue={setValue}
                                     setError={setError}
                                 />
-                            </>
-                        )}
-                        {formState === 4 && (
-                            <>
-                                <UploadCertifications
-                                    state={setFormState}
-                                    setValue={setValue}
-                                />
-                                {setValue('uid', auth.currentUser.uid)}
-                                {console.log('logged')}
-                                <div className="mt-5 flex space-x-3">
-                                    <button
-                                        className="w-full rounded-xl bg-neutral-200 py-2 text-neutral-800 active:bg-neutral-300"
-                                        onClick={() =>
-                                            setFormState((e) => e - 1)
-                                        }
-                                    >
-                                        Prev Step
-                                    </button>
-                                    <button
-                                        disabled={loading ? true : false}
-                                        type="submit"
-                                        form="submit-artwork"
-                                        className="w-full rounded-md bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg hover:bg-neutral-900"
-                                    >
-                                        {loading ? (
-                                            <Loading
-                                                type="points-opacity"
-                                                color="currentColor"
-                                                size="sm"
-                                            />
-                                        ) : (
-                                            'Submit'
-                                        )}
-                                    </button>
-                                </div>
-                                <span
-                                    ref={errorRef}
-                                    className="mt-2 text-base text-red-500"
-                                />
-                            </>
-                        )}
-                    </form>
+                            )}
+                            {formState === 3 && (
+                                <>
+                                    <Images
+                                        formState={setFormState}
+                                        setValue={setValue}
+                                        setError={setError}
+                                    />
+                                </>
+                            )}
+                            {formState === 4 && (
+                                <>
+                                    <UploadCertifications
+                                        formState={setFormState}
+                                        setValue={setValue}
+                                    />
+                                    {setValue('uid', auth.currentUser.uid)}
+                                    <div className="mt-5 flex space-x-3">
+                                        <button
+                                            className="w-full rounded-xl bg-neutral-200 py-2 text-neutral-800 active:bg-neutral-300"
+                                            onClick={() =>
+                                                setFormState((e) => e - 1)
+                                            }
+                                        >
+                                            Prev Step
+                                        </button>
+                                        <button
+                                            disabled={loading ? true : false}
+                                            type="submit"
+                                            form="submit-artwork"
+                                            className="w-full rounded-md bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg hover:bg-neutral-900"
+                                        >
+                                            {loading ? (
+                                                <Loading
+                                                    type="points-opacity"
+                                                    color="currentColor"
+                                                    size="sm"
+                                                />
+                                            ) : (
+                                                'Submit'
+                                            )}
+                                        </button>
+                                    </div>
+                                    <span
+                                        ref={errorRef}
+                                        className="mt-2 text-base text-red-500"
+                                    />
+                                </>
+                            )}
+                        </form>
+                    </StateMachineProvider>
                     {formState === 5 && (
                         <>
                             <h4 className="my-2 text-center text-xl font-medium">
@@ -211,7 +219,7 @@ const Steps = ({ current, number, isLast }) => {
                             : 'bg-none text-neutral-800'
                     } ${
                         current === number
-                            ? 'bg-neutral-200 text-neutral-800'
+                            ? 'bg-gray-100 text-neutral-800'
                             : 'bg-none text-neutral-800'
                     } h-8 w-8 rounded-full  border-2 border-neutral-800 py-0.5 text-center transition duration-500 ease-in-out md:h-12 md:w-12 md:py-3`}
                 >

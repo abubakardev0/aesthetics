@@ -5,14 +5,14 @@ import { useRouter } from 'next/router';
 function Navbar() {
     return (
         <>
-            <ul className="mt-2 hidden space-x-4 md:flex lg:space-x-6">
+            <ul className="mt-2 hidden space-x-4 text-current md:flex lg:space-x-6">
                 <NavLink text="Home" refrence="/" />
                 <NavLink text="Artworks" refrence="/artworks" />
                 <NavLink text="Collections" refrence="/collections" />
                 <NavLink text="Auction" refrence="/auction" />
                 <NavLink text="Competitions" refrence="/competitions" />
             </ul>
-            <button className="hidden h-10 w-24 rounded-sm border border-[#2D2D2D] bg-none text-base transition-all hover:bg-[#2D2D2D] hover:text-white md:block">
+            <button className="hidden h-10 w-24 rounded-sm border border-current bg-none text-base text-current md:block">
                 <Link href="/sellart">
                     <a>Sell Art</a>
                 </Link>
@@ -26,13 +26,13 @@ export default memo(Navbar);
 function NavLink(props) {
     const router = useRouter();
     return (
-        <li className="w-fit cursor-pointer text-xs uppercase md:text-sm lg:text-base">
+        <li className="w-fit cursor-pointer text-sm uppercase">
             <Link href={props.refrence}>
                 <a
                     className={`${
                         router.pathname == props.refrence
-                            ? 'border-b border-black font-medium opacity-100 delay-100'
-                            : 'border-black font-normal opacity-90 hover:border-b'
+                            ? 'border-b border-current font-medium opacity-100 delay-100'
+                            : 'border-current font-normal opacity-90 hover:border-b'
                     }`}
                 >
                     {props.text}

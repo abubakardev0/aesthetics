@@ -21,14 +21,12 @@ import {
 import { Loading } from '@nextui-org/react';
 
 function SearchModel(props) {
-    const [searchValue, setValue] = useState('');
     const [searchResult, setResult] = useState([]);
     const ref = useRef(null);
-    const textRef = useRef(null);
 
     const handleSearch = async (e) => {
         let result = [];
-        const fieldValue = ref.current?.value;
+        const fieldValue = ref.current.value;
         const searchValue = e.target.value.toLowerCase();
         try {
             const documents = await getDocs(
@@ -36,6 +34,7 @@ function SearchModel(props) {
                     collection(db, 'artworks'),
                     where(`${fieldValue}`, '>=', `${searchValue}`),
                     where(`${fieldValue}`, '<=', `${searchValue}\uf8ff`),
+                    where('status', '==', 'listed'),
                     orderBy(`${fieldValue}`),
                     limit(5)
                 )
@@ -56,7 +55,7 @@ function SearchModel(props) {
     };
     return (
         <motion.div
-            initial={{ x: '-100', opacity: 0 }}
+            initial={{ x: '-100', opacity: 0.5 }}
             animate={{
                 x: '0',
                 opacity: 1,
@@ -67,7 +66,7 @@ function SearchModel(props) {
                     stiffness: 500,
                 },
             }}
-            className={`fixed top-0 right-0 left-0 z-50 h-full w-full bg-slate-500/25 transition-all duration-500 ease-in-out`}
+            className={`fixed top-0 right-0 left-0 z-50 h-screen w-screen bg-slate-500/25 transition-all duration-500 ease-in-out`}
         >
             <div className="flex h-14 w-full flex-col items-center bg-[#010101] md:h-20">
                 <div className="relative mx-auto my-auto w-full md:w-1/2">
@@ -76,10 +75,10 @@ function SearchModel(props) {
                             <Search className="h-6 w-6" stroke="white" />
                         </button>
                     </div>
-                    <div className="absolute inset-y-0 left-6 flex items-center px-4">
+                    <div className="absolute inset-y-0 left-6 flex w-24 items-center px-3 md:w-28 lg:w-32">
                         <select
                             ref={ref}
-                            className="content:after[>] block w-full appearance-none bg-transparent px-2 py-1 text-sm text-gray-300 md:px-4"
+                            className="block w-full bg-black px-2 py-2 text-sm font-[500] text-gray-300"
                         >
                             <option value="title">Title</option>
                             <option value="artist">Artist</option>
@@ -110,29 +109,33 @@ function SearchModel(props) {
             </div>
 
             <div className="min-h-48 relative mx-auto w-full rounded-b-2xl border-b bg-white py-4 px-3 shadow sm:w-5/6 sm:py-8 md:w-1/2">
-                <div className="my-1 space-y-1">
-                    {!searchResult && <Loading />}
+                <div className="space-y-1">
                     {searchResult.length > 0 ? (
-                        searchResult.map((result) => {
-                            return (
-                                <Link
-                                    href={`/artworks${
-                                        result.type === 'auction'
-                                            ? '/auction'
-                                            : '/immediate'
-                                    }/${result.id}`}
-                                    key={result.id}
-                                >
-                                    <a className="flex h-16 w-full items-center space-x-4 rounded py-2 pl-3 hover:bg-blue-200/50">
-                                        <Item
-                                            title={result.title}
-                                            image={result.image}
-                                            artist={result.artist}
-                                        />
-                                    </a>
-                                </Link>
-                            );
-                        })
+                        <>
+                            <h6 className="pl-3 font-medium text-gray-600">
+                                Search Results:
+                            </h6>
+                            {searchResult.map((result) => {
+                                return (
+                                    <Link
+                                        href={`/artworks${
+                                            result.type === 'auction'
+                                                ? '/auction'
+                                                : '/immediate'
+                                        }/${result.id}`}
+                                        key={result.id}
+                                    >
+                                        <a className="flex h-16 w-full items-center space-x-4 rounded py-2 pl-3 hover:bg-blue-200/50">
+                                            <Item
+                                                title={result.title}
+                                                image={result.image}
+                                                artist={result.artist}
+                                            />
+                                        </a>
+                                    </Link>
+                                );
+                            })}
+                        </>
                     ) : (
                         <p className="text-center">No Result</p>
                     )}

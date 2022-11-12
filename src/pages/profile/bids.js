@@ -21,6 +21,7 @@ import useSWR from 'swr';
 
 import { Loading, Tooltip } from '@nextui-org/react';
 
+import Alert from '@/commoncomponents/popups/Alert';
 import { useCountDown } from '@/hooks/useCountDown';
 import SettingsLayout from '@/layouts/SettingsLayout';
 import { formatCurrency } from '@/commoncomponents/functions';
@@ -72,7 +73,7 @@ function Bids() {
             }
             return bids;
         },
-        { refreshInterval: 500 }
+        { refreshInterval: 2000 }
     );
 
     if (error) {
@@ -111,10 +112,25 @@ Bids.Layout = SettingsLayout;
 
 function Bid({ data }) {
     const [loading, setLoading] = useState(false);
+    const [show, setShow] = useState(false);
+    const [alert, setAlert] = useState({
+        type: '',
+        message: '',
+    });
     const time = useCountDown(data.endingTime.seconds);
 
     const handleBidCancellation = async () => {
         setLoading(true);
+        if (time < 86400) {
+            setAlert({
+                type: 'error',
+                message:
+                    'As the auction will end in 24 hours, you cannot cancel your bid',
+            });
+            setLoading(false);
+            setShow(true);
+            return;
+        }
         if (data.value === data.currentBid) {
             await deleteDoc(
                 doc(db, 'artworks', `${data.artworkId}`, 'bids', `${data.id}`)
@@ -197,7 +213,7 @@ function Bid({ data }) {
         <li className="relative">
             <Link href={`/artworks/auction/${data.artworkId}`}>
                 <a className="flex h-32 w-full cursor-pointer items-end space-x-2 border-b py-2.5 pr-10 hover:bg-gray-50 md:h-36 md:w-[500px] md:items-center md:rounded-lg md:border md:px-4">
-                    <div className="h-24 w-20 overflow-hidden md:h-32 md:w-28">
+                    <div className="h-20 w-16 overflow-hidden md:h-32 md:w-28">
                         <Image
                             src={data.image}
                             height={250}
@@ -247,6 +263,12 @@ function Bid({ data }) {
                     Auction Ends
                 </span>
             )}
+            <Alert
+                show={show}
+                setShow={setShow}
+                type={alert.type}
+                message={alert.message}
+            />
         </li>
     );
 }

@@ -61,14 +61,15 @@ export default async function handler(req, res) {
             }
             const artwork = {
                 images: imagesPath,
-                certificates: certificatesPath,
+                certificates:
+                    certificatesPath.length === 0 ? null : certificatesPath,
                 uid: data.uid,
                 artist: data.artist.toLocaleLowerCase(),
                 title: data.title.toLocaleLowerCase(),
                 rarity: data.rarity.toLocaleLowerCase(),
                 height: parseInt(data.height),
                 width: parseInt(data.width),
-                depth: data.depth ? parseInt(depth) : 0,
+                depth: data.depth ? parseInt(depth) : null,
                 unit: data.unit.toLocaleLowerCase(),
                 mediums: data.mediums,
                 surfaces: data.surfaces,

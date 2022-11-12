@@ -1,4 +1,4 @@
-function Search({ stroke = '#2D2D2D', ...props }) {
+function Search({ ...props }) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -10,13 +10,11 @@ function Search({ stroke = '#2D2D2D', ...props }) {
                 cx="11.767"
                 cy="11.767"
                 r="8.989"
-                stroke={stroke}
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="1.5"
             ></circle>
             <path
-                stroke={stroke}
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="1.5"

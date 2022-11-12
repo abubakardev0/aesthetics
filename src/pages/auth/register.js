@@ -62,6 +62,8 @@ function Register() {
                     <Input
                         width="100%"
                         color="black"
+                        bordered
+                        clearable
                         type="text"
                         label="Name"
                         helperColor="red"
@@ -80,6 +82,8 @@ function Register() {
                     <Input
                         width="100%"
                         color="black"
+                        bordered
+                        clearable
                         type="email"
                         label="E-mail"
                         placeholder="Your E-mail"
@@ -96,6 +100,7 @@ function Register() {
                     <Input.Password
                         width="100%"
                         clearable
+                        bordered
                         color="black"
                         type="password"
                         label="Password"

@@ -1,18 +1,34 @@
 import { useRef, useState } from 'react';
+import { useStateMachine } from 'little-state-machine';
 
+import updateAction from '@/commoncomponents/updateAction';
 import Checkbox from './Checkbox';
 
-function ChooseMaterial({ mediums, surfaces, state, setValue, setError }) {
-    const [selectedMediums, setSelectedMediums] = useState([]);
-    const [selectedSurfaces, setSelectedSurfaces] = useState([]);
+function ChooseMaterial({ mediums, surfaces, formState, setValue, setError }) {
+    const { state, actions } = useStateMachine({ updateAction });
+    const [selectedMediums, setSelectedMediums] = useState(
+        state.details.mediums
+    );
+    const [selectedSurfaces, setSelectedSurfaces] = useState(
+        state.details.surfaces
+    );
+
     const mediumRef = useRef();
     const surfaceRef = useRef();
     const prevStep = () => {
-        state((e) => e - 1);
+        actions.updateAction({
+            mediums: selectedMediums,
+            surfaces: selectedSurfaces,
+        });
+        formState((e) => e - 1);
     };
     const nextStep = async () => {
         if (selectedMediums.length > 0 && selectedSurfaces.length > 0) {
-            state((e) => e + 1);
+            actions.updateAction({
+                mediums: selectedMediums,
+                surfaces: selectedSurfaces,
+            });
+            formState((e) => e + 1);
         } else {
             setError('mediums', {
                 type: 'custom',
