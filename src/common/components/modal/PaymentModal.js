@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 
 import Mastercard from '@/icons/MasterCard';
 import Visa from '@/icons/Visa';
-import Alert from '@/commoncomponents/navbar/popups/Alert';
+import Alert from '@/commoncomponents/popups/Alert';
 
 export default function PaymentModal() {
     const [show, setShow] = useState(false);
