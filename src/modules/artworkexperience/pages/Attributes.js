@@ -23,8 +23,10 @@ export default function Artist({
     const [follow, setFollow] = useState(false);
 
     useEffect(() => {
-        checkFollow();
-    });
+        if (auth.currentUser) {
+            checkFollow();
+        }
+    }, []);
 
     async function checkFollow() {
         const ref = await getDoc(doc(db, 'users', auth.currentUser.uid));

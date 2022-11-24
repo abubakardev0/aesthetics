@@ -110,7 +110,7 @@ function Login() {
                             />
                             <label
                                 htmlFor="checkbox"
-                                class="ml-2 text-sm text-neutral-800"
+                                className="ml-2 text-sm text-neutral-800"
                             >
                                 Log me Out
                             </label>

@@ -15,14 +15,14 @@ import {
 } from 'firebase/firestore';
 
 import { db, auth } from '@/firebase/firebase-config';
+import { Loading } from '@nextui-org/react';
 import axios from 'axios';
 
 import { useCountDown } from '@/hooks/useCountDown';
 import { useTimeout } from '@/hooks/useTimeout';
 import ShowCounter from '@/commoncomponents/ShowCounter';
-
+import Loader from '@/commoncomponents/Loader';
 import { formatCurrency } from '@/commoncomponents/functions';
-import { Loading } from '@nextui-org/react';
 
 export default function BiddingDetails({ data, setAlert, setShow }) {
     const [userBid, setUserBid] = useState(null);

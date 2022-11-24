@@ -13,10 +13,6 @@ import Behance from '@/icons/Behance';
 
 export default function Social({ id, sellerId, setAlert, setShow }) {
     const [save, setSave] = useState(false);
-    const users = {
-        currentUser: auth.currentUser.uid,
-        otherUser: sellerId,
-    };
 
     useEffect(() => {
         if (auth.currentUser) {
@@ -79,7 +75,12 @@ export default function Social({ id, sellerId, setAlert, setShow }) {
             <Link
                 href={{
                     pathname: '/chat',
-                    query: auth.currentUser ? users : '',
+                    query: auth.currentUser
+                        ? {
+                              currentUser: auth.currentUser.uid,
+                              otherUser: sellerId,
+                          }
+                        : null,
                 }}
             >
                 <a className="flex items-center space-x-2">
