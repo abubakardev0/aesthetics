@@ -43,7 +43,7 @@ function Footer() {
                     <li className="text-xs md:text-lg">Contact</li>
                 </ul>
             </nav>
-            <div className="mt-10 grid w-full place-items-center">
+            <div className="mt-10 grid w-full place-items-center px-4 md:px-0">
                 <h3 className="mb-3 text-base tracking-wide text-gray-700 md:text-xl">
                     Weekly News Letter
                 </h3>

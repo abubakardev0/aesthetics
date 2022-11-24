@@ -62,7 +62,6 @@ export const AuthProvider = ({ children }) => {
             const user = await setDoc(doc(db, 'users', auth.currentUser.uid), {
                 name: name,
                 email: email,
-                role: 'buyer',
                 photoURL: auth.currentUser.photoURL,
                 createdAt: serverTimestamp(),
                 uploadedWorks: 0,

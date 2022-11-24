@@ -17,7 +17,7 @@ function Auction({ artworks, hasError }) {
     return (
         <>
             <Hero />
-            <section className="container z-50 mt-5 bg-white px-2 md:mx-auto md:px-0">
+            <section className="z-50 mt-5 bg-white px-3 md:px-10 lg:px-16">
                 <div>
                     <Trending />
                 </div>
@@ -29,7 +29,7 @@ function Auction({ artworks, hasError }) {
                         Live Auction
                     </h2>
                 </div>
-                <div className="flex flex-wrap justify-center gap-6">
+                <div className="container mx-auto flex flex-wrap justify-center gap-3 md:gap-5 lg:justify-start">
                     {posts.map((item) => (
                         <Link
                             href={`/artworks${

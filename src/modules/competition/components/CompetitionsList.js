@@ -13,7 +13,7 @@ export default function CompetitionsList({ list }) {
                     Live Competitions
                 </h2>
             </div>
-            <div className="flex flex-wrap gap-6">
+            <div className="flex flex-wrap justify-center gap-4 md:justify-start md:gap-6">
                 {list.map((each) => (
                     <Link href={`/competitions/${each.id}`} key={each.id}>
                         <a>

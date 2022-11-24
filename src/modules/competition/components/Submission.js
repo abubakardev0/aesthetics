@@ -20,6 +20,14 @@ import Error from '@/commoncomponents/Error';
 
 export default function Submission({ id }) {
     let res = false;
+    const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
+
     const { data: submitted, error } = useSWR('submission-work', async () => {
         const docSnap = await getDocs(
             query(
@@ -35,12 +43,6 @@ export default function Submission({ id }) {
         });
         return res;
     });
-    const [visible, setVisible] = useState(false);
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
 
     if (error) {
         return <Error />;
@@ -56,9 +58,14 @@ export default function Submission({ id }) {
             );
         } catch (error) {
             alert(error);
+        } finally {
+            setLoading(false);
+            setVisible(false);
         }
     }
-    const onSubmit = async (data) => {
+    const onSubmit = (data) => {
+        setLoading(true);
+
         const obj = {
             title: data.title,
             userId: auth.currentUser.uid,
@@ -79,6 +86,7 @@ export default function Submission({ id }) {
                 );
             },
             (error) => {
+                setLoading(false);
                 reject(error);
             },
             () => {
@@ -209,10 +217,19 @@ export default function Submission({ id }) {
                         </button>
                         <button
                             onClick={handleSubmit(onSubmit)}
+                            disabled={loading ? true : false}
                             type="submit"
-                            className="h-12 w-full rounded-2xl bg-blue-600 font-semibold text-white"
+                            className="h-12 w-full rounded-2xl bg-blue-600 font-semibold text-white disabled:cursor-not-allowed"
                         >
-                            Submit
+                            {loading ? (
+                                <Loading
+                                    color="white"
+                                    type="points-opacity"
+                                    size="sm"
+                                />
+                            ) : (
+                                'Submit'
+                            )}
                         </button>
                     </div>
                 </Modal.Footer>

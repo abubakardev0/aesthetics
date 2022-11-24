@@ -15,7 +15,6 @@ sendgrid.setApiKey(process.env.SENTGRID_SECRET_KEY);
 
 export default async function handler(req, res) {
     const id = req.body.documentId;
-    let userId = null;
     let user = null;
     const ref = await getDocs(
         query(
@@ -25,26 +24,28 @@ export default async function handler(req, res) {
         )
     );
     ref.forEach((document) => {
-        userId = document.data().user;
+        user = document.data();
     });
-    const userRef = await getDoc(doc(db, 'users', `${userId}`));
-    if (userRef.exists) {
-        user = userRef.data();
-    }
+
+    await updateDoc(doc(db, 'artworks', `${id}`), {
+        status: 'archived',
+        winner: user,
+    });
     await sendgrid.send({
         to: user.email,
-        from: 'keyowe1568@migonom.com',
+        from: {
+            email: 'keyowe1568@migonom.com',
+            name: 'Aesthetics',
+        },
         subject: 'You won the auction',
         html: `Hey ${user.name},
                     Congratulation! You won the auction with the highest bid. 
                     Please follow the link below to pay for your item. 
+                    link=http://localhost:3000/auction-checkout?itemId=${id}&userId=${user.user}
                     You will have 7 days to pay before the listing is re-listed. 
                     Included below are some helpful links to help you make informed 
                     
             `,
-    });
-    await updateDoc(doc(db, 'artworks', `${id}`), {
-        status: 'sold',
     });
     res.send('resolved');
 }

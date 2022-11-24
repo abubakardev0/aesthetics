@@ -108,10 +108,6 @@ function Artworks({ artworks, hasError }) {
         const query = priceFilterQuery(min, max);
         filter(query);
     }
-    function filterArtist(name) {
-        const query = artistFilterQuery(name);
-        filter(query);
-    }
     function filterType(type) {
         const query = typeFilterQuery(type);
         filter(query);

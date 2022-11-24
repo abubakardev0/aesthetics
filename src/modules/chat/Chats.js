@@ -75,7 +75,7 @@ export default function Chat({ setChat }) {
                                     size="lg"
                                     text={chat.name.toUpperCase()[0]}
                                 />
-                                <span className="capitalize">{chat.name}</span>
+                                <span className="hidden md:block capitalize">{chat.name}</span>
                             </li>
                         );
                     })}

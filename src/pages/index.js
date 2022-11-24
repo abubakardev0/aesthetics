@@ -19,10 +19,10 @@ function Home({ data, hasError }) {
             <section className="container mx-auto h-fit w-full py-10 text-center md:py-20">
                 <About />
             </section>
-            <section className="container relative flex h-fit w-full flex-col items-center justify-between py-10 px-2 md:mx-auto md:flex-row md:py-20 md:px-0">
+            <section className="relative flex h-fit w-full flex-col items-center justify-between px-3 py-10 md:mx-auto md:flex-row md:px-10 md:py-20 lg:px-16">
                 <Category />
             </section>
-            <section className="container mx-auto px-2 pt-5 md:px-5">
+            <section className="mx-auto mt-5 px-3 md:px-10 lg:px-16">
                 <NewWorks />
             </section>
         </>

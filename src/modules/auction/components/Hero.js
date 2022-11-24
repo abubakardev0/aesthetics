@@ -5,7 +5,7 @@ import hero from '@/assets/heroImage.jpg';
 function Hero() {
     return (
         <>
-            <section className="relative flex h-full w-full flex-col-reverse bg-black md:h-screen md:max-h-[700px] md:flex-row">
+            <section className="relative flex h-full w-full flex-col-reverse bg-black md:h-screen md:max-h-[900px] md:flex-row">
                 <div className="absolute z-10 h-full w-full md:relative md:h-full md:w-1/2">
                     <div className="grid h-full w-full place-content-center space-y-4 px-4 text-center md:px-0 md:pl-20 md:text-left">
                         <div className="block h-fit overflow-y-hidden">

@@ -1,5 +1,3 @@
-import { useState, useRef, useEffect } from 'react';
-
 import useSWR from 'swr';
 
 import { db } from '@/firebase/firebase-config';
@@ -21,7 +19,7 @@ function Category() {
     }
     if (!categories) {
         return (
-            <div className="flex items-center justify-center py-20">
+            <div className="flex w-screen items-center justify-center py-20">
                 <Loading />
             </div>
         );

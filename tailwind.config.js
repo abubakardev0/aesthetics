@@ -19,6 +19,7 @@ module.exports = {
             animation: {
                 hero: 'hero 8s',
                 text: 'slideUp 1s',
+                textRight: 'slideRight 1s ease infinite',
                 opacity: 'opacity 2s',
                 spinning: 'spinning 12s linear infinite',
             },
@@ -46,6 +47,14 @@ module.exports = {
                     },
                     to: {
                         transform: 'translate3d(0px, 0px, 0)',
+                    },
+                },
+                slideRight: {
+                    from: {
+                        transform: 'translate3d(0px, 0px, 0)',
+                    },
+                    to: {
+                        transform: 'translate3d(20px, 0px, 0)',
                     },
                 },
                 opacity: {

@@ -53,7 +53,7 @@ const Tabbar = () => {
                         fill="none"
                     />
                 }
-                refrence="/competition"
+                refrence="/competitions"
                 text={'Competition'}
             />
         </ul>

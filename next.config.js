@@ -2,7 +2,10 @@
 
 module.exports = {
     images: {
-        domains: ['fypaesthetics.s3.ap-south-1.amazonaws.com'],
+        domains: [
+            'fypaesthetics.s3.ap-south-1.amazonaws.com',
+            'firebasestorage.googleapis.com',
+        ],
     },
     swcMinify: true,
     reactStrictMode: true,

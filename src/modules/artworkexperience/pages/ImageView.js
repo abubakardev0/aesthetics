@@ -5,7 +5,7 @@ import Slider from '@/commoncomponents/Scrollers/Slider';
 
 export default function ImageView({ images }) {
     return (
-        <div className="grid h-[450px] w-full place-content-center pb-2 md:h-full md:w-1/2">
+        <div className="my-2 grid h-[450px] w-full place-content-center md:my-0 md:h-full md:w-1/2">
             <Slider images={images} />
             <Link
                 href={{
@@ -15,9 +15,9 @@ export default function ImageView({ images }) {
                     },
                 }}
             >
-                <button className="flex justify-center py-3">
+                <a className="place-self-center">
                     <ARView className="h-12 w-12 md:h-16 md:w-16" />
-                </button>
+                </a>
             </Link>
         </div>
     );

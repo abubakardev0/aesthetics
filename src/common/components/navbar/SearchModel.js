@@ -1,9 +1,4 @@
-import { useRef, useState } from 'react';
-
-import { motion } from 'framer-motion';
-
-import Plus from '@/icons/Plus';
-import Search from '@/icons/Search';
+import { useRef, useState, useEffect } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,22 +13,36 @@ import {
     getDocs,
 } from 'firebase/firestore';
 
-import { Loading } from '@nextui-org/react';
+import { motion } from 'framer-motion';
+
+import { useDebounce } from '@/hooks/useDebounce';
+import Plus from '@/icons/Plus';
+import Search from '@/icons/Search';
 
 function SearchModel(props) {
+    const [searchQuery, setQuery] = useState('');
     const [searchResult, setResult] = useState([]);
+    const [error, setError] = useState(false);
+    const debouncedSearch = useDebounce(searchQuery, 500);
     const ref = useRef(null);
 
-    const handleSearch = async (e) => {
+    const searchItems = async () => {
         let result = [];
         const fieldValue = ref.current.value;
-        const searchValue = e.target.value.toLowerCase();
         try {
             const documents = await getDocs(
                 query(
                     collection(db, 'artworks'),
-                    where(`${fieldValue}`, '>=', `${searchValue}`),
-                    where(`${fieldValue}`, '<=', `${searchValue}\uf8ff`),
+                    where(
+                        `${fieldValue}`,
+                        '>=',
+                        `${searchQuery.toLowerCase()}`
+                    ),
+                    where(
+                        `${fieldValue}`,
+                        '<=',
+                        `${searchQuery.toLowerCase()}\uf8ff`
+                    ),
                     where('status', '==', 'listed'),
                     orderBy(`${fieldValue}`),
                     limit(5)
@@ -50,9 +59,16 @@ function SearchModel(props) {
             });
             setResult(result);
         } catch (error) {
-            console.log(error);
+            setError(true);
         }
     };
+
+    useEffect(() => {
+        if (debouncedSearch) {
+            searchItems();
+        }
+    }, [debouncedSearch]);
+
     return (
         <motion.div
             initial={{ x: '-100', opacity: 0.5 }}
@@ -75,10 +91,10 @@ function SearchModel(props) {
                             <Search className="h-6 w-6" stroke="white" />
                         </button>
                     </div>
-                    <div className="absolute inset-y-0 left-6 flex w-24 items-center px-3 md:w-28 lg:w-32">
+                    <div className="absolute inset-y-0 left-5 flex w-24 items-center px-3 md:w-28 lg:w-32">
                         <select
                             ref={ref}
-                            className="block w-full bg-black px-2 py-2 text-sm font-[500] text-gray-300"
+                            className="block w-full border-none bg-black px-2 py-2 text-sm font-[500] text-gray-300 focus:ring-0"
                         >
                             <option value="title">Title</option>
                             <option value="artist">Artist</option>
@@ -101,7 +117,7 @@ function SearchModel(props) {
                         autocomplete="off"
                         type="text"
                         id="search"
-                        onChange={handleSearch}
+                        onChange={(e) => setQuery(e.target.value)}
                         className="block w-full appearance-none bg-[#010101] p-2.5 pl-28 text-base text-white shadow-slate-700 focus:outline-none md:pl-36"
                         placeholder="Search artworks"
                     />
@@ -139,6 +155,7 @@ function SearchModel(props) {
                     ) : (
                         <p className="text-center">No Result</p>
                     )}
+                    {error ? 'Unable to search' : null}
                 </div>
             </div>
         </motion.div>
