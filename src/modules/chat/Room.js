@@ -156,7 +156,7 @@ const Room = ({ chat, setChat }) => {
                     </div>
                 </CustomModal>
             </div>
-            <ul className="no-scrollbar relative flex h-[450px] w-full flex-col-reverse overflow-y-auto px-3 pt-3">
+            <ul className="no-scrollbar relative flex h-full w-full flex-col-reverse overflow-y-auto px-3 pt-3">
                 {list &&
                     list.map((msg) => {
                         return (
@@ -171,7 +171,6 @@ const Room = ({ chat, setChat }) => {
                         );
                     })}
             </ul>
-
             <div className="flex w-full items-center justify-between border-t border-gray-300 px-1 py-3 md:p-3">
                 <input
                     ref={textRef}
@@ -249,7 +248,7 @@ function ChatMessage(props) {
                             </div>
                         </CustomModal>
                         {type === 'text' ? (
-                            <p className="max-w-[350px] break-all rounded-t-3xl rounded-bl-3xl bg-blue-500/90 py-2 pl-3 pr-5 text-white shadow">
+                            <p className="max-w-[350px] break-all rounded-t-3xl rounded-bl-3xl bg-blue-500/90 py-2 pl-3 pr-5 text-white shadow 2xl:text-lg">
                                 {message}
                             </p>
                         ) : (
@@ -282,7 +281,7 @@ function ChatMessage(props) {
                     <Avatar size="lg" text={name.toUpperCase()[0]} />
                     <div>
                         {type === 'text' ? (
-                            <p className="max-w-[350px] break-all rounded-t-3xl rounded-br-3xl bg-slate-100 px-4 py-2  text-gray-700 shadow">
+                            <p className="max-w-[350px] break-all rounded-t-3xl rounded-br-3xl bg-slate-100 px-4 py-2 text-gray-700  shadow 2xl:text-lg">
                                 {message}
                             </p>
                         ) : (

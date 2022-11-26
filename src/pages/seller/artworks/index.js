@@ -1,14 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import {
-    collection,
-    query,
-    where,
-    startAfter,
-    limit,
-    getDocs,
-} from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebase-config';
 
 import { Table, useAsyncList, useCollator, Tooltip } from '@nextui-org/react';
@@ -28,21 +21,21 @@ function Artworks() {
         { name: 'UPLOADED AT', uid: 'uploadedAt' },
         { name: 'ACTIONS', uid: 'actions' },
     ];
-     async function load() {
-         const list = [];
-         const docRef = await getDocs(
-             query(
-                 collection(db, 'artworks'),
-                 where('sellerId', '==', auth.currentUser.uid)
-             )
-         );
-         docRef.forEach((doc) => {
-             list.push({ id: doc.id, ...doc.data() });
-         });
-         return {
-             items: list,
-         };
-     }
+    async function load() {
+        const list = [];
+        const docRef = await getDocs(
+            query(
+                collection(db, 'artworks'),
+                where('sellerId', '==', auth.currentUser.uid)
+            )
+        );
+        docRef.forEach((doc) => {
+            list.push({ id: doc.id, ...doc.data() });
+        });
+        return {
+            items: list,
+        };
+    }
     async function sort({ items, sortDescriptor }) {
         return {
             items: items.sort((a, b) => {
@@ -268,9 +261,9 @@ function Artworks() {
                                 </Table.Row>
                             )}
                         </Table.Body>
-                         <Table.Pagination
+                        <Table.Pagination
                             shadow
-                            noMargin
+                            rounded
                             align="left"
                             rowsPerPage={10}
                         />

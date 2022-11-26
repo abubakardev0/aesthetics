@@ -83,7 +83,7 @@ function Overview({ data }) {
                 <select
                     id="status"
                     name="status"
-                    className="rounded-md border border-gray-100 bg-gray-200 px-3 py-2 text-sm font-medium text-gray-600"
+                    className="rounded-md border border-gray-100 bg-gray-200 px-3 py-2 text-sm font-medium text-gray-600 2xl:text-base"
                     defaultValue={data.status}
                     ref={statusRef}
                 >
@@ -93,26 +93,26 @@ function Overview({ data }) {
                 </select>
                 <button
                     onClick={updateStatus}
-                    className="rounded-md bg-neutral-800 px-4 py-2 text-sm text-white hover:bg-neutral-700 active:bg-neutral-900"
+                    className="rounded-md bg-neutral-800 px-4 py-2 text-sm text-white hover:bg-neutral-700 active:bg-neutral-900 2xl:text-base"
                 >
                     Change Status
                 </button>
             </div>
-            <div className="h-full w-full space-y-5 lg:w-4/12">
+            <div className="h-full w-full space-y-5 lg:w-4/12 2xl:space-y-8">
                 <div>
-                    <label className="font-medium">Title</label>
+                    <label className="font-medium 2xl:text-lg">Title</label>
                     <p className="mt-1 rounded-md border-2 px-2 py-1 capitalize">
                         {data.title}
                     </p>
                 </div>
                 <div>
-                    <label className="font-medium">Artist</label>
+                    <label className="font-medium 2xl:text-lg">Artist</label>
                     <p className="mt-1 rounded-md border-2 px-2 py-1 capitalize">
                         {data.artist}
                     </p>
                 </div>
                 <div className="relative">
-                    <label className="font-medium">
+                    <label className="font-medium 2xl:text-lg">
                         {data.type === 'immediate' ? 'Price' : 'Current Bid'}
                     </label>
                     <p className="mt-1 rounded-md border-2 px-2 py-1 capitalize">
@@ -123,41 +123,43 @@ function Overview({ data }) {
                 </div>
 
                 <div className="flex space-x-6">
-                    <label className="font-medium">
+                    <label className="font-medium 2xl:text-lg">
                         Height
                         <p className="mt-1 rounded-md border-2 px-2 py-1">
                             {data.dimensions.height}
                         </p>
                     </label>
-                    <label className="font-medium">
+                    <label className="font-medium 2xl:text-lg">
                         Width
                         <p className="mt-1 rounded-md border-2 px-2 py-1">
                             {data.dimensions.width}
                         </p>
                     </label>
                     {data.dimensions.depth && (
-                        <label className="font-medium">
+                        <label className="font-medium 2xl:text-lg">
                             Depth
                             <p className="mt-1 rounded-md border-2 px-2 py-1">
                                 {data.dimensions.depth}
                             </p>
                         </label>
                     )}
-                    <label className="font-medium">
+                    <label className="font-medium 2xl:text-lg">
                         Unit
                         <p className="mt-1 rounded-md border-2 px-2 py-1">
                             {data.dimensions.unit}
                         </p>
                     </label>
                 </div>
-                <div className="relative w-[700px]">
+                <div className="relative w-full md:w-[500px] lg:w-[700px] ">
                     <button
                         onClick={updateDescription}
-                        className="absolute right-1 -top-3 h-8 w-16 rounded-md bg-neutral-800 text-sm text-white hover:bg-neutral-700 active:bg-neutral-900"
+                        className="absolute right-1 -top-3 h-8 w-16 rounded-md bg-neutral-800 text-sm text-white hover:bg-neutral-700 active:bg-neutral-900 2xl:-top-4 2xl:h-10 2xl:w-20 2xl:text-base"
                     >
                         Save
                     </button>
-                    <label className="font-medium">Description</label>
+                    <label className="font-medium 2xl:text-lg">
+                        Description
+                    </label>
                     <textarea
                         ref={descriptionRef}
                         rows="5"
@@ -168,19 +170,19 @@ function Overview({ data }) {
                 </div>
             </div>
             <div className="w-4/12 space-y-4 lg:px-10">
-                <label className="block font-medium">
+                <label className="block font-medium 2xl:text-lg">
                     Selling Type
                     <p className="mt-1 w-fit rounded-full border-2 border-gray-300 bg-gray-100 px-4 py-1 capitalize text-gray-600">
                         {data.type}
                     </p>
                 </label>
-                <label className="block font-medium">
+                <label className="block font-medium 2xl:text-lg">
                     Category
                     <p className="mt-1 w-fit rounded-full border-2 border-gray-300 bg-gray-100 px-4 py-1 capitalize text-gray-600">
                         {data.category}
                     </p>
                 </label>
-                <label className="block font-medium">
+                <label className="block font-medium 2xl:text-lg">
                     Surfaces
                     <ul className="mt-1 flex flex-wrap gap-4 font-normal">
                         {data.surfaces.map((surface) => (
@@ -191,7 +193,7 @@ function Overview({ data }) {
                     </ul>
                 </label>
 
-                <label className="block font-medium">
+                <label className="block font-medium 2xl:text-lg">
                     Mediums
                     <ul className="mt-1 flex flex-wrap gap-4 font-normal">
                         {data.mediums.map((medium) => (
@@ -202,7 +204,7 @@ function Overview({ data }) {
                     </ul>
                 </label>
             </div>
-            <div className="mt-4 w-4/12">
+            <div className="mt-4 w-4/12 2xl:mt-6">
                 <Slider images={data.images} />
             </div>
             <Alert

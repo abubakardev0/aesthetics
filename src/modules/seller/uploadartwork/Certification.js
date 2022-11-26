@@ -42,29 +42,29 @@ function UploadCertifications({ setValue }) {
     return (
         <>
             <div className="space-y-2 px-1">
-                <h2 className="text-lg font-semibold text-black md:text-2xl">
+                <h2 className="text-lg font-semibold text-black md:text-2xl 2xl:text-3xl">
                     Upload Certifications of your artwork
                 </h2>
                 <ul className="list-inside list-disc py-1 text-neutral-500 ">
-                    <li className="text-xs">
+                    <li className="text-xs 2xl:text-base">
                         If possible, include photos of any signatures or
                         certificates of authenticity.
                     </li>
                 </ul>
             </div>
             <div className="flex w-full flex-col">
-                <div className="relative h-fit w-full border p-5">
+                <div className="relative h-fit w-full rounded-sm border p-5 2xl:border-2">
                     <span
                         ref={errorRef}
                         className="absolute top-1 right-1 text-xs text-red-500"
                     ></span>
-                    <h1 className="text-lg font-semibold">
+                    <h1 className="text-lg font-semibold 2xl:text-xl">
                         Add Certifications here
                     </h1>
-                    <p className="text-sm text-neutral-600 md:text-base">
+                    <p className="text-sm text-neutral-600 md:text-base 2xl:text-lg">
                         Files Supported: Doc, Docx, Pdf
                     </p>
-                    <p className="mb-6 text-sm text-neutral-600 md:text-base">
+                    <p className="mb-6 text-sm text-neutral-600 md:text-base 2xl:text-lg">
                         Maximum Size: 3MB
                     </p>
                     <input

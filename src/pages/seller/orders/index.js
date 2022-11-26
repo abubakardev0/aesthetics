@@ -211,7 +211,7 @@ function Orders() {
                         </Table.Body>
                         <Table.Pagination
                             shadow
-                            noMargin
+                            rounded
                             align="left"
                             rowsPerPage={10}
                         />

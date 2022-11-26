@@ -2,7 +2,6 @@ import Grid from '@/icons/Grid';
 import Artwork from '@/icons/Artwork';
 import Order from '@/icons/Order';
 import Chat from '@/icons/Chat';
-import Settings from '@/icons/Settings';
 import IconLink from '@/commoncomponents/navbar/IconLink';
 import Logout from '@/icons/Logout';
 import useAuth from '@/hooks/useAuth';
@@ -50,17 +49,6 @@ function Sidebar() {
                     }
                     refrence="/chat"
                     text={'Chat'}
-                />
-                <IconLink
-                    icon={
-                        <Settings
-                            className="h-6 w-6 stroke-current md:h-7 md:w-7"
-                            strokeWidth={1.5}
-                            fill="none"
-                        />
-                    }
-                    refrence="/seller/settings"
-                    text={'Settings'}
                 />
                 <li className="absolute bottom-4 hidden md:block">
                     <button onClick={logout}>

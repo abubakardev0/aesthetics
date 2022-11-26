@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 import { ParallaxProvider } from 'react-scroll-parallax';
 import { motion, useReducedMotion } from 'framer-motion';
 
+import ErrorBoundary from '@/commoncomponents/ErrorBoundary/ErrorBoundary';
 import Loader from '@/commoncomponents/Loader';
 import BuyerLayout from '@/layouts/BuyerLayout';
 
@@ -38,7 +39,9 @@ function App({ Component, pageProps, router }) {
                                 animate="pageAnimate"
                             >
                                 <Layout>
-                                    <Component {...pageProps} />
+                                    <ErrorBoundary>
+                                        <Component {...pageProps} />
+                                    </ErrorBoundary>
                                 </Layout>
                             </motion.div>
                         </ParallaxProvider>

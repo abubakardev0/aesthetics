@@ -102,7 +102,11 @@ export default function Bag() {
                                 <span className="border-r-2 pr-4">
                                     Bag Items ({items.length})
                                 </span>
-                                <span>Your Saves</span>
+                                <span>
+                                    <Link href="/profile/saves">
+                                        Your Saves
+                                    </Link>
+                                </span>
                             </p>
                         </div>
                         <div className="my-5 flex w-full flex-col items-start justify-between space-y-4 px-2 md:flex-row md:space-y-0">

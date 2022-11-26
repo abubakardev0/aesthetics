@@ -1,17 +1,17 @@
-import { useParallax } from 'react-scroll-parallax';
 import { useRef } from 'react';
 
 import Image from 'next/future/image';
-
+import { motion, useScroll, useTransform } from 'framer-motion';
 import asset1 from '@/assets/asset1.jpg';
 import asset2 from '@/assets/asset2.jpg';
 
 function About() {
-    const target = useRef(null);
-    const imageA = useParallax({
-        speed: 5,
-        targetElement: target.current,
+    let ref = useRef(null);
+    let { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ['start start', 'end start'],
     });
+    let y = useTransform(scrollYProgress, [0, 1], ['-20%', '50%']);
     return (
         <>
             <p className="text-sm font-medium uppercase md:text-base">
@@ -20,10 +20,7 @@ function About() {
             <h2 className="mt-2 font-garamond text-4xl font-semibold md:text-5xl ">
                 Why Aesthetics
             </h2>
-            <div
-                ref={target}
-                className="mt-6 flex flex-col justify-around px-2 md:mt-20 md:flex-row "
-            >
+            <div className="mt-6 flex flex-col justify-around px-2 md:mt-20 md:flex-row ">
                 <div className="relative mx-auto w-fit md:mx-0">
                     <div className="h-56 w-44 -rotate-3 overflow-hidden drop-shadow-lg md:h-96 md:w-64">
                         <Image
@@ -34,8 +31,8 @@ function About() {
                             className="object-cover"
                         />
                     </div>
-                    <div
-                        ref={imageA.ref}
+                    <motion.div
+                        style={{ y }}
                         className="absolute -bottom-14 -left-4 h-28 w-56 rotate-1 overflow-hidden drop-shadow-md md:bottom-0 md:left-28 md:h-40 md:w-80"
                     >
                         <Image
@@ -46,15 +43,15 @@ function About() {
                             alt="Aesthetics-artwork"
                             className="object-cover"
                         />
-                    </div>
+                    </motion.div>
                 </div>
-                <div className="mt-20 w-full space-y-4 px-2 text-left text-base md:mt-0 md:w-96 md:px-0 md:text-lg">
-                    <p className="text-lg font-medium md:text-2xl">
+                <div className="mt-20 w-full space-y-4 px-2 text-left text-base md:mt-0 md:w-96 md:px-0 md:text-lg 2xl:w-[500px]">
+                    <p className="text-lg font-medium md:text-2xl 2xl:text-3xl">
                         Aesthetics is an online gallery that lets you interact
                         with amazing artworks in AR. It's like stepping inside
                         an artwork and exploring its every detail, but better!
                     </p>
-                    <p>
+                    <p className="2xl:text-xl">
                         We serve as a platform that connects artists,
                         collectors, and art lovers. We are a place where you can
                         collect your favorite pieces of art in one place and use

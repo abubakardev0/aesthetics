@@ -26,18 +26,18 @@ function Chat({ chat, hasError, noQuery }) {
 
     return (
         <PrivateRoute>
-            <section className="relative h-screen w-full bg-gray-100">
+            <section className="relative grid h-screen w-full place-content-center bg-gray-100">
                 <button
                     onClick={() => router.back()}
                     className="fixed left-5 top-3 z-50 rounded-full border bg-white p-2 hover:bg-gray-50"
                 >
                     <Arrow className="h-6 w-6 -rotate-180" />
                 </button>
-                <div className="mx-auto flex flex-col gap-2 px-3 py-14 md:flex-row md:gap-5 md:py-10 lg:w-[900px]">
+                <div className="mx-auto flex flex-col gap-2 px-3 py-14 md:flex-row md:gap-5 md:py-10 lg:w-[900px] 2xl:w-[1020px]">
                     <div className="mt-3 h-fit max-h-[36rem] w-full overflow-x-auto rounded-xl border bg-white p-3 drop-shadow-md md:w-[32rem] md:overflow-hidden">
                         <Chats setChat={setChat} />
                     </div>
-                    <div className="relative mt-3 h-[36rem] w-full rounded-xl border bg-white">
+                    <div className="relative mt-3 flex h-[36rem] w-full flex-col rounded-xl border bg-white 2xl:h-[40rem]">
                         <Room chat={currentChat} setChat={setChat} />
                     </div>
                 </div>

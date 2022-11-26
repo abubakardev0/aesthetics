@@ -26,7 +26,7 @@ export default memo(Navbar);
 function NavLink(props) {
     const router = useRouter();
     return (
-        <li className="w-fit cursor-pointer text-sm uppercase">
+        <li className="w-fit cursor-pointer text-sm uppercase 2xl:text-base">
             <Link href={props.refrence}>
                 <a
                     className={`${

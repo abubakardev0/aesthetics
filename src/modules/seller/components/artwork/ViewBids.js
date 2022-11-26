@@ -99,14 +99,16 @@ function ViewBids({ id, totalBids, startingBid, currentBid, estimate }) {
                                         borderBottom: '1px solid #f1f5f9',
                                     }}
                                 >
-                                    <Table.Cell>
-                                        <p>{item.name}</p>
+                                    <Table.Cell
+                                        css={{
+                                            textTransform: 'capitalize',
+                                        }}
+                                    >
+                                        {item.name}
                                     </Table.Cell>
+                                    <Table.Cell>{item.email}</Table.Cell>
                                     <Table.Cell>
-                                        <p>{item.email}</p>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <p>{formatCurrency(item.value)}</p>
+                                        {formatCurrency(item.value)}
                                     </Table.Cell>
                                     <Table.Cell>
                                         {new Date(

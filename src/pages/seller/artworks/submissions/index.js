@@ -274,6 +274,12 @@ function Submissions() {
                                 </Table.Row>
                             )}
                         </Table.Body>
+                        <Table.Pagination
+                            shadow
+                            rounded
+                            align="left"
+                            rowsPerPage={10}
+                        />
                     </Table>
                 ) : (
                     <p className="text-center">No Submissions Found</p>

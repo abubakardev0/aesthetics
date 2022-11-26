@@ -52,13 +52,25 @@ export async function getServerSideProps(context) {
     const ref = await getDoc(doc(db, 'artworks', itemId));
     if (ref.exists()) {
         const time = ref.data().winner.linkExpiry.seconds;
-        if (ref.data().winner.user !== userId) {
+        if (ref.data().type !== 'auction') {
+            return {
+                props: {
+                    notFound: true,
+                },
+            };
+        } else if (ref.data().winner.user !== userId) {
             return {
                 props: {
                     notFound: true,
                 },
             };
         } else if (time - new Date().getTime() / 1000 <= 0) {
+            return {
+                props: {
+                    notFound: true,
+                },
+            };
+        } else if (ref.data().status !== 'archived') {
             return {
                 props: {
                     notFound: true,

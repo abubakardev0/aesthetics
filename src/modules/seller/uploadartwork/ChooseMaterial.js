@@ -47,7 +47,7 @@ function ChooseMaterial({ mediums, surfaces, formState, setValue, setError }) {
     return (
         <>
             <div className="w-full">
-                <h2 className="text-lg font-semibold text-black ">
+                <h2 className="text-lg font-semibold text-black 2xl:text-xl">
                     Choose Drawing Material
                 </h2>
                 <div className="mt-3">
@@ -59,10 +59,13 @@ function ChooseMaterial({ mediums, surfaces, formState, setValue, setError }) {
                             max={3}
                         />
                     </div>
-                    <span ref={mediumRef} className="text-sm text-red-500" />
+                    <span
+                        ref={mediumRef}
+                        className="text-sm text-red-500 2xl:text-base"
+                    />
                     {setValue('mediums', selectedMediums)}
                 </div>
-                <h2 className="mt-4 text-lg font-semibold text-black">
+                <h2 className="mt-4 text-lg font-semibold text-black 2xl:text-xl">
                     Choose Artwork Surface
                 </h2>
                 <div className="mt-3">
@@ -74,7 +77,10 @@ function ChooseMaterial({ mediums, surfaces, formState, setValue, setError }) {
                             max={3}
                         />
                     </div>
-                    <span ref={surfaceRef} className="text-sm text-red-500" />
+                    <span
+                        ref={surfaceRef}
+                        className="text-sm text-red-500 2xl:text-base"
+                    />
                     {setValue('surfaces', selectedSurfaces)}
                 </div>
             </div>

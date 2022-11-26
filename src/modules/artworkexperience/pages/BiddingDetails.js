@@ -121,12 +121,21 @@ export default function BiddingDetails({ data, setAlert, setShow }) {
                 setShow(true);
                 setLoading(false);
             }
+            addDoc(collection(db, 'notifications'), {
+                sellerId: data.sellerId,
+                bidder: auth.currentUser.displayName,
+                message: `You have got a bid on ${data.title}`,
+                reference: data.id,
+                time: Timestamp.fromDate(new Date()),
+            });
         }
 
         async function updateBid() {
             await updateDoc(
                 doc(db, 'artworks', `${data.id}`, 'bids', `${userBid.id}`),
                 {
+                    name: auth.currentUser.displayName,
+                    email: auth.currentUser.email,
                     value: parseInt(newValue),
                     time: Timestamp.fromDate(new Date()),
                 }
@@ -157,6 +166,8 @@ export default function BiddingDetails({ data, setAlert, setShow }) {
                 {
                     user: auth.currentUser.uid,
                     value: parseInt(newValue),
+                    name: auth.currentUser.displayName,
+                    email: auth.currentUser.email,
                     time: Timestamp.fromDate(new Date()),
                 }
             );

@@ -2,10 +2,10 @@ import Link from 'next/link';
 
 import { auth } from '@/firebase/firebase-config';
 
-import Logo from '@/icons/Logo';
-import Bell from '@/icons//Bell';
-
 import { User } from '@nextui-org/react';
+
+import Logo from '@/icons/Logo';
+import Notification from '../notifications/Notification';
 
 function Header() {
     return (
@@ -22,15 +22,15 @@ function Header() {
                     </a>
                 </Link>
                 <div className="inline-flex space-x-10">
-                    <button className="hidden h-10 w-24 rounded-sm border border-black bg-none text-base transition-all hover:bg-black hover:text-white md:block">
+                    <button className="hidden h-10 w-24 rounded-sm border border-[#2d2d2d] bg-none text-base transition-all hover:bg-[#2d2d2d] hover:text-white md:block">
                         <Link href="/">
                             <a>Buy Art</a>
                         </Link>
                     </button>
                     <div className="inline-flex items-center ">
-                        <span className="border-gray-400 md:border-r-2">
-                            <Bell className="mr-1 h-6 w-6 fill-transparent stroke-current md:mr-2 md:h-8 md:w-8" />
-                        </span>
+                        <div className="relative inline-block border-gray-400 md:border-r-2">
+                            <Notification />
+                        </div>
 
                         <User
                             bordered

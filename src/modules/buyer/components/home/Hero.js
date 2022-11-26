@@ -111,22 +111,22 @@ const Hero = ({ list }) => {
                         <div className="space-y-1 md:space-y-3">
                             <h6
                                 className="animate-opacity text-xs font-medium
-                                capitalize text-gray-600 md:text-base"
+                                capitalize text-gray-600 md:text-base 2xl:text-lg"
                             >
                                 {list[currentIndex].subtitle}
                             </h6>
                             <div className="block h-fit overflow-y-hidden">
-                                <h1 className="animate-text font-garamond text-xl font-semibold uppercase tracking-wide md:text-5xl">
+                                <h1 className="animate-text font-garamond text-xl font-semibold uppercase tracking-wide md:text-5xl 2xl:text-6xl">
                                     {list[currentIndex].title}
                                 </h1>
                             </div>
                         </div>
-                        <p className="w-full animate-opacity text-sm tracking-wide text-gray-600 md:w-5/6 md:text-xl">
+                        <p className="w-full animate-opacity text-sm tracking-wide text-gray-600 md:w-5/6 md:text-xl 2xl:text-2xl">
                             {list[currentIndex].description}
                         </p>
                         <button className="w-32 animate-opacity rounded-sm border border-black bg-none py-2.5 text-base  transition-all hover:bg-black hover:text-white md:block md:w-36">
                             <Link href={`/${list[currentIndex].reference}`}>
-                                <a className="text-sm md:text-base">
+                                <a className="text-sm md:text-base 2xl:text-lg">
                                     {list[currentIndex].refText}
                                 </a>
                             </Link>

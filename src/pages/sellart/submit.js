@@ -68,8 +68,8 @@ function FormSubmission({ mediums, surfaces }) {
             >
                 <Arrow className="h-6 w-6 -rotate-180" />
             </button>
-            <main className="grid place-content-center pt-12 pb-5 md:gap-5 md:py-10">
-                <div className="flex w-full items-center justify-center px-2 pt-3 sm:w-[500px]">
+            <main className="grid place-content-center pt-12 pb-5 md:gap-5 md:py-10 2xl:py-12">
+                <div className="flex w-full items-center justify-center px-2 pt-3 sm:w-[500px] 2xl:w-[600px]">
                     <Steps
                         current={formState}
                         number={1}
@@ -95,7 +95,7 @@ function FormSubmission({ mediums, surfaces }) {
                         isLast={true}
                     />
                 </div>
-                <section className="mt-5 w-full place-self-center px-5 py-6 sm:w-[400px] sm:flex-col sm:rounded-xl sm:border-2 sm:border-slate-200 sm:shadow-slate-400">
+                <section className="mt-5 w-full place-self-center px-5 py-6 sm:w-[400px] sm:flex-col sm:rounded-xl sm:border-2 sm:border-slate-200 sm:shadow-slate-400 2xl:mt-10 2xl:w-[500px] 2xl:border-[3px] 2xl:py-10 2xl:px-8">
                     <StateMachineProvider>
                         <form
                             onSubmit={handleSubmit(onSubmit)}

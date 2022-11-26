@@ -2,11 +2,11 @@ import {
     doc,
     updateDoc,
     getDocs,
-    getDoc,
     collection,
     query,
     limit,
     orderBy,
+    Timestamp,
 } from 'firebase/firestore';
 import { db } from '@/firebase/firebase-config';
 
@@ -27,10 +27,19 @@ export default async function handler(req, res) {
         user = document.data();
     });
 
-    await updateDoc(doc(db, 'artworks', `${id}`), {
-        status: 'archived',
-        winner: user,
-    });
+    try {
+        await updateDoc(doc(db, 'artworks', `${id}`), {
+            status: 'archived',
+            winner: {
+                ...user,
+                linkExpiry: Timestamp.fromDate(
+                    new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+                ),
+            },
+        });
+    } catch (e) {
+        console.log(e);
+    }
     await sendgrid.send({
         to: user.email,
         from: {
@@ -41,7 +50,7 @@ export default async function handler(req, res) {
         html: `Hey ${user.name},
                     Congratulation! You won the auction with the highest bid. 
                     Please follow the link below to pay for your item. 
-                    link=http://localhost:3000/auction-checkout?itemId=${id}&userId=${user.user}
+                    link=https://fyp-aesthetics.vercel.app/auction-checkout?itemId=${id}&userId=${user.user}
                     You will have 7 days to pay before the listing is re-listed. 
                     Included below are some helpful links to help you make informed 
                     

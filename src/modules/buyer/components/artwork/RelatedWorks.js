@@ -12,6 +12,7 @@ import {
 
 import Carousel from '@/commoncomponents/Scrollers/Carousel';
 import { Loading } from '@nextui-org/react';
+import Error from '@/commoncomponents/Error';
 
 function RelatedWorks({ category }) {
     const { data: items, error } = useSWR('new-uploaded-artworks', async () => {
@@ -33,7 +34,7 @@ function RelatedWorks({ category }) {
         return list;
     });
     if (error) {
-        return <p>Error fetching data!</p>;
+        return <Error />;
     }
     if (!items) {
         return (

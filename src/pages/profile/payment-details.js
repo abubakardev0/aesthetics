@@ -15,13 +15,13 @@ function Payment() {
     const { data: paymentInfo, error } = useSWR('payment-info', async () => {
         const ref = await getDoc(doc(db, 'users', `${auth.currentUser.uid}`));
         if (ref.exists()) {
-            return ref.data().paymentInfo;
+            return ref.data().paymentInfo ?? -1;
         }
     });
     if (error) {
         return <Error />;
     }
-    if (paymentInfo === undefined) {
+    if (paymentInfo === undefined || paymentInfo === null) {
         return (
             <div className="grid h-screen place-content-center">
                 <Loading />
@@ -31,7 +31,7 @@ function Payment() {
     return (
         <>
             <section className="grid h-screen w-full place-content-center">
-                {paymentInfo ? (
+                {paymentInfo !== -1 ? (
                     <VirtualCard
                         userName={paymentInfo.name}
                         expiryDate={paymentInfo.expiry}

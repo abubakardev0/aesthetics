@@ -96,7 +96,7 @@ function Bids() {
                 <h3 className="my-5 text-center text-xl font-medium md:text-2xl">
                     Your Bids
                 </h3>
-                <ul className="div-scrollbar h-[500px] w-full space-y-4 overflow-auto px-4">
+                <ul className="section-scrollbar h-[500px] w-full space-y-4 overflow-auto px-4">
                     {bids.map((data) => {
                         return <Bid key={data.id} data={data} />;
                     })}

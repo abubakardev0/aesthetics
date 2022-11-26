@@ -61,29 +61,29 @@ function Images({ formState, setValue, setError }) {
         <>
             <div>
                 <div className="space-y-2 px-1">
-                    <h2 className="text-lg font-semibold text-black md:text-2xl">
+                    <h2 className="text-lg font-semibold text-black md:text-2xl 2xl:text-3xl">
                         Upload photos of your artwork
                     </h2>
                     <ul className="list-inside list-disc py-1 text-neutral-500 ">
-                        <li className="text-xs">
+                        <li className="text-xs 2xl:text-base">
                             For a faster valuation, please upload high-quality
                             photos of the work's front and back.
                         </li>
                     </ul>
                 </div>
                 <div className="flex w-full flex-col">
-                    <div className="relative h-fit w-full border p-5">
+                    <div className="relative h-fit w-full rounded-sm border p-5 2xl:border-2">
                         <span
                             ref={errorRef}
-                            className="absolute top-1 right-1 py-1 text-xs tracking-wide text-red-500"
+                            className="absolute top-1 right-1 py-1 text-xs tracking-wide text-red-500 2xl:text-sm"
                         ></span>
-                        <h1 className="text-lg font-semibold">
+                        <h1 className="text-lg font-semibold 2xl:text-xl">
                             Add Photos here
                         </h1>
-                        <p className="text-sm text-neutral-600 md:text-base">
+                        <p className="text-sm text-neutral-600 md:text-base 2xl:text-lg">
                             Files Supported: JPG,JPEG, PNG, Webp
                         </p>
-                        <p className="mb-6 text-sm text-neutral-600 md:text-base">
+                        <p className="mb-6 text-sm text-neutral-600 md:text-base 2xl:text-lg">
                             Maximum Size: 20MB
                         </p>
                         <label htmlFor="image-file" className="sr-only">
@@ -99,7 +99,7 @@ function Images({ formState, setValue, setError }) {
                     </div>
                     {picture.length >= 1 && (
                         <div className="mt-2 h-fit w-full border py-2 px-5">
-                            <h1 className="mb-2 text-lg font-semibold">
+                            <h1 className="mb-2 text-lg font-semibold 2xl:text-xl">
                                 Uploaded Artwork Preview:
                             </h1>
                             <div className="space-x-3">
