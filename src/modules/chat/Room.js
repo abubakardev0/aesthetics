@@ -264,7 +264,7 @@ function ChatMessage(props) {
                                 />
                             </button>
                         )}
-                        <p className="mt-1 text-right text-xs font-medium text-gray-800 md:text-sm">
+                        <p className="mt-1 text-right text-xs font-medium text-gray-700">
                             {new Date(sentAt.seconds * 1000).toLocaleTimeString(
                                 'en-US',
                                 {
@@ -285,16 +285,19 @@ function ChatMessage(props) {
                                 {message}
                             </p>
                         ) : (
-                            <div className="h-40 w-40 rounded-lg">
+                            <button
+                                onClick={() => setVisible(true)}
+                                className="h-32 w-32 overflow-hidden rounded-xl md:h-40 md:w-40"
+                            >
                                 <Image
                                     src={message}
                                     height={400}
                                     width={400}
                                     className="object-cover"
                                 />
-                            </div>
+                            </button>
                         )}
-                        <p className="mt-1 text-left text-xs font-medium text-gray-800 md:text-sm">
+                        <p className="mt-1 text-left text-xs font-medium text-gray-700">
                             {new Date(sentAt.seconds * 1000).toLocaleTimeString(
                                 'en-US',
                                 {

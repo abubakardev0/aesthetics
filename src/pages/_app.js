@@ -2,8 +2,8 @@ import Head from 'next/head';
 import { NextUIProvider } from '@nextui-org/react';
 import { AuthProvider } from '@/hooks/useAuth';
 import { Suspense } from 'react';
-import { ParallaxProvider } from 'react-scroll-parallax';
 import { motion, useReducedMotion } from 'framer-motion';
+import { StateMachineProvider, createStore } from 'little-state-machine';
 
 import ErrorBoundary from '@/commoncomponents/ErrorBoundary/ErrorBoundary';
 import Loader from '@/commoncomponents/Loader';
@@ -15,6 +15,14 @@ function App({ Component, pageProps, router }) {
     const Layout = Component.Layout || BuyerLayout;
     const shouldReduceMotion = useReducedMotion();
 
+    createStore({
+        details: {
+            mediums: [],
+            surfaces: [],
+            images: [],
+            certificates: [],
+        },
+    });
     const variants = {
         pageInitial: {
             opacity: 0.5,
@@ -28,10 +36,10 @@ function App({ Component, pageProps, router }) {
             <Head>
                 <title>{Component.title}</title>
             </Head>
-            <NextUIProvider>
-                <AuthProvider>
-                    <Suspense fallback={<Loader />}>
-                        <ParallaxProvider>
+            <StateMachineProvider>
+                <NextUIProvider>
+                    <AuthProvider>
+                        <Suspense fallback={<Loader />}>
                             <motion.div
                                 key={router.route}
                                 variants={!shouldReduceMotion ? variants : null}
@@ -44,10 +52,10 @@ function App({ Component, pageProps, router }) {
                                     </ErrorBoundary>
                                 </Layout>
                             </motion.div>
-                        </ParallaxProvider>
-                    </Suspense>
-                </AuthProvider>
-            </NextUIProvider>
+                        </Suspense>
+                    </AuthProvider>
+                </NextUIProvider>
+            </StateMachineProvider>
         </>
     );
 }

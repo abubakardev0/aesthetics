@@ -15,6 +15,8 @@ import { db, auth } from '@/firebase/firebase-config';
 
 import { Avatar, Loading } from '@nextui-org/react';
 
+import Artwork from '@/icons/Artwork';
+
 const getChats = async () => {
     let chats = [];
     const ref = collection(db, 'chat');
@@ -87,6 +89,7 @@ export default function Chat() {
                             key={message.id}
                         >
                             <Card
+                                type={message.type}
                                 name={message.name}
                                 text={message.text}
                                 date={message.sentAt.seconds}
@@ -101,15 +104,19 @@ export default function Chat() {
     );
 }
 
-export const Card = ({ name, text, date }) => {
+export const Card = ({ name, text, date, type }) => {
     return (
         <li className="relative flex cursor-pointer rounded-md border-b bg-gray-50 p-2.5 drop-shadow">
             <Avatar size="md" bordered text={name.toUpperCase()[0]} />
             <span className="flex flex-col px-2.5">
                 <h3 className="font-medium capitalize">{name}</h3>
-                <p className="truncate whitespace-pre-wrap break-all text-sm md:text-base">
-                    {text}
-                </p>
+                {type === 'text' ? (
+                    <p className="truncate whitespace-pre-wrap break-all text-sm md:text-base">
+                        {text}
+                    </p>
+                ) : (
+                    <Artwork className="h-4 w-4" />
+                )}
                 <span className="absolute bottom-1 right-2 text-sm">
                     {new Date(date * 1000).toDateString()}
                 </span>

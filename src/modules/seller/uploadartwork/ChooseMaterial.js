@@ -7,10 +7,10 @@ import Checkbox from './Checkbox';
 function ChooseMaterial({ mediums, surfaces, formState, setValue, setError }) {
     const { state, actions } = useStateMachine({ updateAction });
     const [selectedMediums, setSelectedMediums] = useState(
-        state.details.mediums
+        state.details ? state.details.mediums : []
     );
     const [selectedSurfaces, setSelectedSurfaces] = useState(
-        state.details.surfaces
+        state.details ? state.details.surfaces : []
     );
 
     const mediumRef = useRef();

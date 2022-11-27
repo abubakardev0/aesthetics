@@ -28,21 +28,25 @@ export default function Submission({ id }) {
         formState: { errors },
     } = useForm();
 
-    const { data: submitted, error } = useSWR('submission-work', async () => {
-        const docSnap = await getDocs(
-            query(
-                collection(db, 'competitions', `${id}`, 'participants'),
-                where('userId', '==', `${auth.currentUser.uid}`),
-                limit(1)
-            )
-        );
-        docSnap.forEach((document) => {
-            if (document.exists()) {
-                res = true;
-            }
-        });
-        return res;
-    });
+    const { data: submitted, error } = useSWR(
+        'submission-work',
+        async () => {
+            const docSnap = await getDocs(
+                query(
+                    collection(db, 'competitions', `${id}`, 'participants'),
+                    where('userId', '==', `${auth.currentUser.uid}`),
+                    limit(1)
+                )
+            );
+            docSnap.forEach((document) => {
+                if (document.exists()) {
+                    res = true;
+                }
+            });
+            return res;
+        },
+        { refreshInterval: 500 }
+    );
 
     if (error) {
         return <Error />;

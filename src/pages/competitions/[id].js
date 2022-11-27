@@ -2,19 +2,35 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Head from 'next/head';
 
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase/firebase-config';
 
 import TransparentLayout from '@/layouts/TransparentLayout';
 import PrivateRoute from '@/commoncomponents/routes/Private';
 import { Collapse } from '@nextui-org/react';
 import Submission from '@/competition/components/Submission';
+import Winner from '@/competition/components/Winner';
 import Error from '@/commoncomponents/Error';
 import { formatCurrency } from '@/commoncomponents/functions';
-
+import { useCountDown } from '@/hooks/useCountDown';
+import { useTimeout } from '@/hooks/useTimeout';
 function Competition({ competition, hasError }) {
     if (hasError) return <Error />;
     const data = JSON.parse(competition);
+
+    const countDown = useCountDown(data.deadline.seconds);
+
+    useTimeout(() => {
+        (async function handleCompetitionEnd() {
+            if (countDown > 0) return;
+            if (data.status === 'inactive') return;
+            await updateDoc(doc(db, 'competitions', `${data.id}`), {
+                status: 'inactive',
+            });
+            return;
+        })();
+    }, countDown);
+
     return (
         <PrivateRoute>
             <Head>
@@ -42,7 +58,12 @@ function Competition({ competition, hasError }) {
                         {data.subtitle}
                     </p>
                     <div className="inline-flex items-center gap-x-3">
-                        <Submission id={data.id} title={data.title} />
+                        {countDown > 0 && (
+                            <Submission id={data.id} title={data.title} />
+                        )}
+                        {countDown <= 0 && data.winner && (
+                            <Winner winner={data.winner} />
+                        )}
                         <Link href="#details">
                             <a className="rounded-full border-[2px] border-white bg-none px-5 py-2.5 font-medium text-white transition-colors duration-300 hover:bg-white/20 active:bg-white/25">
                                 View Details

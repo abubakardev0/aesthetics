@@ -59,7 +59,7 @@ export default function CheckoutForm({ itemsId }) {
                     shippingDetails: {
                         name: data.name.toLocaleLowerCase(),
                         city: data.city.toLocaleLowerCase(),
-                        address: data.address,
+                        address: data.address.toLocaleLowerCase(),
                         zipCode: data.zip,
                         state: data.province,
                     },

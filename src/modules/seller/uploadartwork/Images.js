@@ -9,7 +9,9 @@ import Plus from '@/icons/Plus';
 
 function Images({ formState, setValue, setError }) {
     const { state, actions } = useStateMachine({ updateAction });
-    const [picture, setPicture] = useState(state.details.images);
+    const [picture, setPicture] = useState(
+        state.details.images ? state.details.images : []
+    );
     const errorRef = useRef();
 
     const handleImageUpload = (e) => {

@@ -39,7 +39,7 @@ function Notification() {
                 <Bell className="mr-1 h-6 w-6 fill-transparent stroke-current md:mr-2 md:h-8 md:w-8" />
             </button>
             <Modal ref={dropdownRef}>
-                <div className="min-h-36 absolute right-0 z-20 mt-3 max-h-80 w-60 overflow-hidden rounded-xl border-2 border-slate-200 bg-white p-3 py-2 pb-2 shadow-xl lg:w-72">
+                <div className="min-h-24 absolute right-0 z-20 mt-3 max-h-80 w-60 overflow-hidden rounded-xl border-2 border-slate-200 bg-white p-3 py-2 pb-2 shadow-xl lg:w-72">
                     <h4 className="pb-2 font-medium">Notifications</h4>
 
                     {!notifications && (
@@ -48,7 +48,7 @@ function Notification() {
                         </div>
                     )}
                     {error && <Error />}
-                    <ul className="section-scrollbar h-64 w-full overflow-auto">
+                    <ul className="section-scrollbar max-h-64 w-full overflow-auto">
                         {notifications && notifications.length > 0 ? (
                             notifications.map((each) => (
                                 <Link
@@ -65,7 +65,7 @@ function Notification() {
                                             <p className="truncate whitespace-pre-wrap break-words text-sm md:text-base">
                                                 {each.message}
                                             </p>
-                                            <p className="text-right text-xs md:text-sm">
+                                            <p className="absolute bottom-1 right-1 text-xs">
                                                 {new Date(
                                                     each.time.seconds * 1000
                                                 ).toLocaleDateString('en-US', {

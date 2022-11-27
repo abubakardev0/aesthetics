@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/firebase/firebase-config';
 
 import Hero from '@/competition/components/Hero';
@@ -8,14 +8,32 @@ import Error from '@/commoncomponents/Error';
 function Competitions({ competitions, hasError }) {
     if (hasError) return <Error />;
     const list = JSON.parse(competitions);
+    const liveCompetitions = list.filter((data) => data.status === 'active');
+    const pastCompetitions = list.filter((data) => data.status === 'inactive');
+
     return (
         <>
             <Hero />
-            <section className="container mx-auto py-10">
-                {list.length > 0 ? (
-                    <CompetitionsList list={list} />
+            <section className="py-10 px-3 md:px-10 lg:px-16">
+                {liveCompetitions.length > 0 ? (
+                    <CompetitionsList
+                        list={liveCompetitions}
+                        title="Live Competitions"
+                        subtitle=" Participate to win"
+                    />
                 ) : (
-                    <p>No Competitions available</p>
+                    <p>No Live Competitions</p>
+                )}
+            </section>
+            <section className="py-10 px-3 md:px-10 lg:px-16">
+                {pastCompetitions.length > 0 ? (
+                    <CompetitionsList
+                        list={pastCompetitions}
+                        title="Past Competitions"
+                        subtitle="See who won"
+                    />
+                ) : (
+                    <p>No Past Competitions</p>
                 )}
             </section>
         </>
@@ -28,18 +46,14 @@ Competitions.title = 'Competitions';
 
 export async function getServerSideProps() {
     const data = [];
-    const q = query(
-        collection(db, 'competitions'),
-        where('status', '==', 'active')
-    );
-
-    const querySnapshot = await getDocs(q);
+    const querySnapshot = await getDocs(collection(db, 'competitions'));
     querySnapshot.forEach((doc) => {
-        const { title, image } = doc.data();
+        const { title, image, status } = doc.data();
         data.push({
             id: doc.id,
             title,
             image,
+            status,
         });
     });
     if (!data) {

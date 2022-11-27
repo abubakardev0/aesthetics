@@ -7,3 +7,14 @@ export default function updateAction(state, payload) {
         },
     };
 }
+
+export function clearAction(state, payload) {
+    return {
+        details: {
+            mediums: [],
+            surfaces: [],
+            images: [],
+            certificates: [],
+        },
+    };
+}

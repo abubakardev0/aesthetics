@@ -90,10 +90,14 @@ export default function Artist({
                 <h2 className="mb-1 text-xl font-medium capitalize sm:text-2xl md:text-3xl">
                     {title}
                 </h2>
-                <p className="text-lg capitalize italic md:text-xl">
-                    {mediums && mediums.join(' and ')}
-                    <span className="mx-1 lowercase">on</span>
-                    {surfaces && surfaces.join(' and ')}
+                <p className="text-lg italic md:text-xl">
+                    <span className="mr-1 capitalize">
+                        {mediums && mediums.join(' and ')}
+                    </span>
+                    on
+                    <span className="ml-1 capitalize first-letter:capitalize">
+                        {surfaces && surfaces.join(' and ')}
+                    </span>
                 </p>
                 <p>
                     {dimensions.height} H x {dimensions.width} W{' '}

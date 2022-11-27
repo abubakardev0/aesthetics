@@ -11,6 +11,7 @@ import {
     Timestamp,
     collection,
     increment,
+    updateDoc,
 } from 'firebase/firestore';
 
 import { Input, Loading } from '@nextui-org/react';
@@ -28,7 +29,7 @@ function Artwork({ artwork, hasError }) {
     const router = useRouter();
 
     if (hasError) {
-        router.push('/404');
+        router.replace('/404');
         return <Loader />;
     }
     const item = JSON.parse(artwork);

@@ -5,7 +5,9 @@ import updateAction from '@/commoncomponents/updateAction';
 
 function UploadCertifications({ setValue }) {
     const { state, actions } = useStateMachine({ updateAction });
-    const [docs, setDocs] = useState(state.details.certificates);
+    const [docs, setDocs] = useState(
+        state.details.certificates ? state.details.certificates : []
+    );
 
     const errorRef = useRef();
 

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import { Input } from '@nextui-org/react';
 
 const Details = ({ state, register, setValue, trigger, errors }) => {

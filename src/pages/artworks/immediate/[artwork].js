@@ -79,12 +79,21 @@ export default function Item({ artwork, hasError }) {
                             </h4>
                         </div>
 
-                        <button
-                            onClick={handleBag}
-                            className="h-12 w-full rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300 md:w-80"
-                        >
-                            {addtoBag ? 'Remove from Bag' : 'Add to Bag'}
-                        </button>
+                        {data.status === 'sold' ? (
+                            <button
+                                disabled
+                                className="h-12 w-full rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300 md:w-80"
+                            >
+                                Item Sold
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleBag}
+                                className="h-12 w-full rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300 md:w-80"
+                            >
+                                {addtoBag ? 'Remove from Bag' : 'Add to Bag'}
+                            </button>
+                        )}
                         <Social
                             id={data.id}
                             sellerId={data.sellerId}
@@ -123,6 +132,7 @@ export async function getServerSideProps({
             },
         };
     }
+
     return {
         props: {
             artwork: JSON.stringify({ id: data.id, ...data.data() }),

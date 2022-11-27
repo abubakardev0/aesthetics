@@ -26,7 +26,7 @@ const Customer = ({ name, email, address }) => {
                         <p className="text-left text-lg font-medium leading-4 text-gray-800">
                             Shipping Address
                         </p>
-                        <p className="w-full text-left text-lg leading-5 text-gray-600">
+                        <p className="w-full text-left text-lg capitalize leading-5 text-gray-600">
                             {address}
                         </p>
                     </div>

@@ -22,7 +22,7 @@ const Details = () => {
     const router = useRouter();
     const { orderid } = router.query;
     if (!orderid) {
-        router.push('/404');
+        router.replace('/404');
         return <Loader />;
     }
     const [loading, setLoading] = useState(false);

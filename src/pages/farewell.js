@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic';
 import Head from 'next/head';
 
 function Farewell() {
@@ -7,7 +6,7 @@ function Farewell() {
             <Head>
                 <title>Farewell</title>
             </Head>
-            <main className="flex h-full w-full items-center justify-center">
+            <main className="grid h-screen place-content-center">
                 <h1 className="text-center font-garamond text-4xl font-bold uppercase md:text-5xl">
                     Sad to see you go!
                 </h1>
