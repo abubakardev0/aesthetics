@@ -17,12 +17,25 @@ export default async function handler(req, res) {
         });
         await sendgrid.send({
             to: email,
-            from: 'keyowe1568@migonom.com',
+            from: {
+                email: 'keyowe1568@migonom.com',
+                name: 'Aesthetics',
+            },
             subject: 'Order amount Refunded',
-            html: `<p style="font-size: 16px; text-align:center">Order id: ${id}</p>
+            html: `
+            <section style="background-color: #f8fafc; padding: 15px">
+                <h4 style="font-size: 16px; text-align:center">Order id: ${id}</h4>
                 <br />
-                Hi, ${name},
-                    Your order amount has been refunded.
+                <p>
+                    Hi, ${name},
+                    We're sorry to inform you that your order has been refunded. We hope this email finds you well. If you have any questions, please contact our customer service team at <u><b>queries@aesthetics.com</b></u>.
+                </p>
+
+                
+                Thank you!
+
+                Aesthetics
+            </section>
             `,
         });
         res.status(200).json({ message: 'Refunded' });

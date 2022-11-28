@@ -5,7 +5,7 @@ import Slider from '@/commoncomponents/Scrollers/Slider';
 
 export default function ImageView({ images }) {
     return (
-        <div className="my-2 grid h-[450px] w-full place-content-center md:my-0 md:h-full md:w-1/2">
+        <div className="grid h-full w-full place-content-center md:h-full md:w-1/2">
             <Slider images={images} />
             <Link
                 href={{

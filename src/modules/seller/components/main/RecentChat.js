@@ -117,8 +117,12 @@ export const Card = ({ name, text, date, type }) => {
                 ) : (
                     <Artwork className="h-4 w-4" />
                 )}
-                <span className="absolute bottom-1 right-2 text-sm">
-                    {new Date(date * 1000).toDateString()}
+                <span className="absolute bottom-1 right-2 text-xs text-gray-500">
+                    {new Date(date * 1000).toLocaleDateString('en-US', {
+                        hour12: true,
+                        hour: 'numeric',
+                        minute: 'numeric',
+                    })}
                 </span>
             </span>
         </li>

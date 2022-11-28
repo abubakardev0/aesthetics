@@ -12,6 +12,7 @@ import {
     addDoc,
     increment,
     updateDoc,
+    runTransaction,
 } from 'firebase/firestore';
 
 import { db, auth } from '@/firebase/firebase-config';
@@ -131,67 +132,101 @@ export default function BiddingDetails({ data, setAlert, setShow }) {
         }
 
         async function updateBid() {
-            await updateDoc(
-                doc(db, 'artworks', `${data.id}`, 'bids', `${userBid.id}`),
-                {
-                    name: auth.currentUser.displayName,
-                    email: auth.currentUser.email,
+            await runTransaction(db, async (transaction) => {
+                const sfDoc = await transaction.get(
+                    doc(db, 'artworks', data.id)
+                );
+                if (!sfDoc.exists()) {
+                    throw 'Document does not exist!';
+                }
+                const current = sfDoc.data().currentBid;
+                if (validateBidValue(newValue, current)) {
+                    transaction.update(
+                        doc(
+                            db,
+                            'artworks',
+                            `${data.id}`,
+                            'bids',
+                            `${userBid.id}`
+                        ),
+                        {
+                            name: auth.currentUser.displayName,
+                            email: auth.currentUser.email,
+                            value: parseInt(newValue),
+                            time: Timestamp.fromDate(new Date()),
+                        }
+                    );
+
+                    if (data.currentBid === data.startingBid) {
+                        transaction.update(doc(db, 'artworks', `${data.id}`), {
+                            currentBid: parseInt(newValue),
+                        });
+                    } else {
+                        transaction.update(doc(db, 'artworks', `${data.id}`), {
+                            currentBid: parseInt(newValue),
+                            lastBid: {
+                                user: auth.currentUser.uid,
+                                bid: parseInt(currentValue),
+                            },
+                        });
+                    }
+                } else {
+                    throw 'Unable to update bid';
+                }
+                setUserBid((prev) => ({
+                    ...prev,
                     value: parseInt(newValue),
                     time: Timestamp.fromDate(new Date()),
-                }
-            );
-            if (data.currentBid === data.startingBid) {
-                updateDoc(doc(db, 'artworks', `${data.id}`), {
-                    currentBid: parseInt(newValue),
-                });
-            } else {
-                updateDoc(doc(db, 'artworks', `${data.id}`), {
-                    currentBid: parseInt(newValue),
-                    lastBid: {
-                        user: auth.currentUser.uid,
-                        bid: parseInt(currentValue),
-                    },
-                });
-            }
-            setUserBid((prev) => ({
-                ...prev,
-                value: parseInt(newValue),
-                time: Timestamp.fromDate(new Date()),
-            }));
+                }));
+            });
         }
 
         async function newBid() {
-            const ref = await addDoc(
-                collection(db, 'artworks', `${data.id}`, 'bids'),
-                {
-                    user: auth.currentUser.uid,
-                    value: parseInt(newValue),
-                    name: auth.currentUser.displayName,
-                    email: auth.currentUser.email,
-                    time: Timestamp.fromDate(new Date()),
+            await runTransaction(db, async (transaction) => {
+                const sfDoc = await transaction.get(
+                    doc(db, 'artworks', data.id)
+                );
+                if (!sfDoc.exists()) {
+                    throw 'Document does not exist!';
                 }
-            );
-            if (data.currentBid === data.startingBid) {
-                updateDoc(doc(db, 'artworks', `${data.id}`), {
-                    currentBid: parseInt(newValue),
-                    totalBids: increment(1),
-                });
-            } else {
-                updateDoc(doc(db, 'artworks', `${data.id}`), {
-                    currentBid: parseInt(newValue),
-                    lastBid: {
-                        user: auth.currentUser.uid,
-                        bid: parseInt(currentValue),
-                    },
-                    totalBids: increment(1),
-                });
-            }
-            setUserBid((prev) => ({
-                ...prev,
-                id: ref.id,
-                value: parseInt(newValue),
-                time: Timestamp.fromDate(new Date()),
-            }));
+                const current = sfDoc.data().currentBid;
+                let ref = null;
+                if (validateBidValue(newValue, current)) {
+                    ref = await addDoc(
+                        collection(db, 'artworks', `${data.id}`, 'bids'),
+                        {
+                            user: auth.currentUser.uid,
+                            value: parseInt(newValue),
+                            name: auth.currentUser.displayName,
+                            email: auth.currentUser.email,
+                            time: Timestamp.fromDate(new Date()),
+                        }
+                    );
+                    if (data.currentBid === data.startingBid) {
+                        transaction.update(doc(db, 'artworks', `${data.id}`), {
+                            currentBid: parseInt(newValue),
+                            totalBids: increment(1),
+                        });
+                    } else {
+                        transaction.update(doc(db, 'artworks', `${data.id}`), {
+                            currentBid: parseInt(newValue),
+                            lastBid: {
+                                user: auth.currentUser.uid,
+                                bid: parseInt(currentValue),
+                            },
+                            totalBids: increment(1),
+                        });
+                    }
+                } else {
+                    throw 'Unable to update bid';
+                }
+                setUserBid((prev) => ({
+                    ...prev,
+                    id: ref.id,
+                    value: parseInt(newValue),
+                    time: Timestamp.fromDate(new Date()),
+                }));
+            });
         }
     };
 

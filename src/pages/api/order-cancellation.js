@@ -14,13 +14,27 @@ export default async function handler(req, res) {
         });
         await sendgrid.send({
             to: email,
-            from: 'keyowe1568@migonom.com',
+            from: {
+                email: 'keyowe1568@migonom.com',
+                name: 'Aesthetics',
+            },
             subject: 'Order Cancellation',
-            html: `<p style="font-size: 16px; text-align:center">Order id: ${id}</p>
+            html: `
+                <section style="background-color: #f8fafc; padding: 15px">
+                <h4 style="font-size: 16px; text-align:center">Order id: ${id}</h4>
                 <br />
+                <p style="font-size: 16px; text-align:center; color:#334155; width:60%; margin: 0 auto;">
                 Hi, ${name} 
                     We're sad to hear that you cancel your order. We have received your cancellation request and are processing it.
                     Your amount will be refunded within 7 days.
+                    If you have any questions, please email us at:
+                    <u><b>queries@aesthetics.com</b></u>.
+                </p>
+
+                Thanks for shopping with us!
+
+                Aesthetics
+            </section>               
             `,
         });
         res.status(200).json({ message: 'Order cancelled' });

@@ -100,12 +100,28 @@ export default async function handler(req, res) {
 
         await sendgrid.send({
             to: email,
-            from: 'keyowe1568@migonom.com',
+            from: {
+                email: 'keyowe1568@migonom.com',
+                name: 'Aesthetics',
+            },
             subject: 'Order Confirmation',
-            html: `<p style="font-size: 16px; text-align:center">Order id: ${docRef.id}</p>
+            html: `
+                <section style="background-color: #f8fafc; padding: 15px">
+                <h4 style="font-size: 16px; text-align:center">Order id: ${docRef.id}</h4>
                 <br />
+                <p style="font-size: 16px; text-align:center; color:#334155; width:60%; margin: 0 auto;">
                 Hey ${shippingDetails.name},
-                     Your order has been placed.
+                    We are excited to tell you that your order has been confirmed. Thank you for shopping with us! We hope you enjoyed your experience and found what you were looking for. If not, please let us know, we're happy to help.
+                    You will receive your purchase in 7 working days.
+                    If you have any questions, please email us at <u><b>queries@aesthetics.com</b></u>.
+
+                    We hope to see you in our store again soon!
+                </p>
+
+                Thanks for shopping with us!
+
+                Aesthetics
+            </section>
             `,
         });
 
