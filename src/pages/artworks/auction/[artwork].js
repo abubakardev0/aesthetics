@@ -32,6 +32,10 @@ function Item() {
         try {
             const docRef = doc(db, 'artworks', artwork);
             onSnapshot(docRef, (doc) => {
+                if (!doc.exists()) {
+                    router.replace('/404');
+                    return <Loader />;
+                }
                 setData({ id: doc.id, ...doc.data() });
             });
         } catch (error) {

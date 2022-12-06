@@ -4,15 +4,7 @@ import Link from 'next/link';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebase-config';
 
-import useSWR from 'swr';
-
-import {
-    Loading,
-    Table,
-    useAsyncList,
-    useCollator,
-    Tooltip,
-} from '@nextui-org/react';
+import { Table, useAsyncList, useCollator, Tooltip } from '@nextui-org/react';
 
 import SellerLayout from '@/layouts/SellerLayout';
 import Plus from '@/icons/Plus';

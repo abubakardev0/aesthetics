@@ -25,7 +25,7 @@ async function getDocument(id) {
 
 async function unListItem(id) {
     try {
-        await updateDoc(doc(db, 'artworks', id), {
+        updateDoc(doc(db, 'artworks', id), {
             status: 'sold',
         });
     } catch (error) {
@@ -35,7 +35,7 @@ async function unListItem(id) {
 
 async function removeFromBag(itemsId, userId) {
     try {
-        await updateDoc(doc(db, 'bag', userId), {
+        updateDoc(doc(db, 'bag', userId), {
             artworks: arrayRemove(...itemsId),
         });
     } catch (error) {
@@ -94,11 +94,11 @@ export default async function handler(req, res) {
         const docRef = await addDoc(collection(db, 'orders'), order);
 
         for (let item of itemsId) {
-            await unListItem(item);
+            unListItem(item);
         }
-        await removeFromBag(itemsId, userId);
+        removeFromBag(itemsId, userId);
 
-        await sendgrid.send({
+        sendgrid.send({
             to: email,
             from: {
                 email: 'keyowe1568@migonom.com',

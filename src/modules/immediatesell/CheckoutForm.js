@@ -164,14 +164,15 @@ export default function CheckoutForm({ itemsId }) {
                                         onClick={() =>
                                             setFormState((e) => e - 1)
                                         }
+                                        disabled={state ? true : false}
                                         className="w-full rounded-md bg-neutral-200 py-2.5 text-neutral-800 hover:bg-neutral-100 active:bg-neutral-300 md:py-3"
                                     >
                                         Discard
                                     </button>
                                     <button
-                                        disabled={state}
+                                        disabled={state ? true : false}
                                         type="submit"
-                                        className="flex h-12 w-full items-center justify-center gap-x-3 rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300"
+                                        className="flex h-12 w-full items-center justify-center gap-x-3 rounded-md bg-neutral-900 text-white hover:bg-neutral-800 focus:outline-none focus:ring-4 focus:ring-neutral-300 disabled:cursor-not-allowed"
                                     >
                                         <Lock
                                             className="h-6 w-6"
