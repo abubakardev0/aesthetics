@@ -13,7 +13,7 @@ export default function CompetitionsList({ list, title, subtitle }) {
                     {title}
                 </h2>
             </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
+            <div className="grid place-content-center gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
                 {list.map((each) => (
                     <Link href={`/competitions/${each.id}`} key={each.id}>
                         <a>

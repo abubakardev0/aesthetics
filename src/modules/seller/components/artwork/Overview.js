@@ -3,8 +3,6 @@ import { useRef, useState } from 'react';
 import { db } from '@/firebase/firebase-config';
 import { doc, updateDoc } from 'firebase/firestore';
 
-import { Loading } from '@nextui-org/react';
-
 import Alert from '@/commoncomponents/popups/Alert';
 import Slider from '@/commoncomponents/Scrollers/Slider';
 import { formatCurrency } from '@/commoncomponents/functions';

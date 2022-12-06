@@ -29,9 +29,11 @@ function Header() {
                     <Link href="/">
                         <a>
                             <span className="hidden lg:block">AESTHETICS</span>
-                            <span className="block lg:hidden">
-                                <Logo />
-                            </span>
+                            <div className="logo logo-triangle relative inline-block h-9 w-9 lg:hidden">
+                                <svg viewBox="0 0 86 80">
+                                    <polygon points="43 8 79 72 7 72"></polygon>
+                                </svg>
+                            </div>
                         </a>
                     </Link>
                 </div>

@@ -23,7 +23,7 @@ export default function Page({ posts }) {
                     },
                 }}
                 exit={{ opacity: 0 }}
-                className="grid grid-cols-1 gap-4 px-3 sm:grid-cols-2 md:grid-cols-3 md:px-10 lg:grid-cols-4 lg:px-16 2xl:grid-cols-5"
+                className="grid place-content-center gap-4 px-3 sm:grid-cols-2 md:grid-cols-3 md:px-10 lg:grid-cols-4 lg:px-16 2xl:grid-cols-5"
             >
                 {posts.map((item) => (
                     <Link

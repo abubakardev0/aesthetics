@@ -31,7 +31,7 @@ async function getArtworks() {
     const list = await getItems();
     for (let i = 0; i < list.length; i++) {
         const item = await getDoc(doc(db, 'artworks', list[i]));
-        if (item) {
+        if (item.exists()) {
             items.push({ id: item.id, ...item.data() });
         }
     }

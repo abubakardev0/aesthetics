@@ -103,7 +103,6 @@ export const AuthProvider = ({ children }) => {
                 {
                     name: auth.currentUser.displayName,
                     email: auth.currentUser.email,
-                    role: 'buyer',
                     photoURL: auth.currentUser.photoURL,
                     createdAt: serverTimestamp(),
                     uploadedWorks: 0,

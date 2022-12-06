@@ -61,28 +61,30 @@ const Details = ({ state, register, setValue, trigger, errors }) => {
                         Is title of your artwork spelled right?
                     </span>
                 )}
-                <label
-                    htmlFor="rarity"
-                    className="mb-2 block text-sm font-medium text-gray-500"
-                >
-                    Rarity
-                </label>
-                <select
-                    id="rarity"
-                    name="rarity"
-                    className="block w-full rounded-xl border-2 border-gray-300 p-2 text-[14px] text-black transition-colors delay-75 duration-300 hover:border-black active:border-black"
-                    required
-                    value={state.rarity}
-                    {...register('rarity', {
-                        required: true,
-                    })}
-                >
-                    <option disabled>Select your classification</option>
-                    <option value="open">Open Edition</option>
-                    <option value="unique">Unique</option>
-                    <option value="limited">Limited Edition</option>
-                    <option value="unknown">Unknown Edition</option>
-                </select>
+                <div className="space-y-1">
+                    <label
+                        htmlFor="rarity"
+                        className="block text-sm text-gray-800"
+                    >
+                        Rarity
+                    </label>
+                    <select
+                        id="rarity"
+                        name="rarity"
+                        className="block w-full rounded-xl border-[3px] border-gray-300 px-2.5 py-2.5 text-[14px] text-black transition-colors delay-75 duration-300 hover:border-black focus:border-black"
+                        required
+                        value={state.rarity}
+                        {...register('rarity', {
+                            required: true,
+                        })}
+                    >
+                        <option disabled>Select your classification</option>
+                        <option value="open">Open Edition</option>
+                        <option value="unique">Unique</option>
+                        <option value="limited">Limited Edition</option>
+                        <option value="unknown">Unknown Edition</option>
+                    </select>
+                </div>
                 {errors.rarity && (
                     <span className="text-sm text-red-500">Required field</span>
                 )}

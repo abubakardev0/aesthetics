@@ -5,7 +5,7 @@ import { formatCurrency } from '@/commoncomponents/functions';
 
 export default function RecentSales({ recentSales }) {
     return (
-        <div className="min-h-fit w-full space-y-3 overflow-hidden rounded-2xl border-2 bg-white p-4 drop-shadow-lg md:h-full">
+        <div className="min-h-fit w-full space-y-3 overflow-hidden rounded-lg border-2 bg-[#FFFFF0] p-4 drop-shadow-sm md:h-full">
             <div className="flex justify-between">
                 <h3 className="text-lg font-medium">Recent Sales</h3>
                 <Link href="/seller/orders">

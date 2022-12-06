@@ -1,7 +1,7 @@
 import { numberWithCommas } from '@/commoncomponents/functions';
 const Analytics = ({ title, numbers, icon }) => {
     return (
-        <div className="group h-full w-full cursor-pointer rounded-2xl border-2 bg-white p-4 drop-shadow-lg">
+        <div className="group h-full w-full cursor-pointer rounded-lg border-2 bg-[#FFFFF0] p-4 drop-shadow-sm">
             <h4 className="border-b pb-2 text-base tracking-wide text-gray-500">
                 {title}
             </h4>

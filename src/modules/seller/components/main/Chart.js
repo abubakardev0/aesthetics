@@ -78,7 +78,7 @@ export default function Chart() {
         return data;
     }
     return (
-        <div className="h-full w-full rounded-2xl border-2 bg-white pb-5 drop-shadow-lg">
+        <div className="h-full w-full rounded-lg border-2 bg-[#FFFFF0] pb-5  drop-shadow-sm">
             <h2 className="w-full py-3 text-center text-sm font-medium text-gray-600 md:text-base lg:text-lg">
                 Your Monthly Sales
             </h2>
@@ -95,15 +95,21 @@ export default function Chart() {
                     }}
                 >
                     <defs>
-                        <linearGradient id="sale" x1="0" y1="0" x2="0" y2="1">
+                        <linearGradient
+                            id="colorSale"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                        >
                             <stop
                                 offset="5%"
-                                stopColor="#8884d8"
+                                stopColor="#0ea5e9"
                                 stopOpacity={0.8}
                             />
                             <stop
                                 offset="95%"
-                                stopColor="#8884d8"
+                                stopColor="#0ea5e9"
                                 stopOpacity={0}
                             />
                         </linearGradient>
@@ -124,7 +130,7 @@ export default function Chart() {
                     <Area
                         type="monotone"
                         dataKey="sale"
-                        fill="#7dd3fc"
+                        fill="url(#colorSale)"
                         stroke="#0ea5e9"
                         strokeWidth="4"
                         fillOpacity={0.7}

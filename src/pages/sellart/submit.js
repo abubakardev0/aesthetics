@@ -37,6 +37,7 @@ function FormSubmission({ mediums, surfaces }) {
     } = useForm();
 
     const onSubmit = async (data) => {
+        console.log('submitted');
         setLoading(true);
         try {
             const res = await axios.post('/api/submit-artwork', {
@@ -147,7 +148,7 @@ function FormSubmission({ mediums, surfaces }) {
                                         disabled={loading ? true : false}
                                         type="submit"
                                         form="submit-artwork"
-                                        className="w-full rounded-md bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg hover:bg-neutral-900"
+                                        className="w-full rounded-md bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg hover:bg-neutral-900 disabled:cursor-not-allowed"
                                     >
                                         {loading ? (
                                             <Loading
