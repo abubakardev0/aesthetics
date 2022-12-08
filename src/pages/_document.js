@@ -16,7 +16,8 @@ class MyDocument extends Document {
         return (
             <Html lang={AppConfig.locale}>
                 <Head>
-                    <link rel="Aesthetics icon" href="/favicon.png" />
+                    <link rel="icon" href="/favicon.ico" />
+
                     <link
                         rel="preconnect"
                         href="https://fonts.googleapis.com"
