@@ -79,7 +79,7 @@ function Competition({ competition, hasError }) {
                 </div>
                 <div className="absolute right-1 top-20 w-fit transform space-y-2 divide-y divide-gray-300 border-2 border-white p-3 text-right text-white md:right-16 md:top-1/2 md:w-64 md:-translate-y-1/2 md:space-y-4 md:p-5">
                     <div>
-                        <h2 className="text-xl font-semibold capitalize md:text-3xl">
+                        <h2 className="md:text-2 text-xl font-semibold capitalize">
                             {data.themeTitle}
                         </h2>
                         <p className="text-sm uppercase tracking-wide text-gray-300 md:text-lg">
@@ -87,7 +87,7 @@ function Competition({ competition, hasError }) {
                         </p>
                     </div>
                     <div>
-                        <h2 className="pt-5 text-xl font-semibold md:text-3xl">
+                        <h2 className="pt-5 text-xl font-semibold md:text-2xl">
                             {formatCurrency(data.prize)}
                         </h2>
                         <p className="text-sm uppercase tracking-wide text-gray-300 md:text-lg">
@@ -95,10 +95,14 @@ function Competition({ competition, hasError }) {
                         </p>
                     </div>
                     <div>
-                        <h2 className="pt-5 text-xl font-semibold md:text-3xl">
+                        <h2 className="pt-5 text-xl font-semibold md:text-2xl">
                             {new Date(
                                 data.deadline.seconds * 1000
-                            ).toDateString()}
+                            ).toLocaleDateString('en-US', {
+                                hour12: true,
+                                hour: 'numeric',
+                                minute: 'numeric',
+                            })}
                         </h2>
                         <p className="text-sm uppercase tracking-wide text-gray-300 md:text-lg">
                             Deadline
