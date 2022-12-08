@@ -52,6 +52,9 @@ export const AuthProvider = ({ children }) => {
     );
 
     const signUp = async (name, email, password) => {
+        if (error) {
+            setError('');
+        }
         setLoading(true);
         try {
             await createUserWithEmailAndPassword(auth, email, password);
@@ -81,6 +84,9 @@ export const AuthProvider = ({ children }) => {
         }
     };
     const sessionBasedSignin = async (email, password) => {
+        if (error) {
+            setError('');
+        }
         setLoading(true);
         setPersistence(auth, browserSessionPersistence)
             .then(() => {
@@ -95,30 +101,28 @@ export const AuthProvider = ({ children }) => {
     };
 
     const signInwithGoogleAccount = async () => {
+        if (error) {
+            setError('');
+        }
         setLoading(true);
         try {
             await signInWithPopup(auth, provider);
-            const user = await setDoc(
-                doc(db, 'users', auth.currentUser.uid),
-                {
+            const isRegistered = await getDoc(
+                doc(db, 'users', auth.currentUser.uid)
+            );
+            if (!isRegistered.exists()) {
+                await setDoc(doc(db, 'users', auth.currentUser.uid), {
                     name: auth.currentUser.displayName,
                     email: auth.currentUser.email,
                     photoURL: auth.currentUser.photoURL,
                     createdAt: serverTimestamp(),
                     uploadedWorks: 0,
-                },
-                {
-                    merge: true,
-                }
-            );
-            const saveRef = await getDoc(
-                doc(db, 'saves', auth.currentUser.uid)
-            );
-            if (!saveRef.exists()) {
-                await setDoc(doc(db, 'saves', `${auth.currentUser.uid}`), {
+                    favourites: [],
+                });
+                setDoc(doc(db, 'saves', `${auth.currentUser.uid}`), {
                     artworks: [],
                 });
-                await setDoc(doc(db, 'bag', `${auth.currentUser.uid}`), {
+                setDoc(doc(db, 'bag', `${auth.currentUser.uid}`), {
                     artworks: [],
                 });
             }
@@ -131,6 +135,9 @@ export const AuthProvider = ({ children }) => {
     };
 
     const signIn = (email, password) => {
+        if (error) {
+            setError('');
+        }
         setLoading(true);
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredentials) => {

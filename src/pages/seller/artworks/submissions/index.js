@@ -151,12 +151,12 @@ function Submissions() {
                                         }}
                                     >
                                         <div className="flex items-center gap-x-3 whitespace-nowrap">
-                                            <div className="h-16 w-14 overflow-hidden">
+                                            <div className="h-16 w-14 overflow-hidden rounded-md">
                                                 <Image
                                                     src={item.images[0]}
                                                     height={70}
                                                     width={60}
-                                                    alt="no image"
+                                                    alt={item.title}
                                                     className="object-cover"
                                                 />
                                             </div>
@@ -257,7 +257,7 @@ function Submissions() {
                                                 color="error"
                                             >
                                                 <DeleteArtwork
-                                                    collection="submittedArtworks"
+                                                    collectionName="submittedArtworks"
                                                     id={item.id}
                                                 />
                                             </Tooltip>

@@ -14,14 +14,14 @@ import Carousel from '@/commoncomponents/Scrollers/Carousel';
 import { Loading } from '@nextui-org/react';
 import Error from '@/commoncomponents/Error';
 
-function RelatedWorks({ category }) {
+function RelatedWorks({ artist }) {
     const { data: items, error } = useSWR('new-uploaded-artworks', async () => {
         const list = [];
         const docSnap = await getDocs(
             query(
                 collection(db, 'artworks'),
                 where('status', '==', 'listed'),
-                where('category', '==', `still life`),
+                where('artist', '==', artist),
                 orderBy('uploadedAt', 'desc'),
                 limit(6)
             )
@@ -33,15 +33,15 @@ function RelatedWorks({ category }) {
         });
         return list;
     });
-    if (error) {
-        return <Error />;
-    }
     if (!items) {
         return (
             <div className="flex items-center justify-center py-20">
                 <Loading />
             </div>
         );
+    }
+    if (error) {
+        return <Error />;
     }
     return (
         <>

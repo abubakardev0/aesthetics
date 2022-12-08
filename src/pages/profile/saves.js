@@ -80,14 +80,14 @@ export default Saves;
 
 function Item({ item }) {
     return (
-        <li>
+        <li className="mx-1">
             <Link
                 href={`/artworks${
                     item.type === 'auction' ? '/auction' : '/immediate'
                 }/${item.id}`}
             >
                 <a className="flex w-full cursor-pointer flex-col items-start justify-start space-y-4 rounded-md border p-4 hover:bg-gray-50 md:mt-0 md:h-36 md:flex-row  md:items-center md:space-x-5">
-                    <div className="relative h-full w-full md:w-40">
+                    <div className="relative h-full w-full overflow-hidden rounded-md md:w-36">
                         <Image
                             src={item.images[0]}
                             layout="fill"

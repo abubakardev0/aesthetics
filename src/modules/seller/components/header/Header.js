@@ -16,9 +16,11 @@ function Header() {
                         <span className="hidden font-garamond text-lg font-bold sm:text-xl md:block md:text-2xl">
                             AESTHETICS
                         </span>
-                        <span className="block md:hidden">
-                            <Logo />
-                        </span>
+                        <div className="logo logo-triangle relative inline-block h-9 w-9 md:hidden">
+                            <svg viewBox="0 0 86 80">
+                                <polygon points="43 8 79 72 7 72"></polygon>
+                            </svg>
+                        </div>
                     </a>
                 </Link>
                 <div className="inline-flex space-x-10">

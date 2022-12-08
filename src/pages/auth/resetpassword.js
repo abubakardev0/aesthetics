@@ -55,7 +55,7 @@ const ResetPassword = () => {
 
     return (
         <>
-            <section className="w-96 p-6 sm:rounded-xl sm:border-2 sm:border-slate-200 sm:shadow-slate-400">
+            <section className="w-96 p-6 focus-within:border-black sm:rounded-xl sm:border-[3px] sm:border-slate-200 sm:shadow-slate-400">
                 <div className="mb-5">
                     <h2
                         className="xl:text-bold mb-1 text-left text-3xl font-bold
@@ -73,6 +73,7 @@ const ResetPassword = () => {
                     <Input
                         width="100%"
                         clearable
+                        bordered
                         color="black"
                         type="email"
                         label="E-mail"

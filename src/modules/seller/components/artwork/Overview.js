@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { db } from '@/firebase/firebase-config';
 import { doc, updateDoc } from 'firebase/firestore';
 
+import ReList from '@/seller/components/artwork/relist';
 import Alert from '@/commoncomponents/popups/Alert';
 import Slider from '@/commoncomponents/Scrollers/Slider';
 import { formatCurrency } from '@/commoncomponents/functions';
@@ -13,21 +14,8 @@ function Overview({ data }) {
         type: '',
         message: '',
     });
-    // const priceRef = useRef(null);
     const descriptionRef = useRef(null);
     const statusRef = useRef(null);
-    // const updatePrice = async () => {
-    //     const price = priceRef.current?.value;
-    //     if (!price) {
-    //         return;
-    //     }
-    //     if (price === data.price) {
-    //         return;
-    //     }
-    //     await updateDoc(doc(db, 'artworks', data.id), {
-    //         price: parseInt(price),
-    //     });
-    // };
     const updateStatus = async () => {
         const status = statusRef.current?.value;
         if (!status) {
@@ -95,6 +83,9 @@ function Overview({ data }) {
                 >
                     Change Status
                 </button>
+                {data.type === 'auction' && data.status === 'archived' ? (
+                    <ReList itemData={data} />
+                ) : null}
             </div>
             <div className="h-full w-full space-y-5 lg:w-4/12 2xl:space-y-8">
                 <div>

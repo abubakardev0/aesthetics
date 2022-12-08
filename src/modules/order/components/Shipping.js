@@ -2,7 +2,7 @@ import { formatCurrency } from '@/commoncomponents/functions';
 
 const Shipping = ({ shipping }) => {
     return (
-        <div className="flex w-full flex-col justify-center space-y-6 rounded-md bg-white px-4 py-6 drop-shadow-md md:p-6 xl:p-8   ">
+        <div className="flex w-full flex-col justify-center space-y-6 rounded-md border-2 bg-white px-4 py-6 drop-shadow-md md:p-6 xl:p-8   ">
             <h3 className="text-xl font-semibold leading-5 text-gray-800">
                 Shipping
             </h3>

@@ -1,29 +1,88 @@
 import { useState } from 'react';
 
-import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
-import { db } from '@/firebase/firebase-config';
+import {
+    doc,
+    collection,
+    deleteDoc,
+    updateDoc,
+    getDocs,
+    increment,
+    query,
+    where,
+} from 'firebase/firestore';
+import { db, auth } from '@/firebase/firebase-config';
 
-import { Modal } from '@nextui-org/react';
+import { Modal, Loading } from '@nextui-org/react';
 
 import Delete from '@/icons/Delete';
 
 import Error from '@/icons/Error';
 
-function DeleteArtwork({ collection, id }) {
+function DeleteArtwork({ collectionName, id, type }) {
+    const [loading, setLoading] = useState(false);
     const [visible, setVisible] = useState(false);
+    const [error, setError] = useState(null);
 
+    async function deleteImmediate(id, uid) {
+        const documents = [];
+        const bagQuery = await getDocs(
+            query(
+                collection(db, 'bag'),
+                where('artworks', 'array-contains', id)
+            )
+        );
+        const wishListQuery = await getDocs(
+            query(
+                collection(db, 'saves'),
+                where('artworks', 'array-contains', id)
+            )
+        );
+        bagQuery.forEach((d) => {
+            documents.push({ type: 'bag', id: d.id });
+        });
+        wishListQuery.forEach((d) => {
+            documents.push({ type: 'saves', id: d.id });
+        });
+        documents.map((obj) => {
+            updateDoc(doc(db, `${obj.type}`, obj.id), {
+                artworks: arrayRemove(id),
+            });
+        });
+        await deleteDoc(doc(db, 'artworks', id));
+        await updateDoc(doc(db, 'users', `${uid}`), {
+            uploadedWorks: increment(-1),
+        });
+    }
+
+    async function deleteAuction(id, uid) {
+        const list = [];
+        const bidders = await getDocs(collection(db, 'artworks', id, 'bids'));
+        bidders.forEach((bidder) => {
+            list.push(bidder.id);
+        });
+        list.forEach((bidId) => {
+            deleteDoc(doc(db, 'artworks', id, 'bids', `${bidId}`));
+        });
+        await deleteDoc(doc(db, 'artworks', id));
+        await updateDoc(doc(db, 'users', `${uid}`), {
+            uploadedWorks: increment(-1),
+        });
+    }
     async function handleDelete() {
         try {
-            await deleteDoc(doc(db, collection, id));
-            if (collection === 'artworks') {
-                await updateDoc(doc(db, 'users', `${auth.currentUser.uid}`), {
-                    uploadedWorks: increment(-1),
-                });
+            setLoading(true);
+            if (type === 'auction' && collectionName === 'artworks') {
+                deleteAuction(id, auth.currentUser.uid);
+            } else if (type === 'immediate' && collectionName === 'artworks') {
+                deleteImmediate(id, auth.currentUser.uid);
+            } else {
+                await deleteDoc(doc(db, 'submittedArtworks', id));
             }
-        } catch (error) {
-            console.log(error);
-        } finally {
             setVisible(false);
+        } catch (error) {
+            setError('Error occurred while performing this action!');
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -43,6 +102,9 @@ function DeleteArtwork({ collection, id }) {
                 onClose={() => setVisible(false)}
             >
                 <Modal.Header className="inline-block space-y-4 text-left">
+                    <span className="text-sm text-red-500">
+                        {error ?? null}
+                    </span>
                     <h3 className="text-lg font-medium">
                         You're deleting an amazing piece, right?
                     </h3>
@@ -66,15 +128,21 @@ function DeleteArtwork({ collection, id }) {
                         <button
                             type="reset"
                             onClick={() => setVisible(false)}
-                            className="w-full rounded-xl bg-neutral-200 py-2 text-neutral-800 hover:bg-neutral-300 active:bg-neutral-300"
+                            disabled={loading ? true : false}
+                            className="w-full rounded-xl bg-neutral-200 py-2 text-neutral-800 hover:bg-neutral-300 active:bg-neutral-300 disabled:cursor-not-allowed"
                         >
                             Discard
                         </button>
                         <button
                             onClick={handleDelete}
-                            className="w-full rounded-md bg-red-500 py-2 font-medium text-gray-100 hover:bg-red-600 active:bg-red-600"
+                            disabled={loading ? true : false}
+                            className="w-full rounded-md bg-red-500 py-2 font-medium text-gray-100 hover:bg-red-600 active:bg-red-600 disabled:cursor-not-allowed"
                         >
-                            Delete
+                            {loading ? (
+                                <Loading type="points-opacity" size="sm" />
+                            ) : (
+                                'Delete'
+                            )}
                         </button>
                     </div>
                 </Modal.Body>

@@ -4,7 +4,7 @@ import { formatCurrency } from '@/commoncomponents/functions';
 
 const Order = ({ items }) => {
     return (
-        <div className="flex w-full flex-col items-start justify-start rounded-md bg-white px-4 py-4 drop-shadow-md md:p-6 md:py-6 xl:p-8">
+        <div className="flex w-full flex-col items-start justify-start rounded-md border-2 bg-white px-4 py-4 drop-shadow-md md:p-6 md:py-6 xl:p-8">
             <p className="text-lg font-semibold leading-6 text-gray-800 md:text-xl xl:leading-5">
                 Your Order
             </p>

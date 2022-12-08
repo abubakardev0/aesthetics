@@ -24,16 +24,17 @@ export default async function handler(req, res) {
             subject: 'Order amount Refunded',
             html: `
             <section style="background-color: #f8fafc; padding: 15px">
-                <h4 style="font-size: 16px; text-align:center">Order id: ${id}</h4>
+                <h4 style="font-size: 16px;margin: 10px auto; text-align:left">Order id: ${id}</h4>
                 <br />
                 <p>
                     Hi, ${name},
+                    <br />
                     We're sorry to inform you that your order has been refunded. We hope this email finds you well. If you have any questions, please contact our customer service team at <u><b>queries@aesthetics.com</b></u>.
                 </p>
 
                 
                 Thank you!
-
+                <br />
                 Aesthetics
             </section>
             `,

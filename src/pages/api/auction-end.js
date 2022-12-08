@@ -49,18 +49,22 @@ export default async function handler(req, res) {
         subject: 'You won the auction',
         html: `
             <section style="background-color: #f8fafc; padding: 15px">
-                <p style="font-size: 16px; text-align:center; color:#334155; width:60%; margin: 0 auto;">
+                <p style="font-size: 16px; text-align:left; color:#334155; width:80%; margin: 10px auto;">
                 Hey ${user.name},
+                <br />
+                <br />
                     Congratulation! You won the auction with the highest bid. Please follow the link below to pay for your item. You will have 7 days to pay before the listing is re-listed.
-                    
+                    <br />
+                    <br />
                     Payment Link: 
                     <u><b>https://fyp-aesthetics.vercel.app/auction-checkout?itemId=${id}&userId=${user.user}</u></b>
-                    
+                    <br />
+                    <br />
                     If you have any questions, please email us at:
                     <u><b>queries@aesthetics.com</b></u>.
-
+                    <br />
                     Thanks for shopping with us!
-
+                    <br />
                     Aesthetics
                 </p>
             </section>       

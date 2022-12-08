@@ -72,7 +72,7 @@ function Notification() {
                 className="relative z-10 flex items-center rounded-full border border-transparent"
             >
                 <span className="absolute right-4 top-0.5 h-2 w-2 animate-pulse rounded-full bg-red-600 ring-2 ring-red-400" />
-                <Bell className="mr-1 h-6 w-6 fill-transparent stroke-current md:mr-2 md:h-8 md:w-8" />
+                <Bell className="mr-1 h-8 w-8 fill-transparent stroke-current md:mr-2" />
             </button>
             <Modal ref={dropdownRef}>
                 <div className="min-h-24 absolute right-0 z-20 mt-3 max-h-96 w-60 overflow-hidden rounded-xl border-2 border-slate-200 bg-white p-3 py-2 pb-2 shadow-xl lg:w-72">

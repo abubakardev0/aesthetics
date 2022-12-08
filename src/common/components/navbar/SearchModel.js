@@ -21,7 +21,7 @@ import Search from '@/icons/Search';
 
 function SearchModel(props) {
     const [searchQuery, setQuery] = useState('');
-    const [searchResult, setResult] = useState([]);
+    const [searchResult, setResult] = useState(null);
     const [error, setError] = useState(false);
     const debouncedSearch = useDebounce(searchQuery, 500);
     const ref = useRef(null);
@@ -124,40 +124,42 @@ function SearchModel(props) {
                 </div>
             </div>
 
-            <div className="min-h-48 relative mx-auto w-full rounded-b-2xl border-b bg-white py-4 px-3 shadow sm:w-5/6 sm:py-8 md:w-1/2">
-                <div className="space-y-1">
-                    {searchResult.length > 0 ? (
-                        <>
-                            <h6 className="pl-3 font-medium text-gray-600">
-                                Search Results:
-                            </h6>
-                            {searchResult.map((result) => {
-                                return (
-                                    <Link
-                                        href={`/artworks${
-                                            result.type === 'auction'
-                                                ? '/auction'
-                                                : '/immediate'
-                                        }/${result.id}`}
-                                        key={result.id}
-                                    >
-                                        <a className="flex h-16 w-full items-center space-x-4 rounded py-2 pl-3 hover:bg-blue-200/50">
-                                            <Item
-                                                title={result.title}
-                                                image={result.image}
-                                                artist={result.artist}
-                                            />
-                                        </a>
-                                    </Link>
-                                );
-                            })}
-                        </>
-                    ) : (
-                        <p className="text-center">No Result</p>
-                    )}
-                    {error ? 'Unable to search' : null}
+            {searchResult && (
+                <div className="min-h-48 relative mx-auto w-full rounded-b-2xl border-b bg-white py-4 px-3 shadow sm:w-5/6 sm:py-8 md:w-1/2">
+                    <div className="space-y-1">
+                        {searchResult.length > 0 ? (
+                            <>
+                                <h6 className="pl-3 font-medium text-gray-600">
+                                    Search Results:
+                                </h6>
+                                {searchResult.map((result) => {
+                                    return (
+                                        <Link
+                                            href={`/artworks${
+                                                result.type === 'auction'
+                                                    ? '/auction'
+                                                    : '/immediate'
+                                            }/${result.id}`}
+                                            key={result.id}
+                                        >
+                                            <a className="flex h-16 w-full items-center space-x-4 rounded py-2 pl-3 hover:bg-blue-200/50">
+                                                <Item
+                                                    title={result.title}
+                                                    image={result.image}
+                                                    artist={result.artist}
+                                                />
+                                            </a>
+                                        </Link>
+                                    );
+                                })}
+                            </>
+                        ) : (
+                            <p className="text-center">No Result</p>
+                        )}
+                        {error ? 'Unable to search' : null}
+                    </div>
                 </div>
-            </div>
+            )}
         </motion.div>
     );
 }

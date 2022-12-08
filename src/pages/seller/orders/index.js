@@ -157,17 +157,9 @@ function Orders() {
                                     >
                                         <span
                                             className={`${
-                                                item.status === 'delivered' &&
+                                                item.status === 'completed' &&
                                                 'bg-green-100 text-green-500'
                                             } rounded-full px-4 py-1 text-sm capitalize
-                                    ${
-                                        item.status === 'in transit' &&
-                                        'bg-yellow-100 text-yellow-500'
-                                    }
-                                    ${
-                                        item.status === 'processing' &&
-                                        'bg-orange-100 text-orange-500'
-                                    }
                                     ${
                                         item.status === 'cancelled' &&
                                         'bg-red-100 text-red-500'

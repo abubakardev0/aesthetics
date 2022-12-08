@@ -88,7 +88,7 @@ export default async function handler(req, res) {
             sellers,
             userId,
             paymentId: intent.id,
-            status: 'processing',
+            status: 'completed',
             placedAt: Timestamp.fromDate(new Date()),
         };
         const docRef = await addDoc(collection(db, 'orders'), order);
@@ -109,12 +109,15 @@ export default async function handler(req, res) {
                 <section style="background-color: #f8fafc; padding: 15px">
                 <h4 style="font-size: 16px; text-align:center">Order id: ${docRef.id}</h4>
                 <br />
-                <p style="font-size: 16px; text-align:center; color:#334155; width:60%; margin: 0 auto;">
+                <p style="font-size: 16px; text-align:left; color:#334155; width:80%; margin: 15px auto;">
                 Hey ${shippingDetails.name},
+                <br />
                     We are excited to tell you that your order has been confirmed. Thank you for shopping with us! We hope you enjoyed your experience and found what you were looking for. If not, please let us know, we're happy to help.
                     You will receive your purchase in 7 working days.
+                    <br />
+                    <br />
                     If you have any questions, please email us at <u><b>queries@aesthetics.com</b></u>.
-
+                    <br />
                     We hope to see you in our store again soon!
                 </p>
 

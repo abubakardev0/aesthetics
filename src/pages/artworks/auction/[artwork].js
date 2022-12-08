@@ -31,12 +31,12 @@ function Item() {
     useEffect(() => {
         try {
             const docRef = doc(db, 'artworks', artwork);
-            onSnapshot(docRef, (doc) => {
-                if (!doc.exists()) {
+            onSnapshot(docRef, (document) => {
+                if (!document.exists()) {
                     router.replace('/404');
                     return <Loader />;
                 }
-                setData({ id: doc.id, ...doc.data() });
+                setData({ id: document.id, ...document.data() });
             });
         } catch (error) {
             setError(true);
@@ -87,7 +87,7 @@ function Item() {
                 certificates={data.certificates}
             />
             <section className="container mx-auto px-3 py-6 md:px-0">
-                <RelatedWorks category={data.category} />
+                <RelatedWorks artist={data.artist} />
             </section>
 
             <Alert

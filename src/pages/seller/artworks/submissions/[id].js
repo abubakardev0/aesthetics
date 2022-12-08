@@ -23,8 +23,6 @@ import useSWR from 'swr';
 import Checkbox from '@/seller/uploadartwork/Checkbox';
 import Error from '@/commoncomponents/Error';
 import Loader from '@/commoncomponents/Loader';
-import ErrorIcon from '@/icons/Error';
-
 function Artwork({ artwork, hasError }) {
     const router = useRouter();
 
@@ -234,7 +232,7 @@ function Artwork({ artwork, hasError }) {
                         <label className="text-sm">Description</label>
                         <textarea
                             rows="4"
-                            className="section-scrollbar w-full resize-none rounded-xl border-2 border-gray-300 bg-slate-50 p-2 transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
+                            className="section-scrollbar w-full resize-none rounded-xl border-[3px] border-gray-300 bg-slate-50 p-2 transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
                             placeholder="Description of your artwork"
                             {...register('description', {
                                 required: true,
@@ -254,13 +252,15 @@ function Artwork({ artwork, hasError }) {
                         <div className="flex w-full space-x-3">
                             <button
                                 type="reset"
-                                className="w-1/2 rounded-lg bg-neutral-200 py-2 text-neutral-800 active:bg-neutral-300"
+                                disabled={loading ? true : false}
+                                className="w-1/2 rounded-lg bg-neutral-200 py-2 text-neutral-800 active:bg-neutral-300 disabled:cursor-not-allowed"
                             >
                                 Discard
                             </button>
                             <button
                                 type="submit"
-                                className="w-1/2 rounded-lg bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg hover:bg-neutral-900"
+                                disabled={loading ? true : false}
+                                className="w-1/2 rounded-lg bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg hover:bg-neutral-900 disabled:cursor-not-allowed"
                             >
                                 {loading ? (
                                     <Loading

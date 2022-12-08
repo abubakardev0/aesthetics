@@ -37,7 +37,6 @@ function FormSubmission({ mediums, surfaces }) {
     } = useForm();
 
     const onSubmit = async (data) => {
-        console.log('submitted');
         setLoading(true);
         try {
             const res = await axios.post('/api/submit-artwork', {
@@ -137,7 +136,7 @@ function FormSubmission({ mediums, surfaces }) {
                                 {setValue('uid', auth.currentUser.uid)}
                                 <div className="mt-5 flex space-x-3">
                                     <button
-                                        className="w-full rounded-xl bg-neutral-200 py-2 text-neutral-800 active:bg-neutral-300"
+                                        className="w-full rounded-md bg-neutral-200 py-2 text-neutral-800 active:bg-neutral-300"
                                         onClick={() =>
                                             setFormState((e) => e - 1)
                                         }

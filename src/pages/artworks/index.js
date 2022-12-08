@@ -27,7 +27,6 @@ import Error from '@/commoncomponents/Error';
 
 import {
     priceFilterQuery,
-    artistFilterQuery,
     typeFilterQuery,
     categoryFilterQuery,
 } from '../../common/queries';
@@ -165,18 +164,18 @@ function Artworks({ artworks, hasError }) {
             </h2>
             <main className="relative">
                 <Page posts={posts} />
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2  transform md:-bottom-3">
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2  transform md:-bottom-3">
                     <button
                         onClick={getMorePosts}
                         className={
                             notFound || postsEnd
                                 ? 'hidden'
-                                : 'rounded-md border-2 px-5 py-2.5 text-center hover:bg-gray-50 focus:border-gray-100 focus:bg-gray-100'
+                                : 'rounded-md border-2 px-5 py-2 text-center text-sm hover:bg-gray-50 focus:border-gray-100 focus:bg-gray-100'
                         }
                     >
                         {loading ? (
                             <Loading
-                                type="points"
+                                type="points-opacity"
                                 color="currentColor"
                                 size="sm"
                             />
@@ -192,7 +191,7 @@ function Artworks({ artworks, hasError }) {
                     )}
                 </div>
             </main>
-            <div className="sticky bottom-[72px] my-6 flex w-full flex-col items-end justify-end pr-3 md:bottom-8 md:items-center md:justify-center md:pr-0">
+            <div className="sticky bottom-[72px] my-6 flex w-full flex-col items-end justify-end pr-3 md:bottom-5 md:items-center md:justify-center md:pr-0">
                 <Modal ref={filterRef}>
                     <div className="absolute bottom-10 mb-3 h-fit w-56 rounded-md border-2 border-gray-100 bg-white px-2 drop-shadow-lg transition delay-200 duration-1000 md:w-64">
                         <Collapse.Group width="100%">
@@ -291,7 +290,7 @@ export async function getServerSideProps() {
     );
 
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
+    querySnapshot.forEach((document) => {
         const {
             artist,
             title,
@@ -302,9 +301,9 @@ export async function getServerSideProps() {
             surfaces,
             uploadedAt,
             type,
-        } = doc.data();
+        } = document.data();
         data.push({
-            id: doc.id,
+            id: document.id,
             artist,
             title,
             mediums,

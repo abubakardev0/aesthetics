@@ -86,13 +86,13 @@ function ChooseMaterial({ mediums, surfaces, formState, setValue, setError }) {
             </div>
             <div className="mt-5 flex space-x-3">
                 <button
-                    className="w-full rounded-xl bg-neutral-200 py-2 text-neutral-800 hover:bg-neutral-300"
+                    className="w-full rounded-md bg-neutral-200 py-2 text-neutral-800 hover:bg-neutral-300"
                     onClick={prevStep}
                 >
                     Prev Step
                 </button>
                 <button
-                    className="w-full rounded-xl bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg hover:bg-neutral-900 "
+                    className="w-full rounded-md bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg hover:bg-neutral-900 "
                     onClick={nextStep}
                 >
                     Next Step

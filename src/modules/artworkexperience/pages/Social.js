@@ -75,12 +75,13 @@ export default function Social({ id, sellerId, setAlert, setShow }) {
             <Link
                 href={{
                     pathname: '/chat',
-                    query: auth.currentUser
-                        ? {
-                              currentUser: auth.currentUser.uid,
-                              otherUser: sellerId,
-                          }
-                        : null,
+                    query:
+                        auth.currentUser && auth.currentUser.uid !== sellerId
+                            ? {
+                                  currentUser: auth.currentUser.uid,
+                                  otherUser: sellerId,
+                              }
+                            : null,
                 }}
             >
                 <a className="flex items-center space-x-2">

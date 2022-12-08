@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import { doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebase-config';
@@ -14,6 +15,7 @@ import { formatCurrency } from '@/commoncomponents/functions';
 import RelatedWorks from '@/buyer/components/artwork/RelatedWorks';
 import Alert from '@/commoncomponents/popups/Alert';
 import Error from '@/commoncomponents/Error';
+import Loader from '@/commoncomponents/Loader';
 
 export default function Item({ artwork, hasError }) {
     const [addtoBag, setAddtoBag] = useState(false);
@@ -22,6 +24,12 @@ export default function Item({ artwork, hasError }) {
         type: '',
         message: '',
     });
+    const router = useRouter();
+
+    if (hasError) {
+        router.replace('/404');
+        return <Loader />;
+    }
 
     const data = JSON.parse(artwork);
 
@@ -108,7 +116,7 @@ export default function Item({ artwork, hasError }) {
                 certificates={data.certificates}
             />
             <section className="container mx-auto px-3 py-6 md:px-0">
-                <RelatedWorks category={data.category} />
+                <RelatedWorks artist={data.artist} />
             </section>
             <Alert
                 show={show}
@@ -125,7 +133,7 @@ export async function getServerSideProps({
 }) {
     const id = params.artwork;
     const data = await getDoc(doc(db, 'artworks', id));
-    if (!data) {
+    if (!data.exists()) {
         return {
             props: {
                 hasError: true,

@@ -23,7 +23,6 @@ import Arrow from '@/icons/Arrow';
 function Chat({ chat, hasError, noQuery }) {
     const router = useRouter();
     const [currentChat, setChat] = useState(chat && JSON.parse(chat));
-
     return (
         <PrivateRoute>
             <section className="relative grid h-screen w-full place-content-center bg-gray-100">
@@ -59,13 +58,6 @@ export async function getServerSideProps(context) {
         };
     }
     const { currentUser, otherUser } = context.query;
-    if (currentUser === otherUser) {
-        return {
-            props: {
-                noQuery: true,
-            },
-        };
-    }
     let chatId = null;
     if (otherUser && currentUser) {
         const docSnap = await getDocs(
@@ -77,9 +69,7 @@ export async function getServerSideProps(context) {
             )
         );
         docSnap.forEach((each) => {
-            if (each.exists()) {
-                chatId = each.id;
-            }
+            chatId = each.id;
         });
         if (chatId === null) {
             const docRef = await addDoc(collection(db, 'chat'), {

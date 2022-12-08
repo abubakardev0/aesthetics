@@ -78,7 +78,7 @@ export default function Chart() {
         return data;
     }
     return (
-        <div className="h-full w-full rounded-lg border-2 bg-[#FFFFF0] pb-5  drop-shadow-sm">
+        <div className="h-full w-full rounded-lg border-2 bg-white pb-5  drop-shadow-sm">
             <h2 className="w-full py-3 text-center text-sm font-medium text-gray-600 md:text-base lg:text-lg">
                 Your Monthly Sales
             </h2>

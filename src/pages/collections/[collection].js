@@ -16,7 +16,7 @@ function Artworks({ artworks, hasError, category }) {
             <Head>
                 <title>{category.toUpperCase()}</title>
             </Head>
-            <h2 className="py-4 text-center font-garamond text-3xl font-medium md:py-8 md:text-5xl">
+            <h2 className="py-4 text-center font-garamond text-3xl font-medium capitalize md:py-8 md:text-5xl">
                 Explore {category}
             </h2>
             <main className="relative">

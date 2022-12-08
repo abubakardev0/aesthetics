@@ -32,7 +32,7 @@ function AddressForm({ errors, register }) {
                 <label className="text-sm">Full Name</label>
                 <input
                     type="text"
-                    className="w-full rounded-lg border-2 border-gray-300 p-2 capitalize transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
+                    className="w-full rounded-lg border-[3px] border-gray-300 p-2 capitalize transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
                     placeholder="Your Name"
                     defaultValue={address.name ?? ''}
                     {...register('name', {
@@ -49,7 +49,7 @@ function AddressForm({ errors, register }) {
             </div>
             <div className="space-y-1">
                 <label className="text-sm">Contact</label>
-                <div className="relative mb-6 flex w-full space-x-2 rounded-lg border-2 border-gray-300 p-2 capitalize transition-transform delay-75 duration-300 hover:border-black active:-translate-y-[2px] active:border-black">
+                <div className="relative mb-6 flex w-full space-x-2 rounded-lg border-[3px] border-gray-300 p-2 capitalize transition-transform delay-75 duration-300 hover:border-black active:-translate-y-[2px] active:border-black">
                     <span>+92</span>
                     <input
                         className="placeholder:text-sm"
@@ -75,7 +75,7 @@ function AddressForm({ errors, register }) {
                 <select
                     id="province"
                     name="province"
-                    className="w-full rounded-lg border-2 border-gray-300 p-2 transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
+                    className="w-full rounded-lg border-[3px] border-gray-300 p-2 transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
                     required
                     {...register('province', {
                         required: true,
@@ -156,7 +156,7 @@ function AddressForm({ errors, register }) {
                     <label className="text-sm">City</label>
                     <input
                         type="text"
-                        className="w-full rounded-lg border-2 border-gray-300 p-2 capitalize transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
+                        className="w-full rounded-lg border-[3px] border-gray-300 p-2 capitalize transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
                         placeholder="Your City"
                         defaultValue={address.city ?? ''}
                         {...register('city', {
@@ -174,7 +174,7 @@ function AddressForm({ errors, register }) {
                 <div className="w-1/2 space-y-1">
                     <label className="text-sm">Zip Code</label>
                     <input
-                        className="w-full rounded-lg border-2 border-gray-300 p-2 transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
+                        className="w-full rounded-lg border-[3px] border-gray-300 p-2 transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
                         placeholder="Zip Code"
                         defaultValue={address.zip ?? ''}
                         {...register('zip', {
@@ -193,7 +193,7 @@ function AddressForm({ errors, register }) {
                 <label className="text-sm">Address Line</label>
                 <input
                     type="text"
-                    className="w-full rounded-lg border-2 border-gray-300 p-2 capitalize transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
+                    className="w-full rounded-lg border-[3px] border-gray-300 p-2 capitalize transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
                     placeholder="Your Address"
                     defaultValue={address.address ?? ''}
                     {...register('address', {

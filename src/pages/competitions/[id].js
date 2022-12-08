@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase/firebase-config';
@@ -10,12 +11,17 @@ import PrivateRoute from '@/commoncomponents/routes/Private';
 import { Collapse } from '@nextui-org/react';
 import Submission from '@/competition/components/Submission';
 import Winner from '@/competition/components/Winner';
-import Error from '@/commoncomponents/Error';
+import Loader from '@/commoncomponents/Loader';
 import { formatCurrency } from '@/commoncomponents/functions';
 import { useCountDown } from '@/hooks/useCountDown';
 import { useTimeout } from '@/hooks/useTimeout';
+
 function Competition({ competition, hasError }) {
-    if (hasError) return <Error />;
+    const router = useRouter();
+    if (hasError) {
+        router.replace('/404');
+        return <Loader />;
+    }
     const data = JSON.parse(competition);
 
     const countDown = useCountDown(data.deadline.seconds);
@@ -147,7 +153,7 @@ export async function getServerSideProps({
 }) {
     const id = params.id;
     const data = await getDoc(doc(db, 'competitions', id));
-    if (!data) {
+    if (!data.exists()) {
         return {
             props: {
                 hasError: true,

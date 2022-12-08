@@ -39,7 +39,7 @@ function Register() {
 
     return (
         <>
-            <section className="w-full p-6 sm:w-[400px] sm:flex-col sm:rounded-xl sm:border-2 sm:border-slate-200 sm:px-10 sm:py-5 sm:shadow-slate-400 md:p-10">
+            <section className="w-full p-6 focus-within:border-black sm:w-[400px] sm:flex-col sm:rounded-xl sm:border-[3px] sm:border-slate-200 sm:px-10 sm:py-5 sm:shadow-slate-400 md:p-10">
                 <h2 className="xl:text-bold text-left text-3xl font-bold text-neutral-800">
                     Get Started
                 </h2>

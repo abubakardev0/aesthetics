@@ -91,11 +91,7 @@ const Details = () => {
                                     'bg-red-100 text-red-500'
                                 }
                                 ${
-                                    orderDetails.status === 'processing' &&
-                                    'bg-amber-200 text-amber-600'
-                                }
-                                ${
-                                    orderDetails.status === 'delivered' &&
+                                    orderDetails.status === 'completed' &&
                                     'bg-green-100 text-green-500'
                                 }
                                 rounded-full px-5 py-2 capitalize
@@ -118,7 +114,7 @@ const Details = () => {
                             className={
                                 orderDetails.status === 'cancelled'
                                     ? 'hidden'
-                                    : 'rounded-full bg-red-500 px-5 py-2 text-white hover:bg-red-600 active:bg-red-700'
+                                    : 'rounded-full bg-red-100 px-5 py-2 text-red-500 hover:bg-red-200'
                             }
                         >
                             Cancel Order

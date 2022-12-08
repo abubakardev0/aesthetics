@@ -1,16 +1,22 @@
 import { useState } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import { db } from '@/firebase/firebase-config';
 import { doc, getDoc } from 'firebase/firestore';
 
 import SellerLayout from '@/layouts/SellerLayout';
-
+import Loader from '@/commoncomponents/Loader';
 import Overview from '@/seller/components/artwork/Overview';
 import ViewBids from '@/seller/components/artwork/ViewBids';
 
-function Artwork({ artwork }) {
+function Artwork({ artwork, hasError }) {
     const [mode, setMode] = useState('overview');
+    const router = useRouter();
+    if (hasError) {
+        router.replace('/404');
+        return <Loader />;
+    }
     const data = JSON.parse(artwork);
     return (
         <>

@@ -143,13 +143,13 @@ function Images({ formState, setValue, setError }) {
             </div>
             <div className="mt-5 flex space-x-3">
                 <button
-                    className="w-full rounded-xl bg-neutral-200 py-2 text-neutral-800 active:bg-neutral-300"
+                    className="w-full rounded-md bg-neutral-200 py-2 text-neutral-800 active:bg-neutral-300"
                     onClick={prevStep}
                 >
                     Prev Step
                 </button>
                 <button
-                    className="focus:shadow-outline w-full rounded-xl bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg focus:outline-none active:bg-neutral-900"
+                    className="focus:shadow-outline w-full rounded-md bg-neutral-800 p-3 font-medium tracking-wide text-neutral-100 shadow-lg focus:outline-none active:bg-neutral-900"
                     onClick={nextStep}
                 >
                     Next Step

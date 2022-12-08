@@ -108,7 +108,7 @@ function BasicInfo() {
                         <label className="text-sm">Full Name</label>
                         <input
                             type="text"
-                            className="w-full rounded-lg border-2 border-gray-300 p-2 capitalize transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
+                            className="w-full rounded-lg border-[3px] border-gray-300 p-2 capitalize transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
                             placeholder="Your Name"
                             defaultValue={
                                 user.name ?? auth.currentUser.displayName
@@ -130,7 +130,7 @@ function BasicInfo() {
                         <label className="text-sm">E-mail</label>
                         <input
                             type="email"
-                            className="w-full cursor-not-allowed resize-none rounded-lg border-2 border-gray-300 p-2 transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
+                            className="w-full cursor-not-allowed resize-none rounded-lg border-[3px] border-gray-300 p-2 transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black"
                             placeholder="Your E-mail"
                             disabled
                             defaultValue={auth.currentUser.email}
@@ -138,7 +138,7 @@ function BasicInfo() {
                     </div>
                     <div className="space-y-1">
                         <label className="text-sm">Contact</label>
-                        <div className="relative mb-6 flex w-full space-x-2 rounded-lg border-2 border-gray-300 p-2 transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black">
+                        <div className="relative mb-6 flex w-full space-x-2 rounded-lg border-[3px] border-gray-300 p-2 transition-transform delay-75 duration-300 placeholder:text-sm hover:border-black focus:-translate-y-[2px] focus:border-black">
                             <span>+92</span>
                             <input
                                 className="placeholder:text-sm"

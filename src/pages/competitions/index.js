@@ -21,9 +21,7 @@ function Competitions({ competitions, hasError }) {
                         title="Live Competitions"
                         subtitle=" Participate to win"
                     />
-                ) : (
-                    <p>No Live Competitions</p>
-                )}
+                ) : null}
             </section>
             <section className="py-10 px-3 md:px-10 lg:px-16">
                 {pastCompetitions.length > 0 ? (
@@ -32,9 +30,7 @@ function Competitions({ competitions, hasError }) {
                         title="Past Competitions"
                         subtitle="See who won"
                     />
-                ) : (
-                    <p>No Past Competitions</p>
-                )}
+                ) : null}
             </section>
         </>
     );

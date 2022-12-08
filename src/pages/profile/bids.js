@@ -213,7 +213,7 @@ function Bid({ data }) {
         <li className="relative">
             <Link href={`/artworks/auction/${data.artworkId}`}>
                 <a className="flex h-32 w-full cursor-pointer items-end space-x-2 border-b py-2.5 pr-10 hover:bg-gray-50 md:h-36 md:w-[500px] md:items-center md:rounded-lg md:border md:px-4">
-                    <div className="h-20 w-16 overflow-hidden md:h-32 md:w-28">
+                    <div className="h-20 w-16 overflow-hidden rounded-md md:h-28 md:w-24">
                         <Image
                             src={data.image}
                             height={250}

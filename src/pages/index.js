@@ -19,7 +19,7 @@ function Home({ data, hasError }) {
             <section className="container mx-auto h-fit w-full py-10 text-center md:py-20">
                 <About />
             </section>
-            <section className="relative flex h-fit w-full flex-col items-center justify-between px-3 py-10 md:mx-auto md:flex-row md:px-10 md:py-20 lg:px-16">
+            <section className="relative flex h-fit w-full flex-col items-center justify-between gap-5 px-3 py-10 md:mx-auto md:flex-row md:px-10 md:py-20 lg:px-16">
                 <Category />
             </section>
             <section className="mx-auto mt-5 px-3 md:px-10 lg:px-16">

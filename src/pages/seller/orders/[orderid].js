@@ -28,21 +28,26 @@ const Details = () => {
     const [loading, setLoading] = useState(false);
     const { data: orderDetails, error } = useSWR('order', async () => {
         const document = await getDoc(doc(db, 'orders', orderid));
-        if (document.exists) {
+        if (document.exists()) {
             return {
                 id: document.id,
                 ...document.data(),
             };
         }
+        return -1;
     });
-
-    if (error) return <Error />;
     if (!orderDetails) {
         return (
             <div className="grid h-screen place-content-center overflow-hidden">
                 <Loading color="black" />
             </div>
         );
+    }
+    if (error) return <Error />;
+
+    if (orderDetails === -1) {
+        router.replace('/404');
+        return <Loader />;
     }
 
     const handleRefund = async () => {
@@ -90,17 +95,13 @@ const Details = () => {
                             className={`
                                 ${
                                     orderDetails.status === 'cancelled' &&
-                                    'bg-red-100 text-red-500'
+                                    'border-red-200 bg-red-100 text-red-500'
                                 }
                                 ${
-                                    orderDetails.status === 'processing' &&
-                                    'bg-amber-200 text-amber-600'
+                                    orderDetails.status === 'completed' &&
+                                    'border-green-200 bg-green-100 text-green-500'
                                 }
-                                ${
-                                    orderDetails.status === 'delivered' &&
-                                    'bg-green-100 text-green-500'
-                                }
-                                rounded-full px-5 py-2 capitalize
+                                rounded-full border-2 px-5 py-2 capitalize
                                 `}
                         >
                             {orderDetails.status}

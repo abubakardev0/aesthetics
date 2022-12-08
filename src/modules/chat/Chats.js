@@ -42,8 +42,8 @@ const getChats = async () => {
     return chats;
 };
 export const getUser = async (userId) => {
-    const getUserDoc = await getDoc(doc(db, 'users', `${userId}`));
-    if (getUserDoc.exists) {
+    const getUserDoc = await getDoc(doc(db, 'users', userId));
+    if (getUserDoc.exists()) {
         return getUserDoc.data();
     }
 };
@@ -53,7 +53,7 @@ export default function Chat({ setChat }) {
     return (
         <>
             <ul className="section-scrollbar h-full overflow-y-auto">
-                {(chats === undefined || chats == null) && (
+                {!chats && (
                     <div className="grid place-content-center">
                         <Loading>
                             {error ? 'Unable to Fetch' : 'Loading'}
@@ -73,9 +73,15 @@ export default function Chat({ setChat }) {
                             >
                                 <Avatar
                                     size="lg"
-                                    text={chat.name.toUpperCase()[0]}
+                                    text={
+                                        chat.name
+                                            ? chat.name.toUpperCase()[0]
+                                            : 'A'
+                                    }
                                 />
-                                <span className="hidden md:block capitalize">{chat.name}</span>
+                                <span className="hidden capitalize md:block">
+                                    {chat.name ? chat.name : ''}
+                                </span>
                             </li>
                         );
                     })}
