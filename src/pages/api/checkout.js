@@ -122,7 +122,7 @@ export default async function handler(req, res) {
                 </p>
 
                 Thanks for shopping with us!
-
+                <br />
                 Aesthetics
             </section>
             `,

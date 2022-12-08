@@ -37,17 +37,14 @@ export default async function handler(req, res) {
                 ),
             },
         });
-    } catch (e) {
-        console.log(e);
-    }
-    await sendgrid.send({
-        to: user.email,
-        from: {
-            email: 'keyowe1568@migonom.com',
-            name: 'Aesthetics',
-        },
-        subject: 'You won the auction',
-        html: `
+        await sendgrid.send({
+            to: user.email,
+            from: {
+                email: 'keyowe1568@migonom.com',
+                name: 'Aesthetics',
+            },
+            subject: 'You won the auction',
+            html: `
             <section style="background-color: #f8fafc; padding: 15px">
                 <p style="font-size: 16px; text-align:left; color:#334155; width:80%; margin: 10px auto;">
                 Hey ${user.name},
@@ -69,6 +66,14 @@ export default async function handler(req, res) {
                 </p>
             </section>       
             `,
-    });
-    res.send('resolved');
+        });
+        res.status(200).json({
+            success: true,
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({
+            success: false,
+        });
+    }
 }
