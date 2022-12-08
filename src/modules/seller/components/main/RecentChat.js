@@ -91,7 +91,7 @@ export default function Chat() {
                             <Card
                                 type={message.type}
                                 name={message.name}
-                                text={message.text}
+                                message={message.message}
                                 date={message.sentAt.seconds}
                             />
                         </Link>
@@ -104,15 +104,15 @@ export default function Chat() {
     );
 }
 
-export const Card = ({ name, text, date, type }) => {
+export const Card = ({ name, message, date, type }) => {
     return (
         <li className="relative flex cursor-pointer rounded-md border-b bg-gray-50 p-2.5 drop-shadow">
             <Avatar size="md" bordered text={name.toUpperCase()[0]} />
-            <span className="flex flex-col px-2.5">
+            <div className="flex flex-col px-2.5">
                 <h3 className="font-medium capitalize">{name}</h3>
                 {type === 'text' ? (
                     <p className="truncate whitespace-pre-wrap break-all text-sm md:text-base">
-                        {text}
+                        {message}
                     </p>
                 ) : (
                     <Artwork className="h-4 w-4" />
@@ -124,7 +124,7 @@ export const Card = ({ name, text, date, type }) => {
                         minute: 'numeric',
                     })}
                 </span>
-            </span>
+            </div>
         </li>
     );
 };
