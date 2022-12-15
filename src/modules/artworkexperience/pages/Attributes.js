@@ -31,7 +31,9 @@ export default function Artist({
     async function checkFollow() {
         const ref = await getDoc(doc(db, 'users', auth.currentUser.uid));
         if (ref.exists()) {
-            if (ref.data().favourites.includes(artist)) {
+            if (!ref.data().favourites) {
+                return;
+            } else if (ref.data().favourites.includes(artist)) {
                 setFollow(true);
                 return;
             }

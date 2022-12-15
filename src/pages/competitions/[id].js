@@ -46,7 +46,7 @@ function Competition({ competition, hasError }) {
                 <Image
                     src={data.image}
                     layout="fill"
-                    className="animate-hero object-cover"
+                    className="animate-hero object-cover object-center"
                     priority
                 />
                 <div className="absolute inset-0 h-full w-full bg-gradient-to-b from-black/25 to-black/10 backdrop-blur-[0.8px]" />

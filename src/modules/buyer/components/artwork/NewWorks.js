@@ -44,10 +44,10 @@ function NewWorks() {
     return (
         <>
             <div className="my-8 text-center md:my-12">
-                <p className="text-sm font-medium uppercase md:text-base">
+                <p className="text-sm font-medium uppercase md:text-base 2xl:text-lg">
                     epitome of creativity
                 </p>
-                <h2 className="mt-2 font-garamond text-2xl font-semibold md:text-4xl ">
+                <h2 className="mt-2 font-garamond text-2xl font-semibold md:text-4xl 2xl:text-5xl">
                     See Latest Works
                 </h2>
             </div>

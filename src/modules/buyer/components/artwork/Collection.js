@@ -1,46 +1,33 @@
-import { motion, useTransform, useMotionValue } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRef } from 'react';
 
 import { myLoader } from '@/commoncomponents/functions';
 import Arrow from '@/icons/Arrow';
 
 function Collection({ category }) {
-    const y = useMotionValue(0.5);
-    const x = useMotionValue(0.5);
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true });
 
-    const rotateY = useTransform(x, [0, 1], [-8, 8], {
-        clamp: true,
-    });
-    const rotateX = useTransform(y, [0, 1], [8, -8], {
-        clamp: true,
-    });
-
-    const onMove = (e) => {
-        const bounds = e.currentTarget.getBoundingClientRect();
-
-        const xValue = (e.clientX - bounds.x) / e.currentTarget.clientWidth;
-        const yValue = (e.clientY - bounds.y) / e.currentTarget.clientHeight;
-
-        x.set(xValue, true);
-        y.set(yValue, true);
-    };
     return (
         <>
             <Link href={`/collections/${category}`}>
                 <motion.div
-                    onPointerMove={onMove}
                     style={{
-                        rotateY,
-                        rotateX,
+                        transform: isInView ? 'none' : 'translateX(15px)',
+                        opacity: isInView ? 1 : 0,
+                        transition: 'all 0.1s 0.5s',
                     }}
-                    className="relative snap-center drop-shadow-md"
+                    ref={ref}
+                    className="relative snap-center overflow-hidden drop-shadow-md"
                 >
-                    <div className="h-[400px] w-[250px] overflow-hidden md:h-[500px] md:w-[300px] 2xl:h-[600px] 2xl:w-[350px]">
+                    <div className="h-[400px] w-[250px] overflow-hidden md:h-[550px] md:w-[350px] 2xl:h-[700px] 2xl:w-[400px]">
                         <Image
                             src={myLoader(category)}
                             height={1280}
                             width={720}
+                            objectPosition="center"
                             className="object-cover"
                         />
                     </div>

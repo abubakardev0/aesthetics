@@ -21,7 +21,7 @@ function Card({
     return (
         <div
             ref={ref}
-            className="mb-8 inline-block h-auto w-fit min-w-[170px] max-w-[300px] text-left md:min-w-[180px] lg:min-w-[240px]"
+            className="mb-8 inline-block h-auto w-fit min-w-[200px] max-w-full text-left sm:min-w-[230px] md:min-w-[220px] md:max-w-[300px] lg:min-w-[200px] lg:max-w-[320px] 2xl:min-w-[300px] 2xl:max-w-[420px]"
             style={{
                 transform: isInView ? 'none' : 'translateY(10px)',
                 opacity: isInView ? 1 : 0,
@@ -37,13 +37,13 @@ function Card({
                     className="object-cover delay-75 duration-200 hover:scale-105 active:scale-95"
                 />
             </div>
-            <h3 className="border-t-2 pt-3 text-base font-medium capitalize text-gray-700 md:text-xl">
+            <h3 className="border-t-2 pt-3 text-base font-medium capitalize text-gray-700 md:text-xl 2xl:text-2xl">
                 {artist}
             </h3>
-            <h4 className="text-sm capitalize italic text-gray-700 sm:text-base md:text-lg">
+            <h4 className="text-sm capitalize italic text-gray-700 sm:text-base md:text-lg 2xl:text-xl">
                 {title}
             </h4>
-            <p className="hidden text-base text-gray-700 md:block">
+            <p className="hidden text-base text-gray-700 md:block 2xl:text-lg">
                 <span className="mr-1 capitalize">
                     {mediums && mediums.join(' and ')}
                 </span>
@@ -51,7 +51,7 @@ function Card({
                 <br />
                 {height} H x {width} W {unit}
             </p>
-            <p className="text-base text-gray-700 md:text-lg">
+            <p className="text-base text-gray-700 md:text-lg 2xl:text-xl">
                 {formatCurrency(price)}
             </p>
         </div>

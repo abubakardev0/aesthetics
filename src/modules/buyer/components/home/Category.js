@@ -31,10 +31,10 @@ function Category() {
                 <h4 className="text-sm font-medium uppercase 2xl:text-base">
                     Our Collections
                 </h4>
-                <h1 className="mt-1 mb-3 font-garamond text-3xl font-semibold md:mt-2 md:mb-5 md:text-5xl 2xl:text-6xl">
+                <h1 className="mt-1 mb-3 font-garamond text-3xl font-semibold md:mt-2 md:mb-5 md:text-5xl 2xl:mb-6 2xl:text-6xl">
                     Shop by Category
                 </h1>
-                <p className="w-full text-base md:w-3/4 md:text-lg 2xl:text-xl">
+                <p className="w-full text-base md:w-3/4 md:text-lg 2xl:text-2xl">
                     Browse artworks by collection whether you're interested in
                     modern or classical, abstract or figurative, landscape or
                     still life, we've got you covered. It's easy to explore the
