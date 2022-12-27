@@ -22,13 +22,14 @@ function Collection({ category }) {
                     ref={ref}
                     className="relative snap-center overflow-hidden drop-shadow-md"
                 >
-                    <div className="h-[400px] w-[250px] overflow-hidden md:h-[550px] md:w-[350px] 2xl:h-[700px] 2xl:w-[400px]">
+                    <div className="relative h-[400px] w-[250px] overflow-hidden md:h-[550px] md:w-[350px] 2xl:h-[700px] 2xl:w-[400px]">
                         <Image
                             src={myLoader(category)}
-                            height={1280}
-                            width={720}
-                            objectPosition="center"
-                            className="object-cover"
+                            layout="fill"
+                            sizes="(max-width: 768px) 100vw,
+              (max-width: 1200px) 50vw,
+              33vw"
+                            className="object-cover object-center"
                         />
                     </div>
                     <span className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/0 to-black/30 backdrop-blur-[0.6px]" />
@@ -36,7 +37,7 @@ function Collection({ category }) {
                         <h1 className="mt-10 text-center font-garamond text-3xl font-medium capitalize text-white md:mt-14 md:text-4xl">
                             {category}
                         </h1>
-                        <button className="absolute bottom-10 left-1/2 flex -translate-x-1/2 items-center gap-x-2 rounded-full border-[3px] border-dotted border-white px-4 py-1.5 text-base capitalize text-white transition-transform delay-75 duration-300 ease-in-out hover:bg-white hover:text-black md:px-6 md:text-xl 2xl:text-2xl">
+                        <button className="absolute bottom-10 left-1/2 flex -translate-x-1/2 items-center gap-x-2 rounded-full border-[3px] border-dotted border-white px-4 py-1.5 text-base capitalize text-white transition-transform delay-75 duration-500 ease-in-out hover:bg-white hover:text-black md:px-6 md:text-xl 2xl:text-2xl">
                             Explore
                             <Arrow className="h-6 w-6 md:h-8 md:w-8" />
                         </button>

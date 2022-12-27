@@ -8,7 +8,7 @@ function Card({ image, title }) {
     return (
         <div
             ref={ref}
-            className="mb-8 inline-block h-auto w-fit min-w-[170px] max-w-[300px] text-left md:min-w-[180px] lg:min-w-[240px]"
+            className="mb-8 inline-block h-auto w-fit min-w-[200px] max-w-full text-left sm:min-w-[230px] md:min-w-[220px] md:max-w-[300px] lg:min-w-[220px] lg:max-w-[320px] 2xl:min-w-[300px] 2xl:max-w-[420px]"
             style={{
                 transform: isInView ? 'none' : 'translateY(10px)',
                 opacity: isInView ? 1 : 0,

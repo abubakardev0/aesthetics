@@ -16,7 +16,7 @@ function Home({ data, hasError }) {
             <section className="-mt-12 md:-mt-20">
                 <Hero list={data} />
             </section>
-            <section className="container mx-auto h-fit w-full py-10 text-center md:py-20">
+            <section className=" h-fit w-full py-10 px-3 text-center  md:px-10 md:py-20 lg:px-16">
                 <About />
             </section>
             <section className="relative flex h-fit w-full flex-col items-center justify-between gap-5 px-3 py-10 md:mx-auto md:flex-row md:px-10 md:py-20 lg:px-16">

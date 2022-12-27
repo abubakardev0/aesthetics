@@ -261,7 +261,7 @@
     }
     .logo svg polygon {
         fill: none;
-        stroke: var(--path);
+        stroke: currentColor;
         stroke-width: 10px;
         stroke-linejoin: round;
         stroke-linecap: round;
