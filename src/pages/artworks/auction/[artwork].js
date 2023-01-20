@@ -87,7 +87,7 @@ function Item() {
                 certificates={data.certificates}
             />
             <section className="container mx-auto px-3 py-6 md:px-0">
-                <RelatedWorks artist={data.artist} />
+                <RelatedWorks artist={data.artist} artworkId={data.id} />
             </section>
 
             <Alert

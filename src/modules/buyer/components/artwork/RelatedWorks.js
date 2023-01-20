@@ -14,7 +14,7 @@ import Carousel from '@/commoncomponents/Scrollers/Carousel';
 import { Loading } from '@nextui-org/react';
 import Error from '@/commoncomponents/Error';
 
-function RelatedWorks({ artist }) {
+function RelatedWorks({ artist, artworkId }) {
     const { data: items, error } = useSWR('new-uploaded-artworks', async () => {
         const list = [];
         const docSnap = await getDocs(
@@ -23,12 +23,13 @@ function RelatedWorks({ artist }) {
                 where('status', '==', 'listed'),
                 where('artist', '==', artist),
                 orderBy('uploadedAt', 'desc'),
-                limit(6)
+                limit(8)
             )
         );
         docSnap.forEach((eachDoc) => {
             if (eachDoc.exists) {
-                list.push({ id: eachDoc.id, ...eachDoc.data() });
+                if (eachDoc.id !== artworkId)
+                    list.push({ id: eachDoc.id, ...eachDoc.data() });
             }
         });
         return list;
