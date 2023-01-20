@@ -92,7 +92,7 @@ export default function Bag() {
             {items.length === 0 ? (
                 <EmptyBag />
             ) : (
-                <section className="container md:mx-auto">
+                <section className="container pt-8 md:mx-auto md:pt-0">
                     <div className="w-full">
                         <div className="flex flex-col items-center">
                             <h3 className="text-xl font-semibold uppercase leading-loose">
@@ -125,12 +125,10 @@ export default function Bag() {
                                             }}
                                             key={each.id}
                                         >
-                                            <div className="w-screen pr-4 md:w-[750px]">
-                                                <ItemBlock
-                                                    item={each}
-                                                    remove={removeFromBag}
-                                                />
-                                            </div>
+                                            <ItemBlock
+                                                item={each}
+                                                remove={removeFromBag}
+                                            />
                                         </Checkbox>
                                     ))}
                                 </Checkbox.Group>

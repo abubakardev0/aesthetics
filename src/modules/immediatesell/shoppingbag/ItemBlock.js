@@ -6,7 +6,7 @@ import Delete from '@/icons/Delete';
 
 const ItemBlock = ({ item, remove }) => {
     return (
-        <div className="flex h-96 w-full flex-col items-start justify-start space-y-4  md:mt-0 md:h-36 md:flex-row  md:items-center md:space-x-6 xl:space-x-8 ">
+        <div className="flex h-96 w-full flex-col items-start justify-start space-y-4 pr-4 md:mt-0 md:h-36 md:w-[750px] md:flex-row md:items-center md:space-x-6 xl:space-x-8 ">
             <div className="relative h-40 w-full md:h-full md:w-40">
                 <Image
                     src={item.images[0]}

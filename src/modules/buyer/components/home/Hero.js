@@ -107,21 +107,21 @@ const Hero = ({ list }) => {
                             );
                         })}
                     </div>
-                    <div className="space-y-3 px-10 pt-2 text-center md:w-11/12 md:space-y-8 md:px-4 md:text-left">
+                    <div className="space-y-4 px-10 pt-5 text-center md:w-11/12 md:space-y-8 md:px-4 md:pt-0 md:text-left">
                         <div className="space-y-1 md:space-y-3">
                             <h6
-                                className="animate-opacity text-xs font-medium
+                                className="animate-opacity text-sm font-medium
                                 capitalize text-gray-600 md:text-base 2xl:text-lg"
                             >
                                 {list[currentIndex].subtitle}
                             </h6>
                             <div className="block h-fit overflow-y-hidden">
-                                <h1 className="animate-text font-garamond text-xl font-semibold uppercase tracking-wide md:text-5xl 2xl:text-6xl">
+                                <h1 className="animate-text font-garamond text-2xl font-semibold uppercase tracking-wide md:text-5xl 2xl:text-6xl">
                                     {list[currentIndex].title}
                                 </h1>
                             </div>
                         </div>
-                        <p className="w-full animate-opacity text-sm tracking-wide text-gray-600 md:w-5/6 md:text-xl 2xl:text-2xl">
+                        <p className="w-full animate-opacity text-base tracking-wide text-gray-600 md:w-5/6 md:text-xl 2xl:text-2xl">
                             {list[currentIndex].description}
                         </p>
                         <button className="w-32 animate-opacity rounded-sm border border-black bg-none py-2.5 text-base  transition-all hover:bg-black hover:text-white md:block md:w-36">

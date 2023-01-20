@@ -114,10 +114,10 @@ export default function CheckoutForm({ itemsId }) {
                         </p>
                     </div>
                 </div>
-                <div className="w-full self-center sm:w-[400px] md:w-[500px] lg:w-1/2">
+                <div className="w-full self-start pt-6 sm:w-[400px] md:w-[500px] md:self-center md:pt-0 lg:w-1/2">
                     <form
                         onSubmit={handleSubmit(handleCheckout)}
-                        className="w-fit space-y-3 rounded-lg border-2 p-3 md:w-[450px] md:p-6"
+                        className="w-full space-y-3 rounded-lg border-none p-3 md:w-[450px] md:border-2 md:p-6"
                     >
                         {formState === 1 && (
                             <>
@@ -137,13 +137,13 @@ export default function CheckoutForm({ itemsId }) {
                                             router.push('/bag');
                                             return <Loader />;
                                         }}
-                                        className="w-full rounded-md bg-neutral-200 py-2.5 text-sm text-neutral-800 hover:bg-neutral-100 active:bg-neutral-300 md:py-3 md:text-base"
+                                        className="h-12 w-full rounded-md bg-neutral-200 text-sm text-neutral-800 hover:bg-neutral-100 active:bg-neutral-300 md:py-3 md:text-base"
                                     >
                                         Return to Bag
                                     </button>
                                     <button
                                         onClick={nextStep}
-                                        className="w-full rounded-md bg-neutral-800 py-2.5 text-sm font-medium text-gray-100 hover:bg-neutral-700 active:bg-neutral-900 md:py-3 md:text-base "
+                                        className="h-12 w-full rounded-md bg-neutral-800 text-sm font-medium text-gray-100 hover:bg-neutral-700 active:bg-neutral-900 md:py-3 md:text-base "
                                     >
                                         Go to Payment
                                     </button>
@@ -152,14 +152,14 @@ export default function CheckoutForm({ itemsId }) {
                         )}
                         {formState === 2 && (
                             <>
-                                <div>
+                                <div className="mb-2">
                                     <p>Don't worry, you're safe.</p>
                                     <h3 className="mb-5 text-3xl font-medium uppercase text-blue-500">
                                         secure checkout
                                     </h3>
                                 </div>
                                 <Card />
-                                <div className="flex space-x-3">
+                                <div className="mt-2 flex space-x-3">
                                     <button
                                         onClick={() =>
                                             setFormState((e) => e - 1)
