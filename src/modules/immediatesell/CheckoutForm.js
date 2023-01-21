@@ -101,7 +101,7 @@ export default function CheckoutForm({ itemsId }) {
     };
     return (
         <>
-            <div className="container mx-auto flex h-full min-h-screen w-full  space-x-0 md:space-x-5 md:py-12">
+            <div className="container mx-auto flex h-full min-h-screen w-full space-x-0 pt-10 pb-5 md:space-x-5 md:py-12">
                 <div className="hidden w-1/2 self-center md:block">
                     <div className="mx-auto w-96">
                         <ShippingInfo className="h-80 w-80" />

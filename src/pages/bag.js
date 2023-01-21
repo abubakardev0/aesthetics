@@ -109,7 +109,7 @@ export default function Bag() {
                                 </span>
                             </p>
                         </div>
-                        <div className="my-5 flex w-full flex-col items-start justify-between space-y-4 px-2 md:flex-row md:space-y-0">
+                        <div className="my-5 flex w-full flex-col items-start justify-between space-y-4 px-2 md:space-y-0 lg:flex-row">
                             <div className="w-full space-y-4 md:w-7/12">
                                 <Checkbox.Group
                                     label="Select Items"
@@ -133,7 +133,7 @@ export default function Bag() {
                                     ))}
                                 </Checkbox.Group>
                             </div>
-                            <div className="w-full space-y-4 p-5 md:w-4/12 md:rounded-md md:border-l-2 md:p-10">
+                            <div className="w-full space-y-4 p-5 md:rounded-md md:p-10 lg:w-4/12 lg:border-l-2">
                                 <h3 className="mb-5 text-lg font-semibold uppercase tracking-wide md:text-2xl">
                                     Order Summary
                                 </h3>
